@@ -18,48 +18,67 @@ import theaterRouter from './routes/theaterRoutes.js';
 import snackRouter from './routes/snackRoutes.js';
 import movieRouter from './routes/movieRoutes.js';
 import offerRouter from './routes/offerRoutes.js';
-import supportRouter from './routes/supportRoutes.js'; 
+import supportRouter from './routes/supportRoutes.js';
 import boxOfficeRouter from './routes/boxOfficeRouter.js';
-import requestRouter from './routes/requestRoutes.js'; 
+import requestRouter from './routes/requestRoutes.js';
 
-// Initialization
+// Init
 const app = express();
 const httpServer = createServer(app);
 const port = process.env.PORT || 3000;
 
+// ✅ ALLOWED ORIGINS (ADD YOUR VERCEL DOMAIN HERE)
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://quick-show-gilt-pi.vercel.app"
+];
+
+// ✅ SOCKET.IO CONFIG (FIXED)
 const io = new Server(httpServer, {
     cors: {
-        origin: ['http://localhost:5173'],
+        origin: allowedOrigins,
         methods: ["GET", "POST"],
         credentials: true
     }
 });
 
-// Middleware
-app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
+// ✅ EXPRESS CORS (FIXED)
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("CORS not allowed"));
+        }
+    },
+    credentials: true
+}));
+
 app.use(express.json());
 app.use(clerkMiddleware());
 
-// API Routes
+// Routes
 app.get('/', (req, res) => res.send('QuickShow Server is Live!'));
+
 app.use('/api/inngest', serve({ client: inngest, functions }));
 app.use('/api/show', showRouter);
-app.use('/api/bookings', bookingRouter); 
+app.use('/api/bookings', bookingRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/user', userRouter);
 app.use('/api/theaters', theaterRouter);
 app.use('/api/snacks', snackRouter);
-app.use('/api/movie', movieRouter); 
-app.use('/api/offers', offerRouter); 
-app.use('/api/support', supportRouter); 
+app.use('/api/movie', movieRouter);
+app.use('/api/offers', offerRouter);
+app.use('/api/support', supportRouter);
 app.use('/api/box-office', boxOfficeRouter);
 app.use('/api/schedule-requests', requestRouter);
 
-// --- WEB SOCKETS (Live Seat Locking with Anti-Ghost TTL) ---
-// Structure: { showId: { seatId: { socketId: '...', timestamp: Date.now() } } }
-const lockedSeats = {}; 
+// ================= SOCKET LOGIC =================
+
+const lockedSeats = {};
 
 io.on('connection', (socket) => {
+
     socket.on('join_show', (showId) => {
         socket.join(showId);
         socket.emit('sync_locked_seats', lockedSeats[showId] || {});
@@ -69,9 +88,9 @@ io.on('connection', (socket) => {
         if (!lockedSeats[showId]) lockedSeats[showId] = {};
 
         if (action === 'lock') {
-            lockedSeats[showId][seatId] = { 
-                socketId: socket.id, 
-                timestamp: Date.now() 
+            lockedSeats[showId][seatId] = {
+                socketId: socket.id,
+                timestamp: Date.now()
             };
         } else if (action === 'unlock') {
             delete lockedSeats[showId][seatId];
@@ -80,14 +99,15 @@ io.on('connection', (socket) => {
         socket.to(showId).emit('seat_updated', lockedSeats[showId]);
     });
 
-    // Handle heartbeats to keep locks alive
     socket.on('heartbeat', ({ showId, activeSeats }) => {
         if (!lockedSeats[showId]) return;
-        
-        let changed = false;
+
         activeSeats.forEach(seatId => {
-            if (lockedSeats[showId][seatId] && lockedSeats[showId][seatId].socketId === socket.id) {
-                lockedSeats[showId][seatId].timestamp = Date.now(); // Refresh TTL
+            if (
+                lockedSeats[showId][seatId] &&
+                lockedSeats[showId][seatId].socketId === socket.id
+            ) {
+                lockedSeats[showId][seatId].timestamp = Date.now();
             }
         });
     });
@@ -95,40 +115,44 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         for (const showId in lockedSeats) {
             let changed = false;
+
             for (const seatId in lockedSeats[showId]) {
                 if (lockedSeats[showId][seatId].socketId === socket.id) {
                     delete lockedSeats[showId][seatId];
                     changed = true;
                 }
             }
-            if (changed) socket.to(showId).emit('seat_updated', lockedSeats[showId]);
+
+            if (changed) {
+                io.to(showId).emit('seat_updated', lockedSeats[showId]);
+            }
         }
     });
 });
 
-// --- GHOST SEAT PURGER (Runs every 10 seconds) ---
-// Scans for locks older than 30 seconds and frees them
+// ✅ AUTO CLEANUP (NO CHANGE)
 setInterval(() => {
     const now = Date.now();
+
     for (const showId in lockedSeats) {
         let changed = false;
+
         for (const seatId in lockedSeats[showId]) {
-            const seatData = lockedSeats[showId][seatId];
-            if (now - seatData.timestamp > 30000) { // 30 seconds
+            if (now - lockedSeats[showId][seatId].timestamp > 30000) {
                 delete lockedSeats[showId][seatId];
                 changed = true;
-                console.log(`[Ghost Purge] Released seat ${seatId} for show ${showId}`);
             }
         }
-        // Broadcast the update if seats were forcefully freed
+
         if (changed) {
             io.to(showId).emit('seat_updated', lockedSeats[showId]);
         }
     }
 }, 10000);
 
-// Boot Server
+// Boot
 await connectDB();
+
 httpServer.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
 });
