@@ -1,0 +1,1 @@
+QuickShow is a full-stack movie ticket booking web app built using the MERN stack. Users can browse movies, view show timings, and book tickets. It includes an admin panel for managing movies, shows, users, and bookings. Environment/config files are excluded for security.
