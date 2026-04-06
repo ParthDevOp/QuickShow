@@ -1,0 +1,259 @@
+import React, { useState, useEffect } from 'react';
+import { useAppContext } from '../../context/AppContext';
+import Title from '../../components/admin/Title';
+import Loading from '../../components/Loading';
+import { Search, Printer, Ticket, CheckCircle2, XCircle, Globe, MonitorPlay } from 'lucide-react';
+import toast from 'react-hot-toast';
+import jsPDF from 'jspdf';
+import QRCode from 'qrcode';
+
+const CinemaBookings = () => {
+    const { axios, getToken } = useAppContext();
+    const [bookings, setBookings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filter, setFilter] = useState('ALL'); // ALL, ONLINE, VENUE
+
+    useEffect(() => {
+        const fetchBookings = async () => {
+            try {
+                const token = await getToken();
+                const { data } = await axios.get("/api/box-office/all-bookings", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (data.success) {
+                    setBookings(data.bookings);
+                }
+            } catch (error) {
+                toast.error("Failed to load booking history.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBookings();
+    }, [axios, getToken]);
+
+    // --- REPRINT TICKET LOGIC ---
+    const reprintTicket = async (booking) => {
+        if (booking.status === 'Cancelled' || booking.status === 'CANCELLED') {
+            return toast.error("Cannot print a cancelled ticket.");
+        }
+
+        try {
+            const doc = new jsPDF();
+            const qrCodeDataUrl = await QRCode.toDataURL(booking._id, { errorCorrectionLevel: 'H' });
+            const bookingIdShort = booking._id.slice(-8).toUpperCase();
+            
+            // Safe date parsing
+            const showDateObj = booking.show?.showDateTime ? new Date(booking.show.showDateTime) : null;
+            const showDate = showDateObj ? showDateObj.toDateString() : 'N/A';
+            const showTime = showDateObj ? showDateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'N/A';
+            const guestName = booking.guestName || booking.user?.name || 'Walk-in Guest';
+
+            // Header
+            doc.setFillColor(10, 10, 10); doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(234, 88, 12); doc.setFontSize(26); doc.setFont("helvetica", "bold");
+            doc.text("QuickShow Box Office", 15, 25);
+            doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.setFont("helvetica", "normal");
+            doc.text("Admit One - Official Ticket", 145, 25);
+
+            // Guest Info
+            doc.setTextColor(0, 0, 0); let y = 55;
+            doc.setFontSize(10); doc.setTextColor(100);
+            doc.text("Issued To:", 15, y); doc.text("Transaction Details:", 130, y);
+            
+            y += 7;
+            doc.setFontSize(11); doc.setTextColor(0); doc.setFont("helvetica", "bold");
+            doc.text(guestName, 15, y);
+            doc.text(`ID: TXN-${bookingIdShort}`, 130, y);
+            
+            y += 6;
+            doc.setFont("helvetica", "normal"); doc.setFontSize(10);
+            doc.text(booking.paymentMethod === 'ONLINE' ? 'Online App Booking' : 'Counter Sale / Walk-in', 15, y);
+            doc.text(`Date: ${new Date(booking.createdAt).toLocaleDateString()}`, 130, y);
+
+            // Movie Block
+            y += 20;
+            doc.setDrawColor(230); doc.setFillColor(250, 250, 250); doc.roundedRect(15, y, 180, 50, 3, 3, 'FD');
+            doc.setFontSize(16); doc.setFont("helvetica", "bold"); doc.setTextColor(0);
+            doc.text(booking.show?.movie?.title || 'Unknown Feature', 25, y+16);
+            doc.setFontSize(11); doc.setFont("helvetica", "normal"); doc.setTextColor(80);
+            doc.text(`${booking.show?.theater?.name || 'Local Theater'}`, 25, y+28);
+            doc.text(`${showDate} | ${showTime}`, 25, y+36);
+            
+            // Seats Block
+            const seatsToPrint = booking.bookedSeats || booking.selectedSeats || [];
+            doc.setFillColor(234, 88, 12); doc.roundedRect(140, y+15, 45, 14, 2, 2, 'F');
+            doc.setTextColor(255); doc.setFontSize(11); doc.setFont("helvetica", "bold");
+            doc.text(`Seats: ${seatsToPrint.join(', ')}`, 162.5, y+24, {align: 'center'});
+
+            // Billing
+            y += 65; doc.setFontSize(10); doc.setTextColor(0);
+            doc.text("Payment Method", 15, y); doc.text("Total Paid", 180, y, {align: 'right'});
+            doc.setDrawColor(200); doc.line(15, y+2, 195, y+2);
+            y += 10;
+            doc.text(booking.paymentMethod === 'VENUE' ? 'Cash at Counter' : booking.paymentMethod === 'CARD_TERMINAL' ? 'Card Terminal' : 'Online Payment', 15, y);
+            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.setTextColor(234, 88, 12);
+            doc.text(`Rs. ${booking.amount}.00`, 180, y, {align: 'right'});
+
+            // QR Code
+            y += 20; doc.addImage(qrCodeDataUrl, 'PNG', 85, y, 40, 40);
+            y += 45; doc.setTextColor(100); doc.setFontSize(9); doc.setFont("helvetica", "normal");
+            doc.text("Present this QR code to the gate staff for entry.", 105, y, {align: 'center'});
+
+            doc.save(`Ticket_${bookingIdShort}.pdf`);
+            toast.success("Ticket reprinted successfully!");
+        } catch (error) { 
+            console.error(error); 
+            toast.error("Failed to generate PDF."); 
+        }
+    };
+
+    // Apply Search and Filter
+    const filteredBookings = bookings.filter(b => {
+        const matchesSearch = 
+            (b._id.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            ((b.guestName || b.user?.name || '').toLowerCase().includes(searchTerm.toLowerCase()));
+        
+        const matchesFilter = 
+            filter === 'ALL' || 
+            (filter === 'ONLINE' && b.paymentMethod === 'ONLINE') ||
+            (filter === 'VENUE' && (b.paymentMethod === 'VENUE' || b.paymentMethod === 'CARD_TERMINAL'));
+
+        return matchesSearch && matchesFilter;
+    });
+
+    if (loading) return <Loading />;
+
+    return (
+        <div className="pb-20 font-outfit text-white animate-fadeIn">
+            
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                <div>
+                    <Title text1="Booking" text2="History" />
+                    <p className="text-gray-500 text-sm mt-1 font-medium">Search, verify, and reprint online and walk-in tickets.</p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    {/* Filter Dropdown */}
+                    <select 
+                        value={filter} 
+                        onChange={(e) => setFilter(e.target.value)}
+                        className="bg-[#0a0a0a] border border-gray-800 text-gray-300 px-4 py-2 rounded-lg font-medium outline-none text-sm cursor-pointer"
+                    >
+                        <option value="ALL">All Sources</option>
+                        <option value="ONLINE">Online App Bookings</option>
+                        <option value="VENUE">Box Office Walk-ins</option>
+                    </select>
+
+                    {/* Search Bar */}
+                    <div className="relative flex-1 sm:w-64">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search size={16} className="text-gray-500" />
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="Search Name or ID..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full bg-[#0a0a0a] border border-gray-800 text-white pl-10 pr-4 py-2 rounded-lg outline-none focus:border-gray-500 text-sm transition-colors"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                        <thead className="bg-[#121212] border-b border-gray-800">
+                            <tr>
+                                <th className="py-4 px-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Transaction ID</th>
+                                <th className="py-4 px-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Guest Info</th>
+                                <th className="py-4 px-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Feature & Show</th>
+                                <th className="py-4 px-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Origin</th>
+                                <th className="py-4 px-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">Status</th>
+                                <th className="py-4 px-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-800/50">
+                            {filteredBookings.length === 0 ? (
+                                <tr>
+                                    <td colSpan="6" className="py-16 text-center text-gray-500 text-sm font-medium">
+                                        No bookings found matching your search.
+                                    </td>
+                                </tr>
+                            ) : (
+                                filteredBookings.map((booking) => {
+                                    const isCancelled = booking.status === 'Cancelled' || booking.status === 'CANCELLED';
+                                    const isOnline = booking.paymentMethod === 'ONLINE';
+                                    
+                                    return (
+                                        <tr key={booking._id} className={`hover:bg-white/[0.02] transition-colors ${isCancelled ? 'opacity-50' : ''}`}>
+                                            
+                                            <td className="py-4 px-6">
+                                                <span className="font-mono text-xs text-gray-300 bg-gray-900 border border-gray-800 px-2 py-1 rounded">
+                                                    #{booking._id.slice(-8).toUpperCase()}
+                                                </span>
+                                            </td>
+
+                                            <td className="py-4 px-6">
+                                                <p className="font-bold text-sm text-gray-200 truncate max-w-[150px]">{booking.guestName || booking.user?.name || "Walk-in Guest"}</p>
+                                                <p className="text-[11px] text-gray-500 mt-0.5">{new Date(booking.createdAt).toLocaleDateString()}</p>
+                                            </td>
+
+                                            <td className="py-4 px-6">
+                                                <p className="text-sm font-medium text-gray-300 truncate max-w-[180px]">{booking.show?.movie?.title || "N/A"}</p>
+                                                <p className="text-[11px] text-orange-400 font-mono mt-0.5">
+                                                    {(booking.bookedSeats || booking.selectedSeats || []).join(', ')}
+                                                </p>
+                                            </td>
+
+                                            <td className="py-4 px-6">
+                                                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-[10px] font-bold uppercase tracking-wider ${
+                                                    isOnline ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                                                }`}>
+                                                    {isOnline ? <Globe size={12}/> : <MonitorPlay size={12}/>}
+                                                    {isOnline ? 'Online App' : 'Box Office'}
+                                                </div>
+                                            </td>
+
+                                            <td className="py-4 px-6">
+                                                {isCancelled ? (
+                                                    <span className="inline-flex items-center gap-1.5 text-red-400 text-[11px] font-bold uppercase tracking-wider">
+                                                        <XCircle size={14}/> Void
+                                                    </span>
+                                                ) : booking.isCheckedIn ? (
+                                                    <span className="inline-flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider">
+                                                        <CheckCircle2 size={14}/> Scanned
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center gap-1.5 text-gray-400 text-[11px] font-bold uppercase tracking-wider">
+                                                        <Ticket size={14}/> Valid
+                                                    </span>
+                                                )}
+                                            </td>
+
+                                            <td className="py-4 px-6 text-right">
+                                                <button 
+                                                    onClick={() => reprintTicket(booking)}
+                                                    disabled={isCancelled}
+                                                    className="bg-transparent border border-gray-700 hover:border-gray-500 hover:text-white text-gray-400 p-2 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                                    title="Download / Reprint PDF Ticket"
+                                                >
+                                                    <Printer size={16} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CinemaBookings;
