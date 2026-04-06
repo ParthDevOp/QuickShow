@@ -7,7 +7,7 @@ export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
     
-    const { user } = useUser(); // The Clerk Authentication User
+    const { user } = useUser();
     const { getToken } = useAuth();
 
     // --- State ---
@@ -15,31 +15,35 @@ export const AppContextProvider = ({ children }) => {
         const saved = localStorage.getItem('quickshow_location');
         return saved ? JSON.parse(saved) : { city: "Select City", lat: null, long: null };
     });
-    const [manualCity, setManualCity] = useState(userLocation.city !== "Select City" ? userLocation.city : "");
-    const [showLocationModal, setShowLocationModal] = useState(false);
-    
-    // --- Admin & Role State ---
-    const [isAdmin, setIsAdmin] = useState(false);
-    // CRITICAL FIX: Added loading state to prevent Admin routing race conditions
-    const [isCheckingAdmin, setIsCheckingAdmin] = useState(true); 
-    const [dbUser, setDbUser] = useState(null); // Stores the database profile (Role, Theater, Coins)
 
-    // --- Backend Config ---
-    const backendUrl = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+    const [manualCity, setManualCity] = useState(
+        userLocation.city !== "Select City" ? userLocation.city : ""
+    );
+
+    const [showLocationModal, setShowLocationModal] = useState(false);
+
+    // --- Admin & Role ---
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
+    const [dbUser, setDbUser] = useState(null);
+
+    // ✅ UPDATED BACKEND CONFIG (PRODUCTION READY)
+    const backendUrl =
+        import.meta.env.VITE_BASE_URL || "http://localhost:3000";
 
     const axiosInstance = axios.create({
         baseURL: backendUrl,
         withCredentials: true,
     });
 
-    // --- Helper Functions ---
+    // --- Helper ---
     const updateUserLocation = (newLoc) => {
         setUserLocation(newLoc);
         setManualCity(newLoc.city);
         localStorage.setItem('quickshow_location', JSON.stringify(newLoc));
     };
 
-    // --- FETCH DATABASE USER PROFILE ---
+    // --- Fetch DB User ---
     const fetchDbUser = async () => {
         try {
             const token = await getToken();
@@ -49,18 +53,17 @@ export const AppContextProvider = ({ children }) => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            if (data.success) {
-                setDbUser(data.user);
-            }
+            if (data.success) setDbUser(data.user);
         } catch (error) {
-            console.error("Failed to fetch DB user:", error);
+            console.error("DB user fetch failed:", error);
         }
     };
 
-    // --- ADMIN CHECK FUNCTION ---
+    // --- Admin Check ---
     const fetchIsAdmin = async () => {
         try {
-            setIsCheckingAdmin(true); // Ensure router waits while checking
+            setIsCheckingAdmin(true);
+
             const token = await getToken();
             if (!token) {
                 setIsAdmin(false);
@@ -71,31 +74,27 @@ export const AppContextProvider = ({ children }) => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            if (data.success && data.isAdmin) {
-                setIsAdmin(true);
-            } else {
-                setIsAdmin(false);
-            }
+            setIsAdmin(data.success && data.isAdmin);
         } catch (error) {
-            if (error.response && error.response.status === 403) {
+            if (error.response?.status === 403) {
                 setIsAdmin(false);
             } else {
-                console.error("Admin Check Failed:", error);
+                console.error("Admin check failed:", error);
                 setIsAdmin(false);
             }
         } finally {
-            setIsCheckingAdmin(false); // Resolve loading state to allow router to proceed
+            setIsCheckingAdmin(false);
         }
     };
 
-    // --- RUN CHECKS AUTOMATICALLY ON LOGIN ---
+    // --- On Login ---
     useEffect(() => {
         if (user) {
             fetchIsAdmin();
-            fetchDbUser(); 
+            fetchDbUser();
         } else {
             setIsAdmin(false);
-            setIsCheckingAdmin(false); // Immediately resolve if there's no user
+            setIsCheckingAdmin(false);
             setDbUser(null);
         }
     }, [user]);
@@ -103,60 +102,63 @@ export const AppContextProvider = ({ children }) => {
     // --- Location Detection ---
     const detectLocation = async () => {
         return new Promise((resolve, reject) => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const { latitude, longitude } = position.coords;
-                        try {
-                            const { data } = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`);
-                            
-                            let city = "Unknown Location";
-                            if (data.results.length > 0) {
-                                const addressComponents = data.results[0].address_components;
-                                const cityObj = addressComponents.find(c => c.types.includes("locality"));
-                                if (cityObj) city = cityObj.long_name;
-                            }
-
-                            const newLoc = { city, lat: latitude, long: longitude };
-                            updateUserLocation(newLoc);
-                            
-                            toast.success(`Location detected: ${city}`);
-                            resolve(newLoc);
-                        } catch (error) {
-                            console.error("Geocoding Error:", error);
-                            toast.error("Failed to fetch city name");
-                            reject(error);
-                        }
-                    },
-                    (error) => {
-                        toast.error("Location permission denied");
-                        reject(error);
-                    }
-                );
-            } else {
+            if (!navigator.geolocation) {
                 toast.error("Geolocation not supported");
-                reject(new Error("Geolocation not supported"));
+                return reject();
             }
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+
+                    try {
+                        const { data } = await axios.get(
+                            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
+                        );
+
+                        let city = "Unknown Location";
+
+                        if (data.results.length > 0) {
+                            const comp = data.results[0].address_components;
+                            const cityObj = comp.find(c => c.types.includes("locality"));
+                            if (cityObj) city = cityObj.long_name;
+                        }
+
+                        const newLoc = { city, lat: latitude, long: longitude };
+                        updateUserLocation(newLoc);
+
+                        toast.success(`Location detected: ${city}`);
+                        resolve(newLoc);
+                    } catch (err) {
+                        toast.error("Failed to fetch city");
+                        reject(err);
+                    }
+                },
+                () => {
+                    toast.error("Location permission denied");
+                    reject();
+                }
+            );
         });
     };
 
     const value = {
-        user,          // Clerk User (Avatar, email)
-        dbUser,        // Database User (Role, TheaterId, Coins)
+        user,
+        dbUser,
         getToken,
         backendUrl,
         axios: axiosInstance,
         userLocation,
-        setUserLocation: updateUserLocation, 
+        setUserLocation: updateUserLocation,
         manualCity,
         setManualCity,
         detectLocation,
         showLocationModal,
         setShowLocationModal,
         isAdmin,
-        isCheckingAdmin, // EXPORTED TO APP.JSX
+        isCheckingAdmin,
         fetchIsAdmin,
-        fetchDbUser    
+        fetchDbUser
     };
 
     return (
@@ -166,8 +168,6 @@ export const AppContextProvider = ({ children }) => {
     );
 };
 
-export const useAppContext = () => {
-    return useContext(AppContext);
-};
+export const useAppContext = () => useContext(AppContext);
 
 export default AppContextProvider;
