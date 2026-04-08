@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // FIXED: Added Loader2 to the imports below!
-import { X, CreditCard, QrCode, ShieldCheck, CheckCircle, ArrowRight, Lock, RefreshCw, Loader2 } from 'lucide-react';
+import { X, CreditCard, QrCode, ShieldCheck, CheckCircle, ArrowRight, Lock, RefreshCw, Loader2, Film } from 'lucide-react';
 // IMPORT YOUR IMAGE HERE
 import scannerImg from '../assets/scanner.jpeg'; 
 
@@ -158,14 +158,26 @@ const MockPaymentModal = ({ amount, onClose, onSuccess }) => {
             {/* --- PROCESSING STATE --- */}
             {step === 'PROCESSING' && (
                 <div className="flex flex-col items-center justify-center py-12 animate-fadeIn h-full">
-                    <div className="relative w-24 h-24 flex items-center justify-center">
-                        {/* Spinning outer ring */}
-                        <div className="absolute inset-0 border-4 border-gray-800 border-t-primary rounded-full animate-spin"></div>
-                        {/* Pulsing inner icon */}
-                        <Lock size={28} className="text-primary animate-pulse"/>
+                    
+                    {/* QuickShow Logo Header */}
+                    <div className="flex items-center gap-2 mb-8 scale-110 drop-shadow-[0_0_15px_rgba(248,69,101,0.4)]">
+                        <div className="bg-gradient-to-tr from-primary to-rose-500 p-2.5 rounded-xl shadow-lg border border-white/20 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                            <Film size={22} strokeWidth={2.5} className="text-white relative z-10" />
+                        </div>
+                        <h2 className="text-3xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                            QuickShow
+                        </h2>
                     </div>
-                    <h3 className="font-bold text-white text-xl mt-8">Processing Payment</h3>
-                    <p className="text-sm text-gray-500 mt-2 text-center max-w-[250px]">Please wait while we securely authenticate your transaction.</p>
+
+                    <div className="relative w-28 h-28 flex items-center justify-center">
+                        <div className="absolute inset-0 border-[6px] border-gray-800 border-t-primary rounded-full animate-spin"></div>
+                        <div className="absolute inset-2 border-[4px] border-transparent border-t-rose-400 rounded-full animate-[spin_1.5s_linear_infinite_reverse]"></div>
+                        <Lock size={32} className="text-white shadow-primary drop-shadow-[0_0_8px_rgba(248,69,101,0.8)] animate-pulse"/>
+                    </div>
+                    
+                    <h3 className="font-black text-white text-2xl mt-8">Securing Payment...</h3>
+                    <p className="text-sm font-medium text-gray-400 mt-2 text-center max-w-[280px]">Please do not close this window or press back button.</p>
                 </div>
             )}
 

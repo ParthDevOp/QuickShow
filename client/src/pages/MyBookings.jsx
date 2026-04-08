@@ -24,6 +24,16 @@ const MyBookings = () => {
         finally { setLoading(false) }
     }
 
+    // Fix background scrolling when modal is open
+    useEffect(() => {
+        if (bookingToCancel) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [bookingToCancel]);
+
     useEffect(() => {
         if (user) fetchBookings()
     }, [user])

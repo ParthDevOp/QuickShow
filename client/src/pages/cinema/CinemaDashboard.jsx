@@ -113,64 +113,66 @@ const CinemaDashboard = () => {
     if (loading) return <Loading />;
 
     return (
-        <div className="pb-20 font-outfit text-white animate-fadeIn relative">
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[300px] bg-orange-600/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
-            <div className="absolute top-[20%] right-[-5%] w-[30%] h-[400px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none z-0"></div>
+        <div className="pb-20 font-outfit text-white animate-fadeIn relative max-w-[1600px] mx-auto">
+            {/* Ambient Background Glows */}
+            <div className="fixed top-0 left-1/4 w-[50%] h-[500px] bg-orange-600/10 blur-[150px] rounded-full pointer-events-none z-0"></div>
+            <div className="fixed bottom-0 right-0 w-[40%] h-[400px] bg-amber-600/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
 
-            <div className="relative z-10">
+            <div className="relative z-10 w-full">
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 bg-[#0a0a0a]/50 p-6 rounded-2xl border border-white/5 backdrop-blur-xl shadow-xl">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6 bg-[#060606]/80 p-8 rounded-3xl border border-white/[0.04] backdrop-blur-2xl shadow-2xl">
                     <div>
-                        <div className="flex items-center gap-3 mb-1">
-                            <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
-                            <p className="text-emerald-500 text-[10px] font-bold uppercase tracking-[0.2em]">System Online</p>
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+                            <p className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.25em]">System Online</p>
                             
-                            {/* ADDED: Manual Refresh Button */}
                             <button 
                                 onClick={handleManualRefresh} 
-                                className="ml-2 p-1 bg-white/5 hover:bg-white/10 rounded border border-white/5 transition-colors group"
+                                className="ml-3 p-1.5 bg-white/5 hover:bg-white/10 rounded-md border border-white/5 transition-all group shadow-sm flex items-center justify-center"
                                 title="Force Refresh Data"
                             >
                                 <RefreshCw size={12} className={`text-gray-400 group-hover:text-white ${isRefreshing ? 'animate-spin text-orange-500' : ''}`} />
                             </button>
                         </div>
-                        <Title text1="Facility" text2="Overview" />
-                        <p className="text-gray-400 text-sm mt-2 flex items-center gap-2 font-medium bg-white/5 inline-flex px-3 py-1.5 rounded-md border border-white/5">
-                            <MapPin size={14} className="text-orange-500" /> {theaterName || 'Local Dashboard View'}
+                        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Facility Dashboard</h2>
+                        <p className="text-gray-400 text-sm flex items-center gap-2 font-medium bg-white/[0.03] inline-flex px-3.5 py-1.5 rounded-lg border border-white/[0.05] shadow-inner">
+                            <MapPin size={16} className="text-orange-500" /> {theaterName || 'Local View'}
                         </p>
                     </div>
                     
                     <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                        <button onClick={() => navigate('/cinema/scan')} className="bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all text-sm border border-white/10 hover:border-white/20 shadow-lg">
-                            <QrCode size={16} className="text-blue-400"/> Access Gate
+                        <button onClick={() => navigate('/cinema/scan')} className="bg-[#121212] hover:bg-[#1a1a1a] text-gray-300 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2.5 transition-all text-sm border border-white/5 hover:border-white/10 hover:text-white shadow-lg">
+                            <QrCode size={18} className="text-blue-400"/> Scan Ticket
                         </button>
-                        <button onClick={() => navigate('/cinema/pos')} className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white px-6 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm shadow-[0_0_20px_rgba(234,88,12,0.3)] hover:shadow-[0_0_25px_rgba(234,88,12,0.5)] border border-orange-400/50">
-                            <Ticket size={16}/> POS Terminal
+                        <button onClick={() => navigate('/cinema/pos')} className="bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2.5 transition-all text-sm shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] border border-orange-400/30">
+                            <Ticket size={18}/> Point of Sale
                         </button>
                     </div>
                 </div>
 
                 {/* KPI Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                    <StatCard icon={<Users size={22}/>} label="Total Seats Sold" value={stats?.totalGuests || 0} colorTheme="blue" />
-                    <StatCard icon={<Ticket size={22}/>} label="Bookings Today" value={stats?.todayTickets || 0} colorTheme="purple" />
-                    <StatCard icon={<Banknote size={22}/>} label="POS Cash Collected" value={formatCurrency(stats?.posCashRevenue)} colorTheme="emerald" />
-                    <StatCard icon={<MonitorPlay size={22}/>} label="Gross Revenue" value={formatCurrency(stats?.totalRevenue)} colorTheme="orange" trend="+ Live"/>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+                    <StatCard icon={<Users size={24}/>} label="Admissions Today" value={stats?.totalGuests || 0} colorTheme="blue" />
+                    <StatCard icon={<Ticket size={24}/>} label="Tickets Generated" value={stats?.todayTickets || 0} colorTheme="purple" />
+                    <StatCard icon={<Banknote size={24}/>} label="Box Office Cash" value={formatCurrency(stats?.posCashRevenue)} colorTheme="emerald" />
+                    <StatCard icon={<MonitorPlay size={24}/>} label="Gross Daily Revenue" value={formatCurrency(stats?.totalRevenue)} colorTheme="orange" trend="Live"/>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Left Column: Today's Screenings */}
-                    <div className="lg:col-span-8 bg-[#0a0a0a]/80 backdrop-blur-md rounded-2xl border border-white/5 p-6 shadow-2xl">
-                        <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
-                            <h3 className="text-sm font-bold flex items-center gap-2 text-white uppercase tracking-widest">
-                                <Calendar size={16} className="text-orange-500" /> Today's Screenings
+                    <div className="lg:col-span-8 bg-[#060606]/80 backdrop-blur-2xl rounded-3xl border border-white/[0.04] p-8 shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
+                        <div className="flex justify-between items-center mb-8 border-b border-white/5 pb-5">
+                            <h3 className="text-sm font-black flex items-center gap-3 text-white uppercase tracking-[0.2em]">
+                                <div className="p-2 bg-orange-500/10 rounded-lg flex items-center justify-center border border-orange-500/20"><Calendar size={18} className="text-orange-500" /></div> 
+                                Master Schedule
                             </h3>
-                            <span className="text-xs font-medium text-gray-500 bg-black px-2 py-1 rounded-md border border-gray-800">{stats?.upcomingShows?.length || 0} Shows</span>
+                            <span className="text-xs font-bold text-gray-400 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 shadow-inner">{stats?.upcomingShows?.length || 0} Screenings</span>
                         </div>
                         
                         {stats?.upcomingShows?.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-16 border border-dashed border-gray-800 rounded-xl bg-black/50">
-                                <Film size={40} className="text-gray-700 mb-3" />
+                            <div className="flex flex-col items-center justify-center py-24 border border-dashed border-white/10 rounded-2xl bg-black/40 shadow-inner">
+                                <Film size={48} className="text-gray-800 mb-4" />
                                 <p className="text-gray-500 text-sm font-medium">No shows scheduled for today.</p>
                             </div>
                         ) : (
@@ -183,45 +185,43 @@ const CinemaDashboard = () => {
 
                                     const occupancyPercentage = Math.min(100, Math.round((bookedCount / capacity) * 100));
                                     
-                                    let progressColor = "from-emerald-500 to-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.5)]";
-                                    if (occupancyPercentage > 50) progressColor = "from-orange-500 to-amber-400 shadow-[0_0_10px_rgba(249,115,22,0.5)]";
-                                    if (occupancyPercentage > 85) progressColor = "from-red-500 to-rose-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]";
+                                    let progressColor = "from-emerald-500 to-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.4)] border-emerald-500/50";
+                                    if (occupancyPercentage > 60) progressColor = "from-orange-500 to-amber-400 shadow-[0_0_15px_rgba(249,115,22,0.4)] border-orange-500/50";
+                                    if (occupancyPercentage > 85) progressColor = "from-red-500 to-rose-500 shadow-[0_0_15px_rgba(239,68,68,0.4)] border-red-500/50";
 
                                     return (
                                         <div 
                                             key={i} 
                                             onClick={() => openSeatMap(show)}
-                                            className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-[#121212] rounded-xl border border-white/5 hover:border-orange-500/50 hover:bg-white/[0.04] transition-all gap-4 group cursor-pointer"
+                                            className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-[#0a0a0a] rounded-2xl border border-white/5 hover:border-orange-500/40 hover:bg-white/[0.03] transition-all duration-300 gap-5 group cursor-pointer shadow-lg"
                                         >
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-16 rounded-md overflow-hidden shrink-0 bg-black border border-gray-800 shadow-md group-hover:shadow-[0_0_15px_rgba(234,88,12,0.3)] transition-all relative">
+                                            <div className="flex items-center gap-5">
+                                                <div className="w-14 h-20 rounded-xl overflow-hidden shrink-0 bg-black border border-white/10 shadow-lg group-hover:shadow-[0_0_20px_rgba(249,115,22,0.2)] transition-all relative">
                                                     <img src={show.poster} className="w-full h-full object-cover" alt={`${show.movieTitle} poster`} loading="lazy" />
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-gray-100 text-base mb-1 group-hover:text-orange-400 transition-colors">{show.movieTitle}</p>
-                                                    <div className="flex items-center gap-3 text-xs text-gray-400 font-medium">
-                                                        <span className="flex items-center gap-1 bg-black px-2 py-1 rounded-md border border-gray-800">
+                                                    <p className="font-black text-gray-100 text-lg mb-1.5 tracking-tight group-hover:text-orange-400 transition-colors">{show.movieTitle}</p>
+                                                    <div className="flex items-center gap-3 text-xs text-gray-400 font-bold">
+                                                        <span className="flex items-center gap-1.5 bg-black px-2.5 py-1.5 rounded-lg border border-white/5 shadow-inner">
                                                             <Clock size={12} className="text-orange-500"/> 
                                                             {new Date(show.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                                         </span>
-                                                        <span className="border border-gray-700 px-2 py-1 rounded-md text-[10px] uppercase tracking-widest font-bold bg-black">
+                                                        <span className="border border-white/10 px-2.5 py-1.5 rounded-lg text-[9px] uppercase tracking-[0.2em] bg-black shadow-inner">
                                                             {show.format}
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="w-full sm:w-56 flex flex-col gap-2 bg-black/40 p-3 rounded-lg border border-white/5">
-                                                <div className="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                                    <span>Occupancy</span>
-                                                    <span className="text-white">{bookedCount} / {capacity} <span className="text-gray-500 font-normal">({occupancyPercentage}%)</span></span>
+                                            <div className="w-full sm:w-64 flex flex-col gap-2 bg-[#050505] p-4 rounded-xl border border-white/5 shadow-inner relative overflow-hidden group/bar">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.02] to-transparent -translate-x-full group-hover/bar:translate-x-full transition-transform duration-1000"></div>
+                                                <div className="flex justify-between text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">
+                                                    <span>Live Occupancy</span>
+                                                    <span className="text-white relative z-10">{bookedCount} / {capacity} <span className="text-gray-500 ml-1">({occupancyPercentage}%)</span></span>
                                                 </div>
-                                                <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-black inset-shadow">
-                                                    <div className={`h-full rounded-full bg-gradient-to-r ${progressColor} transition-all duration-1000 ease-out`} style={{ width: `${occupancyPercentage}%` }}></div>
-                                                </div>
-                                                <div className="text-[10px] text-center text-gray-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    Click to view live seat map
+                                                <div className="w-full bg-[#111] rounded-full h-2.5 overflow-hidden border border-black inset-shadow relative z-10">
+                                                    <div className={`h-full rounded-full border-t border-b bg-gradient-to-r ${progressColor} transition-all duration-1000 ease-out`} style={{ width: `${occupancyPercentage}%` }}></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -232,21 +232,22 @@ const CinemaDashboard = () => {
                     </div>
 
                     {/* Right Column: Live Activity Feed */}
-                    <div className="lg:col-span-4 bg-[#0a0a0a]/80 backdrop-blur-md rounded-2xl border border-white/5 p-6 flex flex-col shadow-2xl">
-                        <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
-                            <h3 className="text-sm font-bold flex items-center gap-2 text-white uppercase tracking-widest">
-                                <Activity size={16} className="text-blue-500" /> Live Feed
+                    <div className="lg:col-span-4 bg-[#060606]/80 backdrop-blur-2xl rounded-3xl border border-white/[0.04] flex flex-col shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-full h-[1px] bg-gradient-to-l from-transparent via-blue-500/50 to-transparent"></div>
+                        <div className="p-8 pb-5 flex justify-between items-center border-b border-white/5 shrink-0">
+                            <h3 className="text-sm font-black flex items-center gap-3 text-white uppercase tracking-[0.2em]">
+                                <div className="p-2 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20"><Activity size={18} className="text-blue-500" /></div>
+                                Operations Feed
                             </h3>
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                         </div>
                         
                         {stats?.recentSales?.length === 0 ? (
-                            <div className="flex-1 flex flex-col items-center justify-center py-10 opacity-50">
-                                <Activity size={32} className="mb-3 text-gray-600"/>
-                                <p className="text-gray-500 text-sm font-medium">Awaiting live transactions...</p>
+                            <div className="flex-1 flex flex-col items-center justify-center p-10 opacity-50">
+                                <Activity size={40} className="mb-4 text-gray-600"/>
+                                <p className="text-gray-500 text-sm font-bold tracking-wide">Awaiting Transactions</p>
                             </div>
                         ) : (
-                            <div className="space-y-4 flex-1">
+                            <div className="space-y-4 flex-1 p-8 pt-4 overflow-y-auto custom-scrollbar">
                                 {stats?.recentSales?.map((sale, i) => {
                                     let MethodIcon = Banknote;
                                     let methodColor = "text-emerald-400 bg-emerald-400/10 border-emerald-400/20";
@@ -281,9 +282,9 @@ const CinemaDashboard = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="font-mono text-sm font-bold text-emerald-400">+{formatCurrency(sale.amount)}</p>
-                                                <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider mt-1 inline-block ${methodColor}`}>
+                                            <div className="text-right shrink-0 bg-[#050505] p-2 rounded-lg border border-white/[0.05]">
+                                                <p className="font-mono text-[13px] font-black text-white">+{formatCurrency(sale.amount)}</p>
+                                                <span className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-[0.2em] mt-1 inline-block border ${methodColor}`}>
                                                     {methodLabel}
                                                 </span>
                                             </div>
@@ -293,9 +294,11 @@ const CinemaDashboard = () => {
                             </div>
                         )}
                         
-                        <button onClick={() => navigate('/cinema/manifest')} className="w-full mt-6 py-3 bg-black border border-white/10 hover:border-white/20 rounded-xl text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-all flex justify-center items-center gap-2 shadow-lg">
-                            View Full Manifest <ArrowRight size={14}/>
-                        </button>
+                        <div className="p-6 shrink-0 border-t border-white/[0.05] bg-[#030303] mt-auto">
+                            <button onClick={() => navigate('/cinema/manifest')} className="w-full py-3.5 bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 rounded-xl text-xs font-black uppercase tracking-[0.2em] text-gray-300 hover:text-white transition-all flex justify-center items-center gap-2 shadow-lg">
+                                Access Guest Manifest <ArrowRight size={14}/>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -315,28 +318,32 @@ const CinemaDashboard = () => {
 
 const StatCard = ({ icon, label, value, colorTheme, trend }) => {
     const themes = {
-        blue: { bg: 'from-blue-500/10 to-transparent', border: 'border-blue-500/20', iconColor: 'text-blue-500', glow: 'group-hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
-        purple: { bg: 'from-purple-500/10 to-transparent', border: 'border-purple-500/20', iconColor: 'text-purple-500', glow: 'group-hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]' },
-        emerald: { bg: 'from-emerald-500/10 to-transparent', border: 'border-emerald-500/20', iconColor: 'text-emerald-500', glow: 'group-hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]' },
-        orange: { bg: 'from-orange-500/10 to-transparent', border: 'border-orange-500/20', iconColor: 'text-orange-500', glow: 'group-hover:shadow-[0_0_20px_rgba(249,115,22,0.15)]' },
+        blue: { bg: 'from-blue-500/10 via-blue-600/5 to-transparent', border: 'border-blue-500/20', iconColor: 'text-blue-500', glow: 'group-hover:shadow-[0_0_25px_rgba(59,130,246,0.2)]' },
+        purple: { bg: 'from-purple-500/10 via-purple-600/5 to-transparent', border: 'border-purple-500/20', iconColor: 'text-purple-500', glow: 'group-hover:shadow-[0_0_25px_rgba(168,85,247,0.2)]' },
+        emerald: { bg: 'from-emerald-500/10 via-emerald-600/5 to-transparent', border: 'border-emerald-500/20', iconColor: 'text-emerald-500', glow: 'group-hover:shadow-[0_0_25px_rgba(16,185,129,0.2)]' },
+        orange: { bg: 'from-orange-500/10 via-orange-600/5 to-transparent', border: 'border-orange-500/20', iconColor: 'text-orange-500', glow: 'group-hover:shadow-[0_0_25px_rgba(249,115,22,0.2)]' },
     };
 
     const theme = themes[colorTheme] || themes.blue;
 
     return (
-        <div className={`relative overflow-hidden bg-[#0a0a0a]/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1 ${theme.glow}`}>
-            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${theme.bg} rounded-full blur-2xl pointer-events-none transform translate-x-1/2 -translate-y-1/2 opacity-50 group-hover:opacity-100 transition-opacity`}></div>
-            <div className="relative z-10 flex justify-between items-start mb-4">
-                <div className={`p-3 rounded-xl border bg-[#121212] ${theme.border} ${theme.iconColor}`}>{icon}</div>
+        <div className={`relative overflow-hidden bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.05] rounded-3xl p-6 md:p-8 flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1 ${theme.glow}`}>
+            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${theme.bg} rounded-full blur-[30px] pointer-events-none transform translate-x-1/3 -translate-y-1/3 opacity-70 group-hover:opacity-100 transition-opacity`}></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
+            
+            <div className="relative z-10 flex justify-between items-start mb-6">
+                <div className={`p-3.5 rounded-2xl bg-[#060606] shadow-inner border border-white/[0.05] ${theme.iconColor}`}>
+                    {React.cloneElement(icon, { size: 28 })}
+                </div>
                 {trend && (
-                    <div className="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-md text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+                    <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg text-emerald-400 text-[9px] font-black uppercase tracking-[0.2em] shadow-inner">
                         <TrendingUp size={12}/> {trend}
                     </div>
                 )}
             </div>
             <div className="relative z-10">
-                <p className="text-3xl font-bold text-white tracking-tight mb-1 font-mono drop-shadow-md">{value}</p>
-                <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.15em]">{label}</p>
+                <p className="text-3xl md:text-4xl font-black text-white tracking-tight mb-2 font-mono drop-shadow-md">{value}</p>
+                <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">{label}</p>
             </div>
         </div>
     );

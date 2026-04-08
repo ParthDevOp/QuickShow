@@ -24,23 +24,23 @@ const CinemaSnacks = () => {
 
     const categories = ['Popcorn', 'Beverage', 'Candy', 'Combo', 'Hot Food', 'Other'];
 
-    const fetchSnacks = async () => {
+    const fetchSnacks = useCallback(async () => {
         setLoading(true);
         try {
             const token = await getToken();
-            // We fetch the specific theater's menu.
             const { data } = await axios.get('/api/snacks/my-menu', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if(data.success) setSnacks(data.snacks);
         } catch (error) { 
+            console.error(error);
             toast.error("Failed to load local menu.");
         } finally {
             setLoading(false);
         }
-    };
+    }, [axios, getToken]);
 
-    useEffect(() => { fetchSnacks(); }, []);
+    useEffect(() => { fetchSnacks(); }, [fetchSnacks]);
 
     const handleEditClick = (snack) => {
         setFormData({
@@ -82,6 +82,7 @@ const CinemaSnacks = () => {
                 toast.error(data.message);
             }
         } catch (error) { 
+            console.error(error);
             toast.error(isEditMode ? "Update failed" : "Creation failed"); 
         } finally {
             setIsSubmitting(false);
@@ -101,6 +102,7 @@ const CinemaSnacks = () => {
                 setSnacks(prev => prev.map(s => s._id === snackId ? { ...s, isActive: !currentStatus } : s));
             }
         } catch (error) {
+            console.error(error);
             toast.error("Stock update failed");
         }
     };
@@ -117,148 +119,170 @@ const CinemaSnacks = () => {
                 if (editingId === id) resetForm();
                 fetchSnacks(); 
             }
-        } catch (error) { toast.error("Delete failed"); }
+        } catch (error) {
+            console.error(error);
+            toast.error("Delete failed");
+        }
     };
 
     if (loading) return <Loading />;
 
     return (
-        <div className='pb-20 max-w-7xl mx-auto text-white font-outfit animate-fadeIn'>
-            <div className="flex items-center justify-between mb-8">
+        <div className='pb-20 relative font-outfit text-white animate-fadeIn max-w-[1600px] mx-auto'>
+            {/* Ambient Background Glows */}
+            <div className="fixed top-20 right-10 w-[40%] h-[400px] bg-orange-600/10 blur-[150px] rounded-full pointer-events-none z-0"></div>
+            <div className="fixed bottom-0 left-10 w-[30%] h-[500px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
+
+            {/* Header Sub-Nav Style */}
+            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6 bg-[#060606]/80 p-8 rounded-3xl border border-white/[0.04] backdrop-blur-2xl shadow-2xl">
                 <div>
-                    <Title text1="Local" text2="Inventory" />
-                    <p className="text-gray-500 text-sm mt-1 font-medium">Manage the F&B menu strictly for your cinema location.</p>
+                    <div className="flex items-center gap-3 mb-2">
+                        <Utensils fill="currentColor" size={12} className="text-orange-500" />
+                        <p className="text-orange-500 text-[10px] font-black uppercase tracking-[0.25em]">Concessions Manager</p>
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Local Inventory</h2>
+                    <p className="text-gray-400 text-sm flex items-center gap-2 font-medium bg-white/[0.03] inline-flex px-3.5 py-1.5 rounded-lg border border-white/[0.05] shadow-inner">
+                        Manage the F&B menu directly for your local venue
+                    </p>
                 </div>
                 {isEditMode && (
-                    <button onClick={resetForm} className="text-xs bg-red-500/10 text-red-500 px-4 py-2 rounded-lg border border-red-500/20 flex items-center gap-2 hover:bg-red-500 hover:text-white transition font-bold shadow-lg">
-                        <X size={14}/> Cancel Edit
+                    <button onClick={resetForm} className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-500 px-5 py-3 rounded-xl text-[11px] font-black uppercase tracking-[0.15em] transition-all flex items-center gap-2 shadow-inner">
+                        <X size={14} strokeWidth={3}/> Terminate Edit
                     </button>
                 )}
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 {/* --- LEFT: ADD / EDIT FORM --- */}
-                <div className="lg:col-span-4">
-                    <div className={`bg-[#0c0c0c] p-6 rounded-3xl border transition-all duration-300 shadow-2xl sticky top-6 ${isEditMode ? 'border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.15)]' : 'border-white/5'}`}>
-                        <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
-                            <div className={`p-3 rounded-xl border ${isEditMode ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/20'}`}>
+                <div className="lg:col-span-4 xl:col-span-5 relative">
+                    <div className={`bg-[#060606]/80 backdrop-blur-xl p-8 rounded-3xl border transition-all duration-300 shadow-2xl sticky top-6 overflow-hidden ${isEditMode ? 'border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.15)]' : 'border-white/[0.04]'}`}>
+                        <div className={`absolute top-0 right-0 w-full h-[1px] bg-gradient-to-l from-transparent ${isEditMode ? 'via-blue-500/50' : 'via-orange-500/50'} to-transparent`}></div>
+                        
+                        <div className="flex items-center gap-4 mb-8 border-b border-white/[0.05] pb-5">
+                            <div className={`p-4 rounded-2xl border shadow-inner ${isEditMode ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/20'}`}>
                                 {isEditMode ? <Edit2 size={24}/> : <Utensils size={24}/>}
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-white tracking-tight">{isEditMode ? 'Edit Item' : 'New Menu Item'}</h3>
-                                <p className="text-[11px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">Local Catalog</p>
+                                <h3 className="text-2xl font-black text-white tracking-tight drop-shadow-md">{isEditMode ? 'Modify Item' : 'New Provision'}</h3>
+                                <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mt-1">Local Catalog Sync</p>
                             </div>
                         </div>
                         
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form onSubmit={handleSubmit} className="space-y-5">
                             {/* Image Preview Box */}
-                            <div className="w-full aspect-video bg-[#151515] rounded-xl border border-white/5 flex items-center justify-center overflow-hidden mb-4 relative shadow-inner">
+                            <div className="w-full aspect-video bg-[#0a0a0a] rounded-2xl border border-white/[0.05] flex items-center justify-center overflow-hidden relative shadow-inner">
                                 {formData.image ? (
                                     <img src={formData.image} alt="Preview" className="w-full h-full object-cover" onError={(e) => {e.target.style.display='none'}} />
                                 ) : (
-                                    <div className="flex flex-col items-center text-gray-600"><ImageIcon size={32} className="mb-2 opacity-50"/><span className="text-[10px] font-bold uppercase tracking-wider">Image URL Preview</span></div>
+                                    <div className="flex flex-col items-center text-gray-600">
+                                        <ImageIcon size={36} className="mb-3 opacity-40"/>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Visual Preview</span>
+                                    </div>
                                 )}
                             </div>
 
                             <div>
-                                <label className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1.5 ml-1">Item Name</label>
-                                <input required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#151515] border border-white/10 focus:border-orange-500 rounded-xl p-3 text-sm text-white outline-none transition-colors shadow-inner" placeholder="e.g. Cheese Popcorn"/>
+                                <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-2 ml-1">Nomenclature</label>
+                                <input required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-4 text-sm text-white outline-none transition-all shadow-inner placeholder:text-gray-600" placeholder="e.g. Cinematic Popcorn"/>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-5">
                                 <div>
-                                    <label className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1.5 ml-1">Category</label>
-                                    <select value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})} className="w-full bg-[#151515] border border-white/10 focus:border-orange-500 rounded-xl p-3 text-sm text-white outline-none transition-colors appearance-none cursor-pointer">
+                                    <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-2 ml-1">Classification</label>
+                                    <select value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-4 text-sm text-white outline-none transition-all appearance-none cursor-pointer shadow-inner">
                                         {categories.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1.5 ml-1">Price</label>
+                                    <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-2 ml-1">Valuation</label>
                                     <div className="relative">
-                                        <IndianRupee size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
-                                        <input type="number" required value={formData.price} onChange={e=>setFormData({...formData, price: e.target.value})} className="w-full bg-[#151515] border border-white/10 focus:border-orange-500 rounded-xl p-3 pl-8 text-sm text-white outline-none transition-colors shadow-inner font-mono" placeholder="250"/>
+                                        <IndianRupee size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"/>
+                                        <input type="number" required value={formData.price} onChange={e=>setFormData({...formData, price: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-4 pl-10 text-sm text-white outline-none transition-all shadow-inner font-mono placeholder:text-gray-600" placeholder="0.00"/>
                                     </div>
                                 </div>
                             </div>
                             
                             <div>
-                                <label className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1.5 ml-1">Image URL</label>
-                                <input required value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} className="w-full bg-[#151515] border border-white/10 focus:border-orange-500 rounded-xl p-3 text-sm text-white outline-none transition-colors shadow-inner" placeholder="https://..."/>
+                                <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-2 ml-1">Secure Image URL</label>
+                                <input required value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-4 text-sm text-white outline-none transition-all shadow-inner placeholder:text-gray-600 font-mono" placeholder="https://..."/>
                             </div>
                             
                             <div>
-                                <label className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1.5 ml-1">Description (Optional)</label>
-                                <textarea value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} className="w-full bg-[#151515] border border-white/10 focus:border-orange-500 rounded-xl p-3 text-sm text-white outline-none transition-colors shadow-inner resize-none h-20 custom-scrollbar" placeholder="A large tub of freshly popped..."/>
+                                <label className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-2 ml-1">Technical Specs</label>
+                                <textarea value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-4 text-sm text-white outline-none transition-all shadow-inner resize-none h-24 custom-scrollbar placeholder:text-gray-600" placeholder="Optional details regarding constraints, allergens, or sizing..."/>
                             </div>
                             
-                            <button disabled={isSubmitting} type="submit" className={`w-full text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 mt-6 ${isEditMode ? 'bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 shadow-[0_0_20px_rgba(234,88,12,0.3)]'}`}>
-                                {isSubmitting ? "Saving..." : isEditMode ? <><CheckIcon size={18} strokeWidth={3}/> Update Item</> : <><Plus size={18} strokeWidth={3}/> Publish to Local Menu</>}
+                            <button disabled={isSubmitting} type="submit" className={`w-full text-white font-black uppercase tracking-[0.15em] text-[11px] py-4.5 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center gap-2 mt-8 border ${isEditMode ? 'bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 border-blue-400/30' : 'bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 border-orange-400/30'}`}>
+                                {isSubmitting ? "Processing..." : isEditMode ? <><CheckIcon size={16} strokeWidth={3}/> Update Database</> : <><Plus size={16} strokeWidth={3}/> Initialize Deployment</>}
                             </button>
                         </form>
                     </div>
                 </div>
 
                 {/* --- RIGHT: LOCAL MENU LIST --- */}
-                <div className="lg:col-span-8">
-                    <div className="bg-[#0c0c0c] border border-white/5 rounded-3xl p-6 shadow-2xl min-h-[500px]">
-                        <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                <div className="lg:col-span-8 xl:col-span-7">
+                    <div className="bg-[#060606]/80 backdrop-blur-2xl border border-white/[0.04] rounded-3xl p-8 shadow-2xl min-h-[600px] relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-[50%] h-[1px] bg-gradient-to-l from-transparent via-white/20 to-transparent"></div>
+                        <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/[0.05]">
                             <div>
-                                <h3 className="text-xl font-bold text-white tracking-tight">Active Menu Display</h3>
-                                <p className="text-xs text-gray-500 mt-1">This is what guests see on the app for your cinema.</p>
+                                <h3 className="text-2xl font-black text-white tracking-tight drop-shadow-md">Active Feed</h3>
+                                <p className="text-xs text-gray-500 mt-2 font-medium">Currently deployed inventory available for guest procurement.</p>
                             </div>
-                            <span className="bg-white/5 text-gray-300 px-4 py-1.5 rounded-full text-xs font-bold border border-white/10">Total Items: {snacks.length}</span>
+                            <span className="bg-black/50 text-gray-400 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border border-white/5 shadow-inner">
+                                Entries: {snacks.length}
+                            </span>
                         </div>
 
                         {snacks.length === 0 ? (
-                            <div className="bg-[#151515] border border-white/5 border-dashed rounded-3xl p-16 text-center text-gray-500 flex flex-col items-center">
-                                <Utensils size={48} className="mb-4 opacity-20"/>
-                                <p className="text-lg font-bold text-gray-400">Menu is empty.</p>
-                                <p className="text-sm mt-1">Add your first snack using the form to start generating F&B revenue.</p>
+                            <div className="bg-white/[0.02] border border-white/[0.05] border-dashed rounded-3xl p-24 text-center text-gray-500 flex flex-col items-center">
+                                <div className="p-6 bg-white/[0.02] rounded-full mb-6 border border-white/[0.05]">
+                                    <Utensils size={48} className="opacity-40 text-orange-500"/>
+                                </div>
+                                <p className="text-xl font-black text-white tracking-tight drop-shadow-md">Inventory Empty</p>
+                                <p className="text-sm mt-3 max-w-sm mx-auto">Initialize your first provision object to establish local theater revenue streams.</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 auto-rows-max">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-max">
                                 {snacks.map(snack => (
-                                    <div key={snack._id} className={`flex gap-4 p-4 rounded-2xl relative group transition-all duration-300 ${editingId === snack._id ? 'bg-blue-500/10 border border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.15)]' : !snack.isActive ? 'bg-[#0f0f0f] border border-red-500/20 opacity-70 grayscale-[50%]' : 'bg-[#151515] border border-white/5 hover:border-white/20 hover:bg-[#1a1a1a]'}`}>
+                                    <div key={snack._id} className={`flex gap-5 p-5 rounded-3xl relative group transition-all duration-300 overflow-hidden shadow-2xl ${editingId === snack._id ? 'bg-[#030303] border border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.15)] scale-[1.02] z-10' : !snack.isActive ? 'bg-[#060606]/40 border border-red-500/10 opacity-70 grayscale-[30%] hover:grayscale-0' : 'bg-[#060606]/60 border border-white/[0.05] hover:border-white/10 hover:bg-[#0a0a0a]/80'}`}>
                                         
-                                        <div className="w-24 h-24 shrink-0 rounded-xl overflow-hidden bg-black shadow-md border border-white/5 relative">
-                                            <img src={snack.image} alt={snack.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+                                        <div className="w-28 h-28 shrink-0 rounded-2xl overflow-hidden bg-black shadow-[inset_0_0_20px_rgba(255,255,255,0.05)] border border-white/10 relative">
+                                            <img src={snack.image} alt={snack.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"/>
                                             {!snack.isActive && (
-                                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
-                                                    <span className="text-[9px] font-black uppercase tracking-widest text-red-500 bg-red-500/10 px-2 py-1 rounded border border-red-500/20 shadow-lg">Sold Out</span>
+                                                <div className="absolute inset-0 bg-black/70 flex items-center justify-center backdrop-blur-sm">
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.5)] transform -rotate-12">Halted</span>
                                                 </div>
                                             )}
                                         </div>
                                         
-                                        <div className="flex-1 flex flex-col justify-between py-0.5 pr-8">
+                                        <div className="flex-1 flex flex-col justify-between py-1 pr-10">
                                             <div>
-                                                <div className="flex justify-between items-start">
-                                                    <h4 className="font-bold text-white leading-tight mb-1 line-clamp-1 pr-2">{snack.name}</h4>
-                                                </div>
-                                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-black px-1.5 py-0.5 rounded border border-gray-800 shrink-0">{snack.category || 'Popcorn'}</span>
+                                                <h4 className="font-bold text-gray-100 text-lg leading-tight mb-2 line-clamp-2 pr-2">{snack.name}</h4>
+                                                <span className="text-[8px] font-black text-gray-500 uppercase tracking-[0.2em] bg-black px-2 py-1 rounded-md border border-white/[0.05] shrink-0 shadow-inner">{snack.category || 'Popcorn'}</span>
                                             </div>
                                             
-                                            <div className="flex items-end justify-between mt-3">
-                                                <p className="text-orange-400 font-bold flex items-center bg-orange-500/10 w-fit px-2 py-1 rounded border border-orange-500/20 text-sm font-mono shadow-inner">
-                                                    <IndianRupee size={12} className="mr-0.5"/> {snack.price}
+                                            <div className="flex items-end justify-between mt-4">
+                                                <p className="text-orange-400 font-bold flex items-center bg-orange-500/10 px-3 py-1.5 rounded-lg border border-orange-500/20 text-sm font-mono shadow-inner">
+                                                    <IndianRupee size={12} className="mr-1 opacity-70"/> {parseFloat(snack.price).toFixed(2)}
                                                 </p>
                                             </div>
                                         </div>
                                         
                                         {/* Action Buttons - Quick Access */}
-                                        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                                        <div className="absolute top-5 right-5 flex flex-col gap-2.5 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">
                                             <button 
                                                 onClick={() => handleToggleStock(snack._id, snack.isActive)} 
-                                                className={`p-2 rounded-lg transition-colors shadow-lg border ${snack.isActive ? 'bg-black hover:bg-red-500/20 text-gray-400 hover:text-red-400 border-white/10 hover:border-red-500/30' : 'bg-red-500/20 text-red-400 hover:bg-emerald-500/20 hover:text-emerald-400 border-red-500/30 hover:border-emerald-500/30'}`} 
-                                                title={snack.isActive ? "Mark Out of Stock" : "Restock Item"}
+                                                className={`p-2.5 rounded-xl transition-all shadow-lg border backdrop-blur-md ${snack.isActive ? 'bg-[#111]/80 hover:bg-black text-gray-400 hover:text-red-500 border-white/10 hover:border-red-500/50' : 'bg-red-500/20 text-red-400 hover:bg-emerald-500/20 hover:text-emerald-400 border-red-500/30 hover:border-emerald-500/30'}`} 
+                                                title={snack.isActive ? "Halt Distribution" : "Resume Distribution"}
                                             >
-                                                {snack.isActive ? <Power size={14}/> : <AlertCircle size={14}/>}
+                                                {snack.isActive ? <Power size={14} strokeWidth={2.5}/> : <AlertCircle size={14} strokeWidth={2.5}/>}
                                             </button>
-                                            <button onClick={() => handleEditClick(snack)} className="bg-black hover:bg-blue-500/20 text-gray-400 hover:text-blue-400 p-2 rounded-lg transition-colors shadow-lg border border-white/10 hover:border-blue-500/30" title="Edit Details">
-                                                <Edit2 size={14}/>
+                                            <button onClick={() => handleEditClick(snack)} className="bg-[#111]/80 hover:bg-black text-gray-400 hover:text-blue-400 p-2.5 rounded-xl transition-all shadow-lg border border-white/10 hover:border-blue-500/50 backdrop-blur-md" title="Modify Config">
+                                                <Edit2 size={14} strokeWidth={2.5}/>
                                             </button>
-                                            <button onClick={() => handleDelete(snack._id)} className="bg-black hover:bg-red-500 text-gray-400 hover:text-white p-2 rounded-lg transition-colors shadow-lg border border-white/10 hover:border-red-500/50" title="Permanently Delete">
-                                                <Trash2 size={14}/>
+                                            <button onClick={() => handleDelete(snack._id)} className="bg-[#111]/80 hover:bg-red-500 text-gray-400 hover:text-white p-2.5 rounded-xl transition-all shadow-lg border border-white/10 hover:border-red-500/50 backdrop-blur-md" title="Execute Purge">
+                                                <Trash2 size={14} strokeWidth={2.5}/>
                                             </button>
                                         </div>
                                     </div>

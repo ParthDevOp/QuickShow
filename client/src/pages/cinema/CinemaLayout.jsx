@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import { SignIn } from '@clerk/clerk-react';
+import { SignIn, useUser } from '@clerk/clerk-react';
 import { useAppContext } from '../../context/AppContext';
 import CinemaSidebar from '../../components/cinema/CinemaSidebar';
 import CinemaNavbar from '../../components/cinema/CinemaNavbar';
@@ -8,7 +8,18 @@ import { Loader2 } from 'lucide-react';
 
 const CinemaLayout = () => {
     const { user, dbUser } = useAppContext();
+    const { isLoaded } = useUser();
 
+    // 1. Wait for Clerk to resolve session before checking user presence
+    if (!isLoaded) {
+        return (
+            <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
+            </div>
+        );
+    }
+
+    // 2. If no user after load, show SignIn
     if (!user) {
         return (
             <div className="min-h-screen flex justify-center items-center bg-[#050505]">

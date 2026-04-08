@@ -7,7 +7,7 @@ export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
     
-    const { user } = useUser();
+    const { user, isLoaded } = useUser();
     const { getToken } = useAuth();
 
     // --- State ---
@@ -89,6 +89,8 @@ export const AppContextProvider = ({ children }) => {
 
     // --- On Login ---
     useEffect(() => {
+        if (!isLoaded) return; // Wait for Clerk to resolve before making decisions
+        
         if (user) {
             fetchIsAdmin();
             fetchDbUser();
@@ -97,7 +99,7 @@ export const AppContextProvider = ({ children }) => {
             setIsCheckingAdmin(false);
             setDbUser(null);
         }
-    }, [user]);
+    }, [user, isLoaded]);
 
     // --- Location Detection ---
     const detectLocation = async () => {
