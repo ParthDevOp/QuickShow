@@ -158,7 +158,7 @@ export const addMovieManual = async (req, res) => {
     try {
         const { 
             title, overview, poster_path, backdrop_path, release_date, 
-            genres, runtime, tagline, trailer_url, censor_rating, languages, formats
+            genres, runtime, tagline, trailer_url, censor_rating, languages, formats, vote_average
         } = req.body;
 
         if (!title || !overview || !release_date || !runtime) {
@@ -177,7 +177,8 @@ export const addMovieManual = async (req, res) => {
             censor_rating: censor_rating || "U/A",
             languages: langList,
             formats: formatList,
-            vote_average: 5.0, vote_count: 0
+            vote_average: Number(vote_average) || 5.0, 
+            vote_count: vote_average ? 1 : 0
         });
 
         await newMovie.save();
@@ -192,8 +193,10 @@ export const addMovieManual = async (req, res) => {
 // 4. Update Movie
 export const updateMovie = async (req, res) => {
     try {
-        const { _id, genres, languages, formats, ...updateData } = req.body;
+        const { _id, genres, languages, formats, vote_average, ...updateData } = req.body;
         if (!_id) return res.json({ success: false, message: "Movie ID is required" });
+
+        if (vote_average) updateData.vote_average = Number(vote_average);
 
         let formattedGenres = genres;
         if (typeof genres === 'string') formattedGenres = genres.split(',').map((g, index) => ({ id: index, name: g.trim() }));
@@ -232,7 +235,7 @@ export const deleteMovie = async (req, res) => {
 // 6. Get All Movies
 export const getAllMovies = async (req, res) => {
     try {
-        const movies = await Movie.find({}, 'title poster_path runtime release_date genres languages formats').sort({ createdAt: -1 });
+        const movies = await Movie.find({}).sort({ createdAt: -1 });
         res.json({ success: true, movies });
     } catch (error) {
         res.json({ success: false, message: error.message });
@@ -598,10 +601,20 @@ export const testEmailIntegration = async (req, res) => {
 
 // --- SUPPORT TICKETS ---
 
-// 21. Get All Support Tickets for Admin
+// 21. Get All Support Tickets for Admin (with user info + related booking)
 export const getAllTickets = async (req, res) => {
     try {
         const tickets = await Ticket.find({})
+            .populate('user', 'name email image role isBanned coins loyaltyPoints createdAt')
+            .populate({
+                path: 'relatedBooking',
+                populate: [
+                    { path: 'show', populate: [
+                        { path: 'movie', select: 'title poster_path' },
+                        { path: 'theater', select: 'name city' }
+                    ]}
+                ]
+            })
             .sort({ updatedAt: -1 }); 
         
         res.json({ success: true, tickets });
@@ -632,6 +645,30 @@ export const replyToTicket = async (req, res) => {
         await ticket.save();
         res.json({ success: true, message: "Reply sent successfully!", ticket });
     } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// 22b. Get a specific user's booking history (for support context)
+export const getUserBookings = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) return res.json({ success: false, message: "User ID required" });
+
+        const bookings = await Booking.find({ user: userId })
+            .populate({
+                path: 'show',
+                populate: [
+                    { path: 'movie', select: 'title poster_path' },
+                    { path: 'theater', select: 'name city' }
+                ]
+            })
+            .sort({ createdAt: -1 })
+            .limit(20);
+
+        res.json({ success: true, bookings });
+    } catch (error) {
+        console.error("User bookings fetch error:", error);
         res.json({ success: false, message: error.message });
     }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
-import { SignIn, useClerk } from '@clerk/clerk-react'
+import { SignIn, useClerk, useUser } from '@clerk/clerk-react'
 import { useAppContext } from './context/AppContext'
 
 // --- PUBLIC COMPONENTS ---
@@ -60,6 +60,7 @@ const App = () => {
   
   const { user, axios, getToken, isAdmin, isCheckingAdmin } = useAppContext() 
   const { signOut } = useClerk() 
+  const { isLoaded } = useUser()
 
   // --- AUTOMATIC USER SYNC & BAN CHECK ---
   useEffect(() => {
@@ -104,6 +105,10 @@ const App = () => {
 
   // --- AUTH RENDER HELPERS ---
   const renderAdminAuth = () => {
+    if (!isLoaded) {
+      return <Loading />;
+    }
+
     if (!user) {
       return (
         <div className='min-h-screen flex justify-center items-center bg-gray-950'>

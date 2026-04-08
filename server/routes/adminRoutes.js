@@ -12,7 +12,7 @@ import {
     getAllBookings, deleteBooking, 
     getAllUsers, toggleUserBan, changeUserRole,
     // Support System
-    getAllTickets, replyToTicket 
+    getAllTickets, replyToTicket, getUserBookings 
 } from '../controllers/adminController.js';
 
 // --- CRITICAL FIX: Import authUser alongside authAdmin ---
@@ -89,6 +89,9 @@ adminRouter.get('/tickets', authAdmin, getAllTickets);
 
 // Send a reply to a specific ticket
 adminRouter.post('/tickets/reply', authAdmin, replyToTicket);
+
+// Get a specific user's booking history for support context
+adminRouter.get('/tickets/user-bookings', authAdmin, getUserBookings);
 
 
 export default adminRouter;

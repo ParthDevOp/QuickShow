@@ -18,13 +18,15 @@ const AddMovie = () => {
   const [omdbResults, setOmdbResults] = useState([])
   const [isSearching, setIsSearching] = useState(false)
   const [suggestedMovies, setSuggestedMovies] = useState([])
+  const [showOmdbDropdown, setShowOmdbDropdown] = useState(false)
+  const [showEditDropdown, setShowEditDropdown] = useState(false)
 
   const [formData, setFormData] = useState({
     _id: '',
     title: '', tagline: '', overview: '', 
     poster_path: '', backdrop_path: '', trailer_url: '',
     release_date: '', genres: '', runtime: '',
-    censor_rating: 'U/A', languages: '', formats: ''
+    censor_rating: 'U/A', languages: '', formats: '', vote_average: '5.0'
   })
 
   // 1. Fetch Existing Movies for the "Edit" Dropdown
@@ -83,9 +85,11 @@ const AddMovie = () => {
       setOmdbSearch(query);
       if (query.length < 3) {
           setOmdbResults([]);
+          setShowOmdbDropdown(false);
           return;
       }
       setIsSearching(true);
+      setShowOmdbDropdown(true);
       try {
           const res = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&apikey=483b0fdc`);
           const data = await res.json();
@@ -123,11 +127,13 @@ const AddMovie = () => {
               runtime: runtimeNumber,
               censor_rating: data.Rated === "R" ? "A" : "U/A",
               languages: data.Language || 'Hindi, English',
-              formats: "2D"
+              formats: "2D",
+              vote_average: data.imdbRating && data.imdbRating !== "N/A" ? data.imdbRating : '5.0'
           });
           
           setOmdbSearch("");
           setOmdbResults([]);
+          setShowOmdbDropdown(false);
           setIsEditMode(false);
           toast.success("Details auto-filled! Please add Trailer URL before saving.");
 
@@ -154,17 +160,19 @@ const AddMovie = () => {
           runtime: movie.runtime || '',
           censor_rating: movie.censor_rating || 'U/A',
           languages: formatArray(movie.languages) || '',
-          formats: formatArray(movie.formats) || ''
+          formats: formatArray(movie.formats) || '',
+          vote_average: movie.vote_average || '5.0'
       });
       setIsEditMode(true);
-      searchEdit && setSearchEdit("");
+      setSearchEdit("");
+      setShowEditDropdown(false);
       toast.success(`Editing: ${movie.title}`);
   }
 
   const resetForm = () => {
       setFormData({ 
         _id: '', title: '', tagline: '', overview: '', poster_path: '', backdrop_path: '', trailer_url: '',
-        release_date: '', genres: '', runtime: '', censor_rating: 'U/A', languages: '', formats: ''
+        release_date: '', genres: '', runtime: '', censor_rating: 'U/A', languages: '', formats: '', vote_average: '5.0'
       });
       setIsEditMode(false);
   }
@@ -252,12 +260,18 @@ const AddMovie = () => {
                             placeholder="Search any movie..."
                             value={omdbSearch}
                             onChange={(e) => handleOMDbSearch(e.target.value)}
+                            onFocus={() => { if (omdbSearch.length >= 3) setShowOmdbDropdown(true); }}
                             className="bg-transparent w-full text-white outline-none text-sm placeholder-gray-500 ml-2"
                           />
+                          {omdbSearch && (
+                            <button onClick={() => { setOmdbSearch(''); setOmdbResults([]); setShowOmdbDropdown(false); }} className="text-gray-500 hover:text-white transition-colors ml-1">
+                              <X size={14}/>
+                            </button>
+                          )}
                       </div>
                       
                       {/* Search Results Dropdown */}
-                      {omdbSearch && (
+                      {showOmdbDropdown && omdbSearch && (
                           <div className="absolute top-full right-0 w-full bg-[#121212] border border-gray-700 rounded-xl mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 custom-scrollbar">
                               {omdbResults.length > 0 ? omdbResults.map(movie => (
                                   <div 
@@ -287,9 +301,8 @@ const AddMovie = () => {
                   </div>
               </div>
 
-              {/* Live Trending Suggestions Row */}
-              {!omdbSearch && (
-                  <div className="mt-2 pt-4 border-t border-blue-500/20 w-full animate-fadeIn">
+              {/* Live Trending Suggestions Row - Always Visible */}
+              <div className="mt-2 pt-4 border-t border-blue-500/20 w-full animate-fadeIn">
                       <div className="flex items-center justify-between mb-3">
                           <p className="text-[10px] text-blue-400 uppercase tracking-widest font-bold flex items-center gap-1">
                               <Sparkles size={12}/> Live Global Trending
@@ -315,7 +328,6 @@ const AddMovie = () => {
                           ))}
                       </div>
                   </div>
-              )}
           </div>
 
           {/* --- EXISTING DATABASE EDIT SEARCH BAR --- */}
@@ -326,13 +338,19 @@ const AddMovie = () => {
                     type="text" 
                     placeholder={loadingList ? "Loading your database..." : "Search your existing database to edit a movie..."}
                     value={searchEdit}
-                    onChange={(e)=>setSearchEdit(e.target.value)}
+                    onChange={(e) => { setSearchEdit(e.target.value); setShowEditDropdown(e.target.value.length > 0); }}
+                    onFocus={() => { if (searchEdit) setShowEditDropdown(true); }}
                     className="bg-transparent w-full text-white outline-none text-sm placeholder-gray-500"
                     disabled={loadingList}
                   />
+                  {searchEdit && (
+                    <button onClick={() => { setSearchEdit(''); setShowEditDropdown(false); }} className="text-gray-500 hover:text-white transition-colors ml-2">
+                      <X size={14}/>
+                    </button>
+                  )}
               </div>
               
-              {searchEdit && (
+              {showEditDropdown && searchEdit && (
                   <div className="absolute top-full left-0 w-full bg-gray-900 border border-gray-700 rounded-xl mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 custom-scrollbar">
                       {filteredEditList.map(movie => (
                           <div 
@@ -415,7 +433,7 @@ const AddMovie = () => {
                           </div>
                     </div>
 
-                    <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+                    <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
                           <div>
                             <CustomCalendar 
                                 label="Release Date"
@@ -432,6 +450,10 @@ const AddMovie = () => {
                           <div>
                             <label className='text-xs font-bold text-gray-400 mb-1 block uppercase'>Runtime (min)</label>
                             <input type="number" required name="runtime" value={formData.runtime} onChange={handleChange} placeholder="150" className="w-full p-3 bg-gray-900 border border-gray-600 rounded-lg text-white outline-none focus:border-primary" />
+                          </div>
+                          <div>
+                            <label className='text-xs font-bold text-gray-400 mb-1 block uppercase'>Rating (/10)</label>
+                            <input type="number" step="0.1" max="10" name="vote_average" value={formData.vote_average} onChange={handleChange} placeholder="8.5" className="w-full p-3 bg-gray-900 border border-gray-600 rounded-lg text-white outline-none focus:border-primary" />
                           </div>
                     </div>
 
