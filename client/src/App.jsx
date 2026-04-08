@@ -11,6 +11,7 @@ import Loading from './components/Loading'
 import LocationSelector from './components/LocationSelector' 
 
 // --- PUBLIC PAGES ---
+import Landing from './pages/Landing' // 🚨 IMPORTED NEW LANDING PAGE
 import Home from './pages/Home'
 import Movies from './pages/Movies'
 import MovieDetails from './pages/MovieDetails'
@@ -35,7 +36,7 @@ import ListBookings from './pages/admin/ListBookings'
 import UsersList from './pages/admin/Users'
 import AdminOffers from './pages/admin/AdminOffers' 
 import SupportAdmin from './pages/admin/SupportAdmin'
-import BoxOffice from './pages/admin/BoxOffice' // Shared component, now exclusively used by Cinema Portal
+import BoxOffice from './pages/admin/BoxOffice'
 import AdminRequests from './pages/admin/AdminRequests' 
 
 // --- CINEMA PORTAL PAGES ---
@@ -53,16 +54,19 @@ const App = () => {
   // Hide public Navbar/Footer on BOTH Admin and Cinema routes
   const isDashboardRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/cinema')
   
-  // CRITICAL FIX: Pulled isCheckingAdmin to prevent race conditions on refresh
+  // Also hide Navbar/Footer on the Landing page if you want it to be a pure full-screen experience
+  // (Change this to `true` if you DO want the navbar on the landing page)
+  const isLandingPage = location.pathname === '/';
+  
   const { user, axios, getToken, isAdmin, isCheckingAdmin } = useAppContext() 
   const { signOut } = useClerk() 
 
   // --- AUTOMATIC USER SYNC & BAN CHECK ---
   useEffect(() => {
-    let isMounted = true; // Cleanup flag for async operations
+    let isMounted = true;
 
     const syncUserData = async () => {
-        if (!user) return; // Exit early if no user is logged in
+        if (!user) return;
 
         try {
             const token = await getToken();
@@ -75,11 +79,10 @@ const App = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            if (!isMounted) return; // Prevent actions if component unmounted
+            if (!isMounted) return;
 
-            // THE BOUNCER: Check if the database says they are banned
             if (data?.success && data?.user?.isBanned) {
-                await signOut(); // Instantly destroy their Clerk session
+                await signOut();
                 toast.error("Access Denied: Your account has been suspended.");
             } else {
                 console.log("User Synced to Database");
@@ -94,7 +97,6 @@ const App = () => {
 
     syncUserData();
 
-    // Cleanup function
     return () => {
         isMounted = false;
     };
@@ -119,8 +121,6 @@ const App = () => {
       );
     }
 
-    // CRITICAL FIX: Wait for the database role check to complete before making a routing decision.
-    // This stops the admin from being kicked out when they hit refresh (F5).
     if (isCheckingAdmin) {
         return <Loading />;
     }
@@ -134,13 +134,16 @@ const App = () => {
       
       <LocationSelector />
 
-      {/* Show Navbar on all routes EXCEPT Admin & Cinema */}
-      {!isDashboardRoute && <Navbar />}
+      {/* Show Navbar on all public routes (except dashboards and the pure landing page) */}
+      {!isDashboardRoute && !isLandingPage && <Navbar />}
       
       <div className="flex-grow">
         <Routes>
           {/* --- PUBLIC ROUTES --- */}
-          <Route path='/' element={<Home />} />
+          {/* 🚨 Set Landing as the root, moved Home to /home */}
+          <Route path='/' element={<Landing />} />
+          <Route path='/home' element={<Home />} />
+          
           <Route path='/movies' element={<Movies />} />
           <Route path='/movies/:id' element={<MovieDetails />} />
           <Route path='/theaters' element={<Theaters />} /> 
@@ -177,13 +180,12 @@ const App = () => {
             <Route path="offers" element={<AdminOffers />} />
             <Route path="support" element={<SupportAdmin />} />
             <Route path="requests" element={<AdminRequests />} />
-            {/* BoxOffice Route REMOVED from Admin panel for strict local cash management enforcement */}
           </Route>
         </Routes>
       </div>
 
-      {/* Show Footer on all routes EXCEPT Admin & Cinema */}
-      {!isDashboardRoute && <Footer />}
+      {/* Show Footer on all public routes (except dashboards and the pure landing page) */}
+      {!isDashboardRoute && !isLandingPage && <Footer />}
     </div>
   )
 }

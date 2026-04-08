@@ -42,6 +42,7 @@ export const getDashboardData = async (req, res) => {
         let totalRevenue = 0;
         let platformProfit = 0; 
         let cinemaShare = 0;    
+        let snacksRevenue = 0;
         let activeBookingsCount = 0;
 
         // Initialize maps before loop
@@ -58,11 +59,18 @@ export const getDashboardData = async (req, res) => {
         bookings.forEach(b => {
             const dateKey = new Date(b.createdAt).toLocaleDateString('en-US', { weekday: 'short' });
 
+            // Calculate F&B for this booking
+            let currentSnacksCost = 0;
+            if (b.snacks && b.snacks.length > 0) {
+                currentSnacksCost = b.snacks.reduce((acc, s) => acc + ((s.price || 0) * (s.quantity || 1)), 0);
+            }
+
             // CANCELLATION LOGIC
             if (b.status === 'Cancelled') {
                 const retainedFee = b.amount * 0.40;
                 totalRevenue += retainedFee;
                 platformProfit += retainedFee;
+                snacksRevenue += (currentSnacksCost * 0.40);
                 
                 if (salesMap[dateKey] !== undefined) {
                     salesMap[dateKey] += retainedFee;
@@ -72,6 +80,7 @@ export const getDashboardData = async (req, res) => {
             else {
                 activeBookingsCount++;
                 totalRevenue += b.amount; 
+                snacksRevenue += currentSnacksCost;
 
                 let basePrice = 0; 
                 let currentProfit = 0;
@@ -102,6 +111,7 @@ export const getDashboardData = async (req, res) => {
         platformProfit = Math.round(platformProfit);
         cinemaShare = Math.round(cinemaShare);
         totalRevenue = Math.round(totalRevenue);
+        snacksRevenue = Math.round(snacksRevenue);
 
         const salesData = Object.entries(salesMap).map(([name, sales]) => ({ name, sales: Math.round(sales) }));
 
@@ -124,7 +134,8 @@ export const getDashboardData = async (req, res) => {
             dashboardData: {
                 totalRevenue,
                 platformProfit, 
-                cinemaShare,    
+                cinemaShare,
+                snacksRevenue,    
                 totalBookings: activeBookingsCount,
                 totalUser,
                 activeShows,

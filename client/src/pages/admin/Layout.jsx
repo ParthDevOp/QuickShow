@@ -8,11 +8,8 @@ const Layout = () => {
   // We no longer trigger fetchIsAdmin() or check isAdmin here to prevent the infinite loading loop.
 
   return (
-    /* FIX: 'h-screen' and 'overflow-hidden' on this wrapper are CRITICAL. 
-       It prevents the entire browser window from scrolling, allowing us to 
-       control scrolling only inside the main content area.
-    */
-    <div className='h-screen w-full bg-[#050505] text-gray-100 flex flex-col font-sans selection:bg-primary/30 overflow-hidden'>
+    /* FIX: 'h-screen' and 'overflow-hidden' on this wrapper are CRITICAL. wrapper ensures admin dashboard fits monitor */
+    <div className='h-screen w-full bg-[#050505] text-gray-100 flex flex-col font-inter selection:bg-primary/30 overflow-hidden'>
       
       {/* 1. Header Navigation (Fixed Height: 64px) */}
       <header className='h-16 flex-shrink-0 z-50 bg-[#050505] border-b border-white/5 shadow-2xl relative'>
@@ -41,7 +38,7 @@ const Layout = () => {
             <div className="relative min-h-full p-4 md:p-6 lg:p-10">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-primary/5 blur-[120px] pointer-events-none"></div>
                 
-                <div className="max-w-[1600px] mx-auto relative z-10 animate-fadeIn">
+                <div className="max-w-[1600px] mx-auto relative animate-fadeIn">
                    <Outlet />
                 </div>
             </div>

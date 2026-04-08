@@ -71,17 +71,17 @@ const Dashboard = () => {
     const topCinemasData = stats?.topCinemas?.length > 0 ? stats.topCinemas : [];
 
     return (
-        <div className="space-y-8 pb-10 font-outfit text-white min-h-screen animate-fadeIn">
+        <div className="space-y-8 pb-10 text-white min-h-screen animate-fadeIn">
             
             {/* --- COMMAND CENTER HEADER --- */}
-            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 bg-[#121212]/90 backdrop-blur-2xl p-6 md:p-8 rounded-3xl border border-gray-800 shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 bg-white/[0.02] backdrop-blur-3xl p-6 md:p-8 rounded-3xl border border-white/5 shadow-2xl">
                 <div>
                     <h1 className="text-3xl md:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">Global Command Center</h1>
                     <p className="text-gray-400 text-sm mt-2 flex items-center gap-2 font-medium">
                         <Activity size={16} className="text-primary animate-pulse"/> Live Platform Telemetry & Financials
                     </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-6 xl:gap-10 w-full xl:w-auto bg-[#0a0a0a] p-4 rounded-2xl border border-gray-800/50">
+                <div className="flex flex-wrap items-center gap-6 xl:gap-10 w-full xl:w-auto bg-black/40 p-4 rounded-2xl border border-white/5 shadow-inner">
                     <div>
                         <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1 flex items-center gap-1"><Users size={12}/> Total Users</p>
                         <p className="text-xl font-black text-white">{stats?.totalUser?.toLocaleString() || 0}</p>
@@ -105,10 +105,10 @@ const Dashboard = () => {
                     title="Gross Platform Volume" 
                     value={totalRevenue} 
                     currency 
-                    icon={DollarSign} 
+                    icon={IndianRupee} 
                     color="text-white" 
-                    bg="from-gray-800 to-gray-900" 
-                    border="border-gray-700" 
+                    bg="from-white/[0.05] to-white/[0.01]" 
+                    border="border-white/5" 
                     subtext="Total processed including F&B"
                 />
                 <StatCard 
@@ -117,7 +117,7 @@ const Dashboard = () => {
                     currency 
                     icon={TrendingUp} 
                     color="text-emerald-400" 
-                    bg="from-emerald-500/10 to-green-900/10" 
+                    bg="from-emerald-500/10 to-transparent" 
                     border="border-emerald-500/20" 
                     glow="shadow-[0_0_30px_rgba(16,185,129,0.15)]"
                     subtext="Retained fees & margins"
@@ -128,7 +128,7 @@ const Dashboard = () => {
                     currency 
                     icon={Building2} 
                     color="text-orange-400" 
-                    bg="from-orange-500/10 to-amber-900/10" 
+                    bg="from-orange-500/10 to-transparent" 
                     border="border-orange-500/20" 
                     subtext="Due to theater partners"
                 />
@@ -138,7 +138,7 @@ const Dashboard = () => {
                     currency 
                     icon={Popcorn} 
                     color="text-purple-400" 
-                    bg="from-purple-500/10 to-fuchsia-900/10" 
+                    bg="from-purple-500/10 to-transparent" 
                     border="border-purple-500/20" 
                     subtext="Total concession sales"
                 />
@@ -148,7 +148,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
                 {/* 7-Day Revenue Trend */}
-                <div className="xl:col-span-2 bg-[#121212] border border-gray-800 rounded-3xl p-6 lg:p-8 shadow-2xl relative overflow-hidden group">
+                <div className="xl:col-span-2 bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl p-6 lg:p-8 shadow-2xl relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-blue-500 opacity-60"></div>
                     <div className="flex justify-between items-start mb-6">
                         <h3 className="text-lg font-bold flex items-center gap-3">
@@ -156,7 +156,7 @@ const Dashboard = () => {
                             7-Day Revenue Trajectory
                         </h3>
                     </div>
-                    <div className="h-[280px] w-full">
+                    <div className="h-[280px] w-full relative">
                         {stats?.salesData?.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                                 <AreaChart data={stats.salesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -167,10 +167,10 @@ const Dashboard = () => {
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" vertical={false} />
-                                    <XAxis dataKey="name" stroke="#555" fontSize={12} tickLine={false} axisLine={false} dy={10} />
-                                    <YAxis stroke="#555" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val)=> `₹${val >= 1000 ? val/1000 + 'k' : val}`} dx={-10}/>
-                                    <Tooltip contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333', borderRadius: '12px', color: '#fff' }} itemStyle={{ color: '#10B981', fontWeight: 'bold' }} cursor={{ stroke: '#333', strokeWidth: 1, strokeDasharray: '5 5' }} />
-                                    <Area type="monotone" dataKey="sales" name="Revenue" stroke="#10B981" strokeWidth={4} fillOpacity={1} fill="url(#colorSales)" animationDuration={1500}/>
+                                    <XAxis dataKey="name" stroke="#666" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                                    <YAxis stroke="#666" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(val)=> `₹${val >= 1000 ? val/1000 + 'k' : val}`} dx={-10}/>
+                                    <Tooltip contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter:'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} itemStyle={{ color: '#10B981', fontWeight: 'bold' }} cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, strokeDasharray: '3 3' }} />
+                                    <Area type="monotone" dataKey="sales" name="Revenue" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" animationDuration={1500}/>
                                 </AreaChart>
                             </ResponsiveContainer>
                         ) : (
@@ -180,7 +180,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Sales Breakdown Donuts */}
-                <div className="bg-[#121212] border border-gray-800 rounded-3xl p-6 shadow-2xl flex flex-col">
+                <div className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl p-6 shadow-2xl flex flex-col">
                     <h3 className="text-lg font-bold flex items-center gap-3 mb-6">
                         <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400"><PieIcon size={18}/></div>
                         Sales Distribution
@@ -188,14 +188,14 @@ const Dashboard = () => {
                     
                     <div className="flex-1 flex flex-col justify-around gap-6">
                         {/* Channel Split */}
-                        <div className="flex items-center justify-between bg-[#1a1a1a] p-4 rounded-2xl border border-gray-800">
-                            <div className="w-24 h-24 shrink-0">
+                        <div className="flex items-center justify-between bg-black/20 p-4 rounded-2xl border border-white/5 shadow-inner">
+                            <div className="w-24 h-24 shrink-0 relative">
                                 <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                                     <PieChart>
                                         <Pie data={channelData} cx="50%" cy="50%" innerRadius={25} outerRadius={40} paddingAngle={5} dataKey="value" stroke="none">
                                             {channelData.map((entry, index) => (<Cell key={`cell-${index}`} fill={CHANNEL_COLORS[index % CHANNEL_COLORS.length]} />))}
                                         </Pie>
-                                        <Tooltip contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '8px', fontSize: '12px' }} itemStyle={{ color: '#fff' }}/>
+                                        <Tooltip contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter:'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '11px' }} itemStyle={{ color: '#fff' }}/>
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
@@ -212,14 +212,14 @@ const Dashboard = () => {
                         </div>
 
                         {/* Product Split */}
-                        <div className="flex items-center justify-between bg-[#1a1a1a] p-4 rounded-2xl border border-gray-800">
-                            <div className="w-24 h-24 shrink-0">
+                        <div className="flex items-center justify-between bg-black/20 p-4 rounded-2xl border border-white/5 shadow-inner">
+                            <div className="w-24 h-24 shrink-0 relative">
                                 <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                                     <PieChart>
                                         <Pie data={productData} cx="50%" cy="50%" innerRadius={25} outerRadius={40} paddingAngle={5} dataKey="value" stroke="none">
                                             {productData.map((entry, index) => (<Cell key={`cell-${index}`} fill={PRODUCT_COLORS[index % PRODUCT_COLORS.length]} />))}
                                         </Pie>
-                                        <Tooltip contentStyle={{ backgroundColor: '#000', border: 'none', borderRadius: '8px', fontSize: '12px' }} itemStyle={{ color: '#fff' }}/>
+                                        <Tooltip contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter:'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '11px' }} itemStyle={{ color: '#fff' }}/>
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
@@ -242,20 +242,20 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 {/* Top Movies */}
-                <div className="bg-[#121212] border border-gray-800 rounded-3xl p-6 shadow-2xl">
+                <div className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl p-6 shadow-2xl">
                     <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
                         <div className="p-2 bg-rose-500/10 rounded-lg text-rose-400"><Film size={18}/></div> 
                         Highest Grossing Features
                     </h3>
-                    <div className="h-[280px] w-full">
+                    <div className="h-[280px] w-full relative">
                         {stats?.topMovies?.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                                 <BarChart data={stats.topMovies} layout="vertical" margin={{ top: 0, right: 20, left: 40, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#2a2a2a" />
                                     <XAxis type="number" hide />
-                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fill: '#e5e7eb', fontSize: 12, fontWeight: 500}} width={130} />
-                                    <Tooltip cursor={{fill: '#1a1a1a'}} contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333', borderRadius: '8px' }} />
-                                    <Bar dataKey="value" name="Tickets Sold" fill="#F84565" radius={[0, 4, 4, 0]} barSize={24}>
+                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fill: '#9CA3AF', fontSize: 11, fontWeight: 500}} width={130} />
+                                    <Tooltip cursor={{fill: 'rgba(255,255,255,0.02)'}} contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter:'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
+                                    <Bar dataKey="value" name="Tickets Sold" fill="#F84565" radius={[0, 4, 4, 0]} barSize={20}>
                                         {stats.topMovies.map((entry, index) => ( <Cell key={`cell-${index}`} fill={BRAND_COLORS[index % BRAND_COLORS.length]} /> ))}
                                     </Bar>
                                 </BarChart>
@@ -265,20 +265,20 @@ const Dashboard = () => {
                 </div>
 
                 {/* Top Cinemas */}
-                <div className="bg-[#121212] border border-gray-800 rounded-3xl p-6 shadow-2xl">
+                <div className="bg-white/[0.02] border border-white/5 backdrop-blur-2xl rounded-3xl p-6 shadow-2xl">
                     <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
                         <div className="p-2 bg-orange-500/10 rounded-lg text-orange-400"><MapPin size={18}/></div> 
                         Top Performing Locations
                     </h3>
-                    <div className="h-[280px] w-full">
+                    <div className="h-[280px] w-full relative">
                         {topCinemasData.length > 0 ? (
                             <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                                 <BarChart data={topCinemasData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2a2a" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#9CA3AF', fontSize: 11}} dy={10}/>
                                     <YAxis axisLine={false} tickLine={false} tick={{fill: '#9CA3AF', fontSize: 11}} tickFormatter={(val)=> `₹${val>=1000 ? val/1000+'k' : val}`}/>
-                                    <Tooltip cursor={{fill: '#1a1a1a'}} contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #333', borderRadius: '8px' }} formatter={(value) => [`₹${value}`, 'Revenue']} />
-                                    <Bar dataKey="sales" name="Gross Revenue" fill="#F59E0B" radius={[4, 4, 0, 0]} barSize={32} />
+                                    <Tooltip cursor={{fill: 'rgba(255,255,255,0.02)'}} contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter:'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} formatter={(value) => [`₹${value}`, 'Revenue']} />
+                                    <Bar dataKey="sales" name="Gross Revenue" fill="#F59E0B" radius={[4, 4, 0, 0]} barSize={24} />
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : <div className="flex h-full items-center justify-center text-gray-600 text-sm border border-dashed border-gray-800 rounded-2xl">Insufficient Data</div>}
@@ -287,8 +287,8 @@ const Dashboard = () => {
             </div>
 
             {/* --- ROW 4: MASTER LIVE LEDGER --- */}
-            <div className="bg-[#121212] border border-gray-800 rounded-3xl shadow-2xl relative overflow-hidden mt-6">
-                <div className="p-6 md:p-8 border-b border-gray-800 bg-[#151515] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-3xl shadow-2xl relative overflow-hidden mt-6">
+                <div className="p-6 md:p-8 border-b border-white/5 bg-black/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h3 className="text-xl font-bold flex items-center gap-3 text-white">
                             <div className="p-2 bg-purple-500/10 rounded-lg text-purple-400"><Clock size={20}/></div>
@@ -300,7 +300,7 @@ const Dashboard = () => {
                 
                 <div className="overflow-x-auto min-h-[400px]">
                     <table className="w-full text-left border-collapse">
-                        <thead className="text-gray-400 text-[10px] uppercase font-bold tracking-widest bg-[#0a0a0a]">
+                        <thead className="text-gray-400 text-[10px] uppercase font-bold tracking-widest bg-black/20 border-b border-white/5">
                             <tr>
                                 <th className="p-5 pl-8">Transaction & User</th>
                                 <th className="p-5">Feature & Location</th>
@@ -311,15 +311,15 @@ const Dashboard = () => {
                         </thead>
                         <tbody className="text-sm font-medium">
                             {stats?.recentBookings?.length === 0 && (
-                                <tr><td colSpan="5" className="p-10 text-center text-gray-600 border-b border-gray-800">No recent transactions in the network.</td></tr>
+                                <tr><td colSpan="5" className="p-10 text-center text-gray-500 border-b border-white/5">No recent transactions in the network.</td></tr>
                             )}
                             {stats?.recentBookings?.map((b) => (
-                                <tr key={b._id} className="group hover:bg-[#1a1a1a] transition-colors border-b border-gray-800/50 last:border-none">
+                                <tr key={b._id} className="group hover:bg-white/[0.03] transition-colors border-b border-white/5 last:border-none">
                                     
                                     {/* 1. TXN & USER */}
                                     <td className="p-5 pl-8 align-top">
                                         <div className="flex items-start gap-3">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0 shadow-inner ${b.status === 'Cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-gray-800 text-gray-300'}`}>
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0 shadow-inner ${b.status === 'Cancelled' ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 'bg-white/5 border border-white/10 text-gray-300'}`}>
                                                 {b.guestName ? b.guestName[0].toUpperCase() : (b.user?.name?.[0] || "G")}
                                             </div>
                                             <div>
@@ -428,7 +428,7 @@ const StatCard = ({ title, value, icon: Icon, color, bg, border, glow = "", curr
         </div>
         <div className="relative z-10">
             <div className="flex justify-between items-start mb-6">
-                <div className={`w-12 h-12 rounded-2xl bg-[#0b0b0b] flex items-center justify-center shadow-lg border border-white/5`}>
+                <div className={`w-12 h-12 rounded-2xl bg-white/[0.03] flex items-center justify-center shadow-inner border border-white/10`}>
                     <Icon size={24} className={color} />
                 </div>
             </div>
@@ -449,9 +449,9 @@ const StatCard = ({ title, value, icon: Icon, color, bg, border, glow = "", curr
 // --- SKELETON COMPONENT ---
 const DashboardSkeleton = () => {
     return (
-        <div className="space-y-8 pb-10 font-outfit min-h-screen">
+        <div className="space-y-8 pb-10 min-h-screen">
             {/* Header Skeleton */}
-            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 bg-[#121212] p-6 md:p-8 rounded-3xl border border-gray-800">
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 bg-white/[0.02] p-6 md:p-8 rounded-3xl border border-white/5">
                 <div className="space-y-3">
                     <div className="h-10 w-64 bg-gray-800 animate-pulse rounded-lg"></div>
                     <div className="h-4 w-48 bg-gray-800 animate-pulse rounded-lg"></div>
@@ -462,8 +462,8 @@ const DashboardSkeleton = () => {
             {/* Row 1 Skeleton */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 {[...Array(4)].map((_, i) => (
-                    <div key={i} className="h-44 bg-[#121212] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
-                        <div className="w-12 h-12 bg-gray-800 animate-pulse rounded-2xl"></div>
+                    <div key={i} className="h-44 bg-white/[0.02] border border-white/5 rounded-3xl p-6 flex flex-col justify-between">
+                        <div className="w-12 h-12 bg-white/5 animate-pulse rounded-2xl"></div>
                         <div className="space-y-2">
                             <div className="h-3 w-24 bg-gray-800 animate-pulse rounded-full"></div>
                             <div className="h-8 w-32 bg-gray-800 animate-pulse rounded-lg"></div>

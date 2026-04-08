@@ -67,7 +67,7 @@ const TrailersSection = () => {
         const match = movie.trailer_url.match(regExp);
         const videoId = (match && match[2].length === 11) ? match[2] : null;
 
-        return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : movie.backdrop_path;
+        return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : movie.backdrop_path;
     }
 
     if (loading || trailers.length === 0) return null;
@@ -142,6 +142,11 @@ const TrailersSection = () => {
                                     alt={movie.title} 
                                     className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
                                     style={{ imageRendering: 'high-quality' }}
+                                    onError={(e) => {
+                                        if (e.target.src !== movie.backdrop_path) {
+                                            e.target.src = movie.backdrop_path || movie.poster_path || '';
+                                        }
+                                    }}
                                 />
                                 
                                 <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300

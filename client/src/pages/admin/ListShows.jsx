@@ -222,7 +222,7 @@ const ListShows = () => {
 
       {/* --- SHOW DETAILS / GUEST LIST / MAP PANEL --- */}
       {viewingShow && (
-          <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm print:hidden">
+          <div className="fixed inset-0 z-[100] flex justify-end bg-black/60 backdrop-blur-sm print:hidden">
               <div className="absolute inset-0" onClick={() => { setViewingShow(null); setSelectedSeatData(null); }}></div>
               
               <div className="w-full max-w-2xl bg-[#121212] border-l border-gray-800 h-full shadow-2xl relative z-10 flex flex-col animate-slideInRight">

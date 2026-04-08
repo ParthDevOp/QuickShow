@@ -34,7 +34,7 @@ const Navbar = () => {
   }, [searchOpen])
 
   const navLinks = [
-    { to: '/', label: 'Home' },
+    { to: '/home', label: 'Home' },
     { to: '/theaters', label: 'Theaters', icon: <Clapperboard size={13} /> },
     { to: '/support', label: 'Support', icon: <Headset size={13} /> },
   ]
@@ -42,72 +42,45 @@ const Navbar = () => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600&display=swap');
-
         .qs-nav {
-          font-family: 'Exo 2', sans-serif;
-        }
-
-        /* Scan line overlay */
-        .qs-nav::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            rgba(255,255,255,0.012) 2px,
-            rgba(255,255,255,0.012) 4px
-          );
-          pointer-events: none;
-          z-index: 0;
+          font-family: 'Outfit', sans-serif;
         }
 
         /* Animated bottom border */
         .qs-nav-border {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
+          bottom: 0; left: 0; right: 0;
           height: 1px;
           background: linear-gradient(90deg,
             transparent 0%,
-            rgba(220,38,38,0.3) 20%,
-            rgba(220,38,38,0.9) 50%,
-            rgba(220,38,38,0.3) 80%,
+            rgba(248,69,101,0.1) 20%,
+            rgba(248,69,101,0.5) 50%,
+            rgba(248,69,101,0.1) 80%,
             transparent 100%
           );
-          animation: borderSweep 4s ease-in-out infinite;
-        }
-
-        @keyframes borderSweep {
-          0%, 100% { opacity: 0.4; }
-          50% { opacity: 1; }
         }
 
         /* Nav link hover effect */
         .qs-link {
           position: relative;
-          letter-spacing: 0.06em;
-          font-weight: 500;
-          font-size: 0.8rem;
-          text-transform: uppercase;
-          color: rgba(200,200,220,0.8);
-          transition: color 0.2s;
-          padding: 6px 2px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: rgba(255,255,255,0.7);
+          transition: color 0.3s ease;
+          padding: 8px 4px;
         }
 
         .qs-link::after {
           content: '';
           position: absolute;
-          bottom: -2px;
-          left: 0;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
           width: 0;
-          height: 1px;
-          background: linear-gradient(90deg, #dc2626, #f97316);
-          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 0 6px #dc2626;
+          height: 2px;
+          background: #F84565;
+          transition: width 0.3s ease, box-shadow 0.3s ease;
+          border-radius: 2px;
         }
 
         .qs-link:hover, .qs-link.active {
@@ -116,277 +89,196 @@ const Navbar = () => {
 
         .qs-link:hover::after, .qs-link.active::after {
           width: 100%;
+          box-shadow: 0 0 10px rgba(248,69,101,0.5);
         }
 
         /* City pill */
         .qs-city {
           position: relative;
-          background: rgba(220,38,38,0.06);
-          border: 1px solid rgba(220,38,38,0.25);
-          border-radius: 4px;
-          padding: 5px 12px;
-          font-size: 0.75rem;
-          letter-spacing: 0.05em;
-          color: rgba(220,220,240,0.85);
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 9999px; /* full pill */
+          padding: 6px 14px;
+          font-size: 0.8rem;
+          color: rgba(255,255,255,0.9);
           cursor: pointer;
-          transition: all 0.2s;
-          font-family: 'Rajdhani', sans-serif;
-          font-weight: 600;
+          transition: all 0.3s ease;
+          font-weight: 500;
+          backdrop-filter: blur(10px);
         }
 
         .qs-city:hover {
-          background: rgba(220,38,38,0.12);
-          border-color: rgba(220,38,38,0.5);
+          background: rgba(248,69,101,0.1);
+          border-color: rgba(248,69,101,0.3);
           color: #fff;
+          transform: translateY(-1px);
         }
 
         .qs-city .ping {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #dc2626;
-          box-shadow: 0 0 6px #dc2626;
-          animation: ping 2s ease-in-out infinite;
+          background: #F84565;
+          box-shadow: 0 0 8px #F84565;
+          animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
         }
 
         @keyframes ping {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(0.8); }
+          75%, 100% { transform: scale(1.5); opacity: 0; }
         }
 
         /* Icon buttons */
         .qs-icon-btn {
           position: relative;
-          width: 36px;
-          height: 36px;
+          width: 40px;
+          height: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 4px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 50%;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.05);
           cursor: pointer;
-          transition: all 0.2s;
-          color: rgba(200,200,220,0.7);
+          transition: all 0.3s ease;
+          color: rgba(255,255,255,0.7);
         }
 
         .qs-icon-btn:hover {
-          background: rgba(220,38,38,0.1);
-          border-color: rgba(220,38,38,0.3);
-          color: #fff;
-          box-shadow: 0 0 12px rgba(220,38,38,0.15);
-        }
-
-        /* Corner brackets */
-        .bracket {
-          position: relative;
-        }
-        .bracket::before, .bracket::after {
-          content: '';
-          position: absolute;
-          width: 6px;
-          height: 6px;
-          border-color: rgba(220,38,38,0.4);
-          border-style: solid;
-          transition: all 0.2s;
-        }
-        .bracket::before {
-          top: -2px; left: -2px;
-          border-width: 1px 0 0 1px;
-        }
-        .bracket::after {
-          bottom: -2px; right: -2px;
-          border-width: 0 1px 1px 0;
-        }
-        .bracket:hover::before, .bracket:hover::after {
-          border-color: rgba(220,38,38,0.9);
-          width: 10px;
-          height: 10px;
+          background: rgba(248,69,101,0.1);
+          border-color: rgba(248,69,101,0.2);
+          color: #F84565;
+          transform: translateY(-2px);
         }
 
         /* Sign in button */
         .qs-signin {
-          font-family: 'Rajdhani', sans-serif;
           font-weight: 700;
-          font-size: 0.8rem;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          padding: 7px 20px;
-          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-          border: 1px solid rgba(220,38,38,0.5);
-          border-radius: 3px;
+          font-size: 0.85rem;
+          padding: 8px 24px;
+          background: #F84565;
+          border-radius: 9999px;
           color: #fff;
           cursor: pointer;
-          position: relative;
-          overflow: hidden;
-          transition: all 0.2s;
-        }
-
-        .qs-signin::before {
-          content: '';
-          position: absolute;
-          top: 0; left: -100%;
-          width: 100%; height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-          transition: left 0.4s;
-        }
-
-        .qs-signin:hover::before {
-          left: 100%;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(248,69,101,0.3);
         }
 
         .qs-signin:hover {
-          box-shadow: 0 0 20px rgba(220,38,38,0.4);
-          border-color: rgba(220,38,38,0.8);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(248,69,101,0.5);
+          background: #ff5c77;
         }
 
         /* Admin badge */
         .qs-admin-badge {
-          font-family: 'Rajdhani', sans-serif;
-          font-weight: 700;
-          font-size: 0.72rem;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          padding: 5px 14px;
-          background: rgba(220,38,38,0.1);
-          border: 1px solid rgba(220,38,38,0.35);
-          border-radius: 3px;
-          color: #ef4444;
+          font-weight: 600;
+          font-size: 0.75rem;
+          padding: 6px 14px;
+          background: rgba(248,69,101,0.1);
+          border: 1px solid rgba(248,69,101,0.2);
+          border-radius: 9999px;
+          color: #F84565;
           display: flex;
           align-items: center;
-          gap: 5px;
-          transition: all 0.2s;
-          position: relative;
+          gap: 6px;
+          transition: all 0.3s ease;
         }
         .qs-admin-badge:hover {
-          background: rgba(220,38,38,0.18);
+          background: rgba(248,69,101,0.2);
           color: #fff;
-          box-shadow: 0 0 16px rgba(220,38,38,0.25);
+          box-shadow: 0 0 15px rgba(248,69,101,0.3);
         }
 
         .qs-cinema-badge {
-          font-family: 'Rajdhani', sans-serif;
-          font-weight: 700;
-          font-size: 0.72rem;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          padding: 5px 14px;
+          font-weight: 600;
+          font-size: 0.75rem;
+          padding: 6px 14px;
           background: rgba(249,115,22,0.1);
-          border: 1px solid rgba(249,115,22,0.35);
-          border-radius: 3px;
+          border: 1px solid rgba(249,115,22,0.2);
+          border-radius: 9999px;
           color: #fb923c;
           display: flex;
           align-items: center;
-          gap: 5px;
-          transition: all 0.2s;
+          gap: 6px;
+          transition: all 0.3s ease;
         }
         .qs-cinema-badge:hover {
-          background: rgba(249,115,22,0.18);
+          background: rgba(249,115,22,0.2);
           color: #fff;
-          box-shadow: 0 0 16px rgba(249,115,22,0.25);
+          box-shadow: 0 0 15px rgba(249,115,22,0.3);
         }
 
         /* Search expand */
         .qs-search-bar {
           overflow: hidden;
-          transition: width 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s;
+          transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
           width: 0;
           opacity: 0;
         }
         .qs-search-bar.open {
-          width: 200px;
+          width: 220px;
           opacity: 1;
         }
         .qs-search-bar input {
           width: 100%;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(220,38,38,0.3);
-          border-radius: 3px;
-          padding: 6px 12px;
-          font-family: 'Exo 2', sans-serif;
-          font-size: 0.8rem;
+          background: rgba(0,0,0,0.5);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 20px;
+          padding: 8px 16px;
+          font-family: 'Outfit', sans-serif;
+          font-size: 0.85rem;
           color: #fff;
           outline: none;
-          letter-spacing: 0.04em;
+          transition: border-color 0.3s ease;
+        }
+        .qs-search-bar input:focus {
+          border-color: #F84565;
         }
         .qs-search-bar input::placeholder {
-          color: rgba(200,200,220,0.35);
+          color: rgba(255,255,255,0.4);
         }
 
         /* Mobile menu */
         .qs-mobile {
-          background: rgba(5,5,10,0.98);
+          background: rgba(9, 9, 11, 0.98);
           backdrop-filter: blur(24px);
         }
 
         .qs-mobile-link {
-          font-family: 'Rajdhani', sans-serif;
           font-weight: 600;
-          font-size: 1.6rem;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: rgba(200,200,220,0.7);
-          transition: all 0.2s;
+          font-size: 1.4rem;
+          color: rgba(255,255,255,0.7);
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           gap: 12px;
-          padding: 8px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.04);
+          padding: 12px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
           width: 100%;
           justify-content: center;
         }
         .qs-mobile-link:hover {
           color: #fff;
-          text-shadow: 0 0 20px rgba(220,38,38,0.5);
+          transform: translateX(4px);
         }
-
-        /* Logo glow on hover */
-        .qs-logo:hover img {
-          filter: drop-shadow(0 0 8px rgba(220,38,38,0.4));
-        }
-
-        /* HUD corner decorations */
-        .hud-corner {
-          position: absolute;
-          width: 16px;
-          height: 16px;
-          border-color: rgba(220,38,38,0.25);
-          border-style: solid;
-        }
-        .hud-tl { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
-        .hud-tr { top: 6px; right: 6px; border-width: 1px 1px 0 0; }
-        .hud-bl { bottom: 6px; left: 6px; border-width: 0 0 1px 1px; }
-        .hud-br { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
 
         /* User greeting */
         .qs-greeting {
-          font-family: 'Rajdhani', sans-serif;
-          font-size: 0.75rem;
-          font-weight: 600;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: rgba(200,200,220,0.5);
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: rgba(255,255,255,0.6);
         }
         .qs-greeting span {
-          color: rgba(220,38,38,0.9);
+          color: #fff;
+          font-weight: 700;
         }
       `}</style>
 
-      <nav className={`qs-nav fixed top-0 left-0 z-50 w-full transition-all duration-500 ${
+      <nav className={`qs-nav fixed top-0 left-0 z-50 w-full transition-all duration-500 border-b ${
         scrolled
-          ? 'py-2 bg-gray-950/92 backdrop-blur-xl shadow-[0_4px_40px_rgba(0,0,0,0.6)]'
-          : 'py-4 bg-gradient-to-b from-black/70 to-transparent'
+          ? 'py-3 bg-black/50 backdrop-blur-3xl border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.5)]'
+          : 'py-5 bg-gradient-to-b from-black/80 to-transparent border-transparent'
       }`} style={{ position: 'fixed' }}>
-
-        {/* HUD corner decorations (only when scrolled) */}
-        {scrolled && (
-          <>
-            <div className="hud-corner hud-tl" />
-            <div className="hud-corner hud-tr" />
-            <div className="hud-corner hud-bl" />
-            <div className="hud-corner hud-br" />
-          </>
-        )}
 
         <div className="qs-nav-border" />
 
@@ -394,7 +286,7 @@ const Navbar = () => {
 
           {/* LEFT: Logo + City */}
           <div className="flex items-center gap-6">
-            <Link to='/' className='qs-logo flex-shrink-0 transition-all duration-300'>
+            <Link to='/home' className='qs-logo flex-shrink-0 transition-all duration-300'>
               <img src={assets.logo} alt="QuickShow" className='w-28 md:w-36 h-auto' />
             </Link>
 
@@ -477,7 +369,7 @@ const Navbar = () => {
                   <Zap size={10} className="inline mr-1 text-red-500" />
                   Hey, <span>{user.firstName}</span>
                 </div>
-                <UserButton afterSignOutUrl="/">
+                <UserButton afterSignOutUrl="/home">
                   <UserButton.MenuItems>
                     <UserButton.Action
                       label="My Bookings"

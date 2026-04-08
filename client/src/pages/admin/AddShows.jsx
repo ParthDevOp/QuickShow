@@ -270,7 +270,7 @@ const AddShows = () => {
     const filteredMovies = allMovies.filter(m => m.title.toLowerCase().includes(movieSearch.toLowerCase()));
 
     return (
-        <div className="max-w-7xl mx-auto pb-20 font-outfit text-white">
+        <div className="w-full max-w-[1600px] mx-auto pb-20 text-white animate-fadeIn">
             
             {/* Edit Modal */}
             {editingShow && (
@@ -374,7 +374,7 @@ const AddShows = () => {
                 <div className="xl:col-span-1 space-y-6">
                     
                     {/* Step 2: Multi-Theater Selection & Format */}
-                    <div className={`bg-[#121212] p-6 rounded-3xl border border-gray-800 shadow-xl transition-all duration-300 ${!selectedMovie ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <div className={`bg-white/[0.02] backdrop-blur-2xl p-6 rounded-3xl border border-white/5 shadow-2xl transition-all duration-300 ${!selectedMovie ? 'opacity-50 pointer-events-none' : ''}`}>
                         <label className="text-gray-300 text-sm font-bold uppercase tracking-wider mb-5 flex justify-between items-center">
                             <span className="flex items-center gap-2"><span className="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span> Configuration</span>
                         </label>
@@ -434,7 +434,7 @@ const AddShows = () => {
                     </div>
 
                     {/* Step 3: Prices */}
-                    <div className={`bg-[#121212] p-6 rounded-3xl border border-gray-800 shadow-xl transition-all duration-300 ${!selectedMovie ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <div className={`bg-white/[0.02] backdrop-blur-2xl p-6 rounded-3xl border border-white/5 shadow-2xl transition-all duration-300 ${!selectedMovie ? 'opacity-50 pointer-events-none' : ''}`}>
                         <div className="flex justify-between items-center mb-5">
                             <label className="text-gray-300 text-sm font-bold uppercase tracking-wider flex items-center gap-2">
                                 <span className="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span> Set Prices
@@ -463,7 +463,7 @@ const AddShows = () => {
                     </div>
 
                     {/* Step 4: Schedule Builder */}
-                    <div className={`bg-[#121212] p-6 rounded-3xl border border-gray-800 shadow-xl transition-all duration-300 ${(!selectedMovie || selectedTheaters.length === 0) ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <div className={`bg-white/[0.02] backdrop-blur-2xl p-6 rounded-3xl border border-white/5 shadow-2xl transition-all duration-300 ${(!selectedMovie || selectedTheaters.length === 0) ? 'opacity-50 pointer-events-none' : ''}`}>
                         <label className="text-gray-300 text-sm font-bold uppercase tracking-wider mb-5 flex justify-between items-center">
                             <span className="flex items-center gap-2"><span className="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">4</span> Build Schedule</span>
                         </label>
@@ -513,7 +513,7 @@ const AddShows = () => {
                     
                     {/* Database Existing View (Now Supports Multi-Theater viewing) */}
                     {selectedMovie && selectedTheaters.length > 0 && (
-                        <div className="bg-[#121212] rounded-3xl border border-gray-800 p-8 shadow-xl relative overflow-hidden">
+                        <div className="bg-white/[0.02] backdrop-blur-2xl rounded-3xl border border-white/5 p-8 shadow-2xl relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
                             
                             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
@@ -567,7 +567,7 @@ const AddShows = () => {
                     )}
 
                     {/* Step 5: Draft Review */}
-                    <div className="flex-1 bg-[#121212] rounded-3xl border border-gray-800 p-8 shadow-xl min-h-[350px] flex flex-col relative overflow-hidden">
+                    <div className="flex-1 bg-white/[0.02] backdrop-blur-2xl rounded-3xl border border-white/5 p-8 shadow-2xl min-h-[350px] flex flex-col relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
                         <div className="flex items-start justify-between mb-6">
