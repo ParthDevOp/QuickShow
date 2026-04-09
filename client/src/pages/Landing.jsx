@@ -123,7 +123,7 @@ const Landing = () => {
               Book Now
             </button>
             <button 
-              onClick={() => navigate('/movies')} // Kept as /movies for direct exploration
+              onClick={() => navigate('/home')} // 🚨 UPDATED ROUTE
               className="flex items-center gap-3 bg-white/5 border border-white/10 text-white font-bold tracking-wide rounded-full px-8 py-4 hover:bg-white/10 transition-all backdrop-blur-md"
               data-testid="hero-cta-explore"
             >
