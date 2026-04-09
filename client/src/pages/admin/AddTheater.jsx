@@ -32,6 +32,7 @@ const AddTheater = () => {
 
   // --- NEW: Management State ---
   const [theaters, setTheaters] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
   const [loadingList, setLoadingList] = useState(true)
 
@@ -173,6 +174,12 @@ const AddTheater = () => {
     }
   }
 
+  const filteredTheaters = theaters.filter(theater => 
+      theater.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      theater.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      theater.address.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className='max-w-6xl mx-auto pb-20'>
       
@@ -290,25 +297,40 @@ const AddTheater = () => {
 
       {/* --- EXISTING THEATERS LIST --- */}
       <div className="border-t border-gray-800 pt-10">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
               <div>
                   <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                       <Building className="text-blue-500"/> Manage Theaters
                   </h2>
                   <p className="text-sm text-gray-400 mt-1">View, edit, or remove locations from your database.</p>
               </div>
-              <span className="bg-gray-800 text-white px-4 py-1.5 rounded-full text-xs font-bold border border-gray-700">Total: {theaters.length}</span>
+              
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                  <div className="relative w-full md:w-64">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+                      <input 
+                          type="text" 
+                          placeholder="Search theaters..." 
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full bg-gray-900 border border-gray-700 text-white rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary transition-colors"
+                      />
+                  </div>
+                  <span className="bg-gray-800 text-white px-4 py-1.5 rounded-full text-xs font-bold border border-gray-700 whitespace-nowrap">
+                      Total: {filteredTheaters.length}
+                  </span>
+              </div>
           </div>
 
           {loadingList ? (
               <div className="text-center py-10 text-gray-500">Loading theaters...</div>
-          ) : theaters.length === 0 ? (
+          ) : filteredTheaters.length === 0 ? (
               <div className="bg-gray-800/30 border border-gray-700 border-dashed rounded-xl p-10 text-center text-gray-500">
-                  No theaters added yet. Use the form above to add your first location.
+                  {searchTerm ? "No theaters found matching your search." : "No theaters added yet. Use the form above to add your first location."}
               </div>
           ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {theaters.map((theater) => (
+                  {filteredTheaters.map((theater) => (
                       <div key={theater._id} className="bg-[#121212] border border-gray-800 rounded-2xl p-5 hover:border-gray-600 transition-colors group relative flex flex-col justify-between">
                           
                           <div>

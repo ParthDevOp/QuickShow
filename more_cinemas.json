@@ -1,0 +1,1460 @@
+[
+  {
+    "_id": {
+      "$oid": "69a1a3dba406ad32840fad8a"
+    },
+    "name": "INOX Bhavnagar Square",
+    "city": "Bhavnagar",
+    "address": "INOX Bhavnagar Square, Main Road, Bhavnagar, Gujarat 364001, India",
+    "pincode": "364001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.1515,
+        21.7866
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aed948e957d1ea56c18300"
+    },
+    "name": "Wave Cinemas Ahmedabad Town Center",
+    "city": "Ahmedabad",
+    "address": "Wave Cinemas Ahmedabad Town Center, Main Road, Ahmedabad, Gujarat 380009, India",
+    "pincode": "380009",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.5698,
+        23.017
+      ]
+    },
+    "facilities": [
+      "Dolby 7.1",
+      "Snack Bar",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69ad4a1367344103c0918cde"
+    },
+    "name": "Miraj Cinemas Pune Avenue",
+    "city": "Pune",
+    "address": "Miraj Cinemas Pune Avenue, Main Road, Pune, Maharashtra 411001, India",
+    "pincode": "411001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.8773,
+        18.5003
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69ad7eefc8ef51f723f1827d"
+    },
+    "name": "INOX Hyderabad Avenue",
+    "city": "Hyderabad",
+    "address": "INOX Hyderabad Avenue, Main Road, Hyderabad, Telangana 500001, India",
+    "pincode": "500001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        78.5031,
+        17.3927
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "Recliners",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69ad016fbc27e5c0604d79ee"
+    },
+    "name": "Cinepolis Hyderabad Arcade",
+    "city": "Hyderabad",
+    "address": "Cinepolis Hyderabad Arcade, Main Road, Hyderabad, Telangana 500001, India",
+    "pincode": "500001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        78.4963,
+        17.3919
+      ]
+    },
+    "facilities": [
+      "Dolby 7.1",
+      "Snack Bar",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aae935674dbf009a7656a0"
+    },
+    "name": "INOX Rajkot Avenue",
+    "city": "Rajkot",
+    "address": "INOX Rajkot Avenue, Main Road, Rajkot, Gujarat 360001, India",
+    "pincode": "360001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        70.8059,
+        22.3065
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aa14a3a68e7e404dd4727a"
+    },
+    "name": "Mukta A2 Kolkata Arcade",
+    "city": "Kolkata",
+    "address": "Mukta A2 Kolkata Arcade, Main Road, Kolkata, West Bengal 700001, India",
+    "pincode": "700001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        88.3521,
+        22.5832
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a5c023c0537ea8d5ea7991"
+    },
+    "name": "INOX Hyderabad Avenue",
+    "city": "Hyderabad",
+    "address": "INOX Hyderabad Avenue, Main Road, Hyderabad, Telangana 500001, India",
+    "pincode": "500001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        78.4963,
+        17.393
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a496f9304e8ac7cbd2d5a2"
+    },
+    "name": "PVR Chennai Heights",
+    "city": "Chennai",
+    "address": "PVR Chennai Heights, Main Road, Chennai, Tamil Nadu 600001, India",
+    "pincode": "600001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        80.2859,
+        13.0581
+      ]
+    },
+    "facilities": [
+      "Dolby 7.1",
+      "Snack Bar",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69af05ee74cac83238df306b"
+    },
+    "name": "PVR Chennai Avenue",
+    "city": "Chennai",
+    "address": "PVR Chennai Avenue, Main Road, Chennai, Tamil Nadu 600001, India",
+    "pincode": "600001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        80.2623,
+        13.0732
+      ]
+    },
+    "facilities": [
+      "4K Projection",
+      "Recliners",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a335202dc3fb9da061f07f"
+    },
+    "name": "Cinepolis Bangalore Square",
+    "city": "Bangalore",
+    "address": "Cinepolis Bangalore Square, Main Road, Bangalore, Karnataka 560001, India",
+    "pincode": "560001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        77.5808,
+        12.9656
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aa24bd01583f7e6097420d"
+    },
+    "name": "INOX Pune Heights",
+    "city": "Pune",
+    "address": "INOX Pune Heights, Main Road, Pune, Maharashtra 411001, India",
+    "pincode": "411001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.8556,
+        18.4999
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "M-Ticket",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a3a04ba1f8bcc2bdce119a"
+    },
+    "name": "Rajhans Cinemas Mumbai Square",
+    "city": "Mumbai",
+    "address": "Rajhans Cinemas Mumbai Square, Main Road, Mumbai, Maharashtra 400001, India",
+    "pincode": "400001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.8962,
+        19.0744
+      ]
+    },
+    "facilities": [
+      "Dolby 7.1",
+      "Snack Bar",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a03a1b7950ce6308fe9e96"
+    },
+    "name": "Miraj Cinemas Gandhinagar Avenue",
+    "city": "Gandhinagar",
+    "address": "Miraj Cinemas Gandhinagar Avenue, Main Road, Gandhinagar, Gujarat 382010, India",
+    "pincode": "382010",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.6482,
+        23.2401
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "Recliners",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a90a75ae6386c4db39a66a"
+    },
+    "name": "PVR Ahmedabad Square",
+    "city": "Ahmedabad",
+    "address": "PVR Ahmedabad Square, Main Road, Ahmedabad, Gujarat 380001, India",
+    "pincode": "380001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.5514,
+        23.0057
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a0013aba1f52aaaaf699ee"
+    },
+    "name": "Carnival Cinemas Hyderabad Multiplex",
+    "city": "Hyderabad",
+    "address": "Carnival Cinemas Hyderabad Multiplex, Main Road, Hyderabad, Telangana 500001, India",
+    "pincode": "500001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        78.4817,
+        17.387
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "Recliners",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aaaaaddc5f5767a1fc9cb4"
+    },
+    "name": "Carnival Cinemas Pune Heights",
+    "city": "Pune",
+    "address": "Carnival Cinemas Pune Heights, Main Road, Pune, Maharashtra 411001, India",
+    "pincode": "411001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.8571,
+        18.5297
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69abd2e1daecd2c575aa75b6"
+    },
+    "name": "Carnival Cinemas Bhavnagar Heights",
+    "city": "Bhavnagar",
+    "address": "Carnival Cinemas Bhavnagar Heights, Main Road, Bhavnagar, Gujarat 364001, India",
+    "pincode": "364001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.1564,
+        21.781
+      ]
+    },
+    "facilities": [
+      "4K Projection",
+      "Recliners",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69ab7201cc04e0a6a02951fa"
+    },
+    "name": "Wave Cinemas Kolkata Avenue",
+    "city": "Kolkata",
+    "address": "Wave Cinemas Kolkata Avenue, Main Road, Kolkata, West Bengal 700001, India",
+    "pincode": "700001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        88.3458,
+        22.5538
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "Recliners",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a8775a40b96cbc19702d07"
+    },
+    "name": "Wave Cinemas Pune Arcade",
+    "city": "Pune",
+    "address": "Wave Cinemas Pune Arcade, Main Road, Pune, Maharashtra 411001, India",
+    "pincode": "411001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.8391,
+        18.5055
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a22fe8ce13404975f0d39c"
+    },
+    "name": "Wave Cinemas Ahmedabad Mall",
+    "city": "Ahmedabad",
+    "address": "Wave Cinemas Ahmedabad Mall, Main Road, Ahmedabad, Gujarat 380009, India",
+    "pincode": "380009",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.5936,
+        23.0387
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "Recliners",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a49a4626f53be70d096fba"
+    },
+    "name": "Cinepolis Kolkata Heights",
+    "city": "Kolkata",
+    "address": "Cinepolis Kolkata Heights, Main Road, Kolkata, West Bengal 700001, India",
+    "pincode": "700001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        88.3465,
+        22.5641
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a4011b18c027535635d457"
+    },
+    "name": "Mukta A2 Chennai Mall",
+    "city": "Chennai",
+    "address": "Mukta A2 Chennai Mall, Main Road, Chennai, Tamil Nadu 600001, India",
+    "pincode": "600001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        80.2581,
+        13.1008
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aabdf5fb02c0c35d78aa2a"
+    },
+    "name": "PVR Kolkata Heights",
+    "city": "Kolkata",
+    "address": "PVR Kolkata Heights, Main Road, Kolkata, West Bengal 700001, India",
+    "pincode": "700001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        88.3629,
+        22.5828
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a8c1eb7f8d511f5549fbc9"
+    },
+    "name": "Wave Cinemas Hyderabad Mall",
+    "city": "Hyderabad",
+    "address": "Wave Cinemas Hyderabad Mall, Main Road, Hyderabad, Telangana 500001, India",
+    "pincode": "500001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        78.4691,
+        17.3899
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a94ad8d30f4d98ca9dfc1b"
+    },
+    "name": "INOX Rajkot Square",
+    "city": "Rajkot",
+    "address": "INOX Rajkot Square, Main Road, Rajkot, Gujarat 360001, India",
+    "pincode": "360001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        70.8234,
+        22.2805
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a1f1dd0ff3998431b2d33c"
+    },
+    "name": "NY Cinemas Vadodara Arcade",
+    "city": "Vadodara",
+    "address": "NY Cinemas Vadodara Arcade, Main Road, Vadodara, Gujarat 390001, India",
+    "pincode": "390001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.1873,
+        22.2877
+      ]
+    },
+    "facilities": [
+      "4K Projection",
+      "Recliners",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69af33707ecd6cd5759b9fd7"
+    },
+    "name": "Carnival Cinemas Vadodara Heights",
+    "city": "Vadodara",
+    "address": "Carnival Cinemas Vadodara Heights, Main Road, Vadodara, Gujarat 390001, India",
+    "pincode": "390001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.1572,
+        22.3145
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a3b6e751c3b2182218b911"
+    },
+    "name": "PVR Rajkot Multiplex",
+    "city": "Rajkot",
+    "address": "PVR Rajkot Multiplex, Main Road, Rajkot, Gujarat 360001, India",
+    "pincode": "360001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        70.79,
+        22.3007
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "Recliners",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69af4bb7a5029f5d0bc5d707"
+    },
+    "name": "INOX Ahmedabad Arcade",
+    "city": "Ahmedabad",
+    "address": "INOX Ahmedabad Arcade, Main Road, Ahmedabad, Gujarat 380009, India",
+    "pincode": "380009",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.5738,
+        23.0354
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a0e8c8429a7a9907622fce"
+    },
+    "name": "Rajhans Cinemas Mumbai Multiplex",
+    "city": "Mumbai",
+    "address": "Rajhans Cinemas Mumbai Multiplex, Main Road, Mumbai, Maharashtra 400001, India",
+    "pincode": "400001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.882,
+        19.0532
+      ]
+    },
+    "facilities": [
+      "4K Projection",
+      "Recliners",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a84d75f52ece8678f73301"
+    },
+    "name": "Cinepolis Rajkot Square",
+    "city": "Rajkot",
+    "address": "Cinepolis Rajkot Square, Main Road, Rajkot, Gujarat 360001, India",
+    "pincode": "360001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        70.8181,
+        22.2798
+      ]
+    },
+    "facilities": [
+      "Dolby 7.1",
+      "Snack Bar",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aa588c953ee5d33a9e5682"
+    },
+    "name": "Cinepolis Pune Arcade",
+    "city": "Pune",
+    "address": "Cinepolis Pune Arcade, Main Road, Pune, Maharashtra 411001, India",
+    "pincode": "411001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.8562,
+        18.5418
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a9de4beb5a952ad4e965c5"
+    },
+    "name": "INOX Kolkata Town Center",
+    "city": "Kolkata",
+    "address": "INOX Kolkata Town Center, Main Road, Kolkata, West Bengal 700001, India",
+    "pincode": "700001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        88.3431,
+        22.5885
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69aeef425b6c6de42196123f"
+    },
+    "name": "Miraj Cinemas Gandhinagar Town Center",
+    "city": "Gandhinagar",
+    "address": "Miraj Cinemas Gandhinagar Town Center, Main Road, Gandhinagar, Gujarat 382010, India",
+    "pincode": "382010",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.6202,
+        23.2086
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a0f266eeacdb8bd256f030"
+    },
+    "name": "Rajhans Cinemas Kolkata Arcade",
+    "city": "Kolkata",
+    "address": "Rajhans Cinemas Kolkata Arcade, Main Road, Kolkata, West Bengal 700001, India",
+    "pincode": "700001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        88.3673,
+        22.5481
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a4ba96abc5b0ffc48ba604"
+    },
+    "name": "PVR Jamnagar Arcade",
+    "city": "Jamnagar",
+    "address": "PVR Jamnagar Arcade, Main Road, Jamnagar, Gujarat 361001, India",
+    "pincode": "361001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        70.0671,
+        22.4881
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "M-Ticket",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a7bcc57640d062aff0569d"
+    },
+    "name": "NY Cinemas Ahmedabad Multiplex",
+    "city": "Ahmedabad",
+    "address": "NY Cinemas Ahmedabad Multiplex, Main Road, Ahmedabad, Gujarat 380001, India",
+    "pincode": "380001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.5664,
+        23.0344
+      ]
+    },
+    "facilities": [
+      "4K Projection",
+      "Recliners",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a273c8aa57d593d0e7d0d1"
+    },
+    "name": "Cinepolis Bhavnagar Arcade",
+    "city": "Bhavnagar",
+    "address": "Cinepolis Bhavnagar Arcade, Main Road, Bhavnagar, Gujarat 364001, India",
+    "pincode": "364001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.1292,
+        21.7581
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "Recliners",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a0898ae69924bce031c89e"
+    },
+    "name": "INOX Pune Avenue",
+    "city": "Pune",
+    "address": "INOX Pune Avenue, Main Road, Pune, Maharashtra 411001, India",
+    "pincode": "411001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        73.8386,
+        18.5282
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69af6e74852da29737ae35e2"
+    },
+    "name": "Rajhans Cinemas Bhavnagar Avenue",
+    "city": "Bhavnagar",
+    "address": "Rajhans Cinemas Bhavnagar Avenue, Main Road, Bhavnagar, Gujarat 364001, India",
+    "pincode": "364001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.17,
+        21.7447
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a0eafe4f04005068077fce"
+    },
+    "name": "Mukta A2 Chennai Mall",
+    "city": "Chennai",
+    "address": "Mukta A2 Chennai Mall, Main Road, Chennai, Tamil Nadu 600001, India",
+    "pincode": "600001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        80.2776,
+        13.0979
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "M-Ticket",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a6fd28e9e3346646e33343"
+    },
+    "name": "NY Cinemas Junagadh Square",
+    "city": "Junagadh",
+    "address": "NY Cinemas Junagadh Square, Main Road, Junagadh, Gujarat 362001, India",
+    "pincode": "362001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        70.4733,
+        21.5201
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69ab5b331ad36e3cd968c716"
+    },
+    "name": "INOX Ahmedabad Arcade",
+    "city": "Ahmedabad",
+    "address": "INOX Ahmedabad Arcade, Main Road, Ahmedabad, Gujarat 380001, India",
+    "pincode": "380001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.5751,
+        23.0075
+      ]
+    },
+    "facilities": [
+      "Dolby 7.1",
+      "Snack Bar",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a1adcc87b625039803d314"
+    },
+    "name": "Rajhans Cinemas Bhavnagar Multiplex",
+    "city": "Bhavnagar",
+    "address": "Rajhans Cinemas Bhavnagar Multiplex, Main Road, Bhavnagar, Gujarat 364001, India",
+    "pincode": "364001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.173,
+        21.7586
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a6670bb75144d231c71ddc"
+    },
+    "name": "Cinepolis Chennai Arcade",
+    "city": "Chennai",
+    "address": "Cinepolis Chennai Arcade, Main Road, Chennai, Tamil Nadu 600001, India",
+    "pincode": "600001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        80.2477,
+        13.0725
+      ]
+    },
+    "facilities": [
+      "Dolby Atmos",
+      "M-Ticket",
+      "Food Court"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69ad0456c9f65fa3de3c567a"
+    },
+    "name": "INOX Hyderabad Multiplex",
+    "city": "Hyderabad",
+    "address": "INOX Hyderabad Multiplex, Main Road, Hyderabad, Telangana 500001, India",
+    "pincode": "500001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        78.508,
+        17.3787
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69af243769f2d757cd3c0421"
+    },
+    "name": "Wave Cinemas Kolkata Heights",
+    "city": "Kolkata",
+    "address": "Wave Cinemas Kolkata Heights, Main Road, Kolkata, West Bengal 700001, India",
+    "pincode": "700001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        88.3393,
+        22.5731
+      ]
+    },
+    "facilities": [
+      "Digital Projection",
+      "Food Court",
+      "M-Ticket"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69a8bb33ea220d89bd89be7f"
+    },
+    "name": "INOX Ahmedabad Heights",
+    "city": "Ahmedabad",
+    "address": "INOX Ahmedabad Heights, Main Road, Ahmedabad, Gujarat 380009, India",
+    "pincode": "380009",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.565,
+        23.0493
+      ]
+    },
+    "facilities": [
+      "Recliners",
+      "M-Ticket",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "69ad1e167e5a042be974a047"
+    },
+    "name": "INOX Mumbai Square",
+    "city": "Mumbai",
+    "address": "INOX Mumbai Square, Main Road, Mumbai, Maharashtra 400001, India",
+    "pincode": "400001",
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        72.8993,
+        19.0661
+      ]
+    },
+    "facilities": [
+      "IMAX",
+      "Dolby Atmos",
+      "Food Court",
+      "Wheelchair Accessible"
+    ],
+    "isActive": true,
+    "createdAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-04-09T10:00:00.000Z"
+    },
+    "__v": 0
+  }
+]

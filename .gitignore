@@ -6,3 +6,4 @@ build/
 coverage/
 logs/
 *.log
+        more_cinemas.json
