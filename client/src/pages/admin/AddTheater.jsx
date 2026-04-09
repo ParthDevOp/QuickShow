@@ -203,7 +203,11 @@ const AddTheater = () => {
                       <Search size={14} className="text-primary"/> Search Google Maps
                   </label>
                   {isLoaded ? (
-                      <Autocomplete onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)} onPlaceChanged={onPlaceChanged}>
+                      <Autocomplete 
+                          onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)} 
+                          onPlaceChanged={onPlaceChanged}
+                          options={{ componentRestrictions: { country: "in" } }}
+                      >
                           <input 
                               type="text"
                               placeholder="Search for a theater..."

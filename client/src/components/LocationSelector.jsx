@@ -172,6 +172,7 @@ const LocationSelector = () => {
                                 onLoad={(a) => (autocompleteRef.current = a)} 
                                 onPlaceChanged={onPlaceChanged}
                                 className="flex-1"
+                                options={{ componentRestrictions: { country: "in" } }}
                             >
                                 <input 
                                     type="text" 
