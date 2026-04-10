@@ -75,22 +75,23 @@ const TrailersSection = () => {
     const currentTrailer = trailers[currentIndex];
 
     return (
-        <div className='px-4 md:px-16 lg:px-24 xl:px-36 py-20 bg-[#050505] font-outfit'>
+        <div className='px-4 sm:px-6 md:px-16 lg:px-24 xl:px-36 py-12 sm:py-20 bg-[#050505] font-outfit relative overflow-hidden'>
+            
+            {/* Background ambient light */}
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[80%] h-[50%] bg-primary/5 blur-[120px] pointer-events-none rounded-full"></div>
             
             {/* Section Heading */}
-            <div className="flex items-center gap-3 mb-10 max-w-[1000px] mx-auto">
-                <div className="bg-gradient-to-br from-primary to-rose-600 p-2.5 rounded-xl text-white shadow-[0_0_15px_rgba(248,69,101,0.3)]">
-                    <Film size={24}/>
+            <div className="flex flex-col sm:flex-row items-center sm:justify-start gap-3 sm:gap-4 mb-8 sm:mb-10 max-w-[1000px] mx-auto text-center sm:text-left relative z-10">
+                <div className="bg-gradient-to-br from-primary to-rose-600 p-2 sm:p-2.5 rounded-xl text-white shadow-[0_0_15px_rgba(248,69,101,0.3)] shrink-0">
+                    <Film size={20} className="sm:w-6 sm:h-6"/>
                 </div>
-                <h2 className='text-white font-black text-3xl md:text-4xl tracking-tight'>Latest Trailers</h2>
+                <h2 className='text-white font-black text-2xl sm:text-3xl md:text-4xl tracking-tight'>Latest Trailers</h2>
             </div>
 
             {/* Main Video Player Container */}
-            <div className='relative w-full max-w-[1000px] mx-auto bg-[#0a0a0a] p-2 md:p-3 rounded-[2rem] border border-gray-800 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'>
+            <div className='relative w-full max-w-[1000px] mx-auto bg-[#0a0a0a] p-1.5 sm:p-2 md:p-3 rounded-2xl sm:rounded-[2rem] border border-gray-800 shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-10'>
                 
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-primary/10 blur-[100px] pointer-events-none"></div>
-
-                <div className="relative aspect-video rounded-3xl overflow-hidden bg-black ring-1 ring-white/10 shadow-inner">
+                <div className="relative aspect-video rounded-xl sm:rounded-3xl overflow-hidden bg-black ring-1 ring-white/10 shadow-inner group">
                     {currentTrailer && (
                         <ReactPlayer 
                             key={currentTrailer._id} // Forces player to remount on change
@@ -104,8 +105,8 @@ const TrailersSection = () => {
                             onPause={() => setIsVideoPlaying(false)} // Resume auto-scroll
                             onEnded={() => setIsVideoPlaying(false)} // Resume auto-scroll
                             playIcon={
-                                <div className="bg-white/10 backdrop-blur-md p-5 rounded-full border border-white/20 group cursor-pointer hover:scale-110 hover:bg-primary/80 hover:border-primary transition-all duration-300 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                                    <Play className="w-12 h-12 text-white fill-white ml-1" />
+                                <div className="bg-white/10 backdrop-blur-md p-4 sm:p-5 rounded-full border border-white/20 cursor-pointer hover:scale-110 hover:bg-primary/80 hover:border-primary transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-center">
+                                    <Play className="w-8 h-8 sm:w-12 sm:h-12 text-white fill-white ml-1" />
                                 </div>
                             }
                             config={{
@@ -113,22 +114,23 @@ const TrailersSection = () => {
                                     playerVars: { showinfo: 0, rel: 0, modestbranding: 1 }
                                 }
                             }}
+                            className="react-player"
                         />
                     )}
                 </div>
             </div>
 
             {/* Horizontal Thumbnail List */}
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-8 max-w-[1000px] mx-auto'>
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mt-6 sm:mt-8 max-w-[1000px] mx-auto relative z-10'>
                 {trailers.slice(0, 4).map((movie, idx) => {
                     const isActive = currentIndex === idx;
                     
                     return (
                         <div 
                             key={movie._id} 
-                            className={`relative group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300 transform
+                            className={`relative group cursor-pointer rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 transform flex flex-col
                                 ${isActive 
-                                    ? 'border border-primary shadow-[0_0_20px_rgba(248,69,101,0.2)] scale-[1.02] z-10' 
+                                    ? 'border border-primary shadow-[0_0_15px_rgba(248,69,101,0.2)] md:shadow-[0_0_20px_rgba(248,69,101,0.2)] scale-[1.02] z-10' 
                                     : 'border border-gray-800 hover:border-gray-600 opacity-70 hover:opacity-100 bg-[#0f0f0f]'}
                             `}
                             onClick={() => {
@@ -136,7 +138,7 @@ const TrailersSection = () => {
                                 setIsVideoPlaying(false); // Reset playing state if they click a new thumbnail
                             }}
                         >
-                            <div className="aspect-video relative overflow-hidden">
+                            <div className="aspect-video relative overflow-hidden shrink-0">
                                 <img 
                                     src={getHDThumbnail(movie)} 
                                     alt={movie.title} 
@@ -153,20 +155,20 @@ const TrailersSection = () => {
                                     ${isActive ? 'bg-black/10' : 'bg-black/50 group-hover:bg-black/30'}`}
                                 >
                                     {isActive ? (
-                                        <div className="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-lg animate-pulse">
+                                        <div className="bg-primary text-white text-[8px] sm:text-[10px] font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full uppercase tracking-widest shadow-lg animate-pulse whitespace-nowrap">
                                             {isVideoPlaying ? "Playing" : "Up Next"}
                                         </div>
                                     ) : (
-                                        <PlayCircleIcon className="w-10 h-10 text-white/80 group-hover:text-white transition-colors" />
+                                        <PlayCircleIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white/80 group-hover:text-white transition-colors" strokeWidth={1.5} />
                                     )}
                                 </div>
                             </div>
                             
-                            <div className={`p-3 md:p-4 transition-colors ${isActive ? 'bg-gradient-to-t from-[#1a0508] to-[#121212]' : 'bg-[#121212]'}`}>
-                                <p className={`text-sm font-bold truncate ${isActive ? 'text-white' : 'text-gray-300'}`}>
+                            <div className={`p-2 sm:p-3 md:p-4 flex-1 flex flex-col justify-center transition-colors ${isActive ? 'bg-gradient-to-t from-[#1a0508] to-[#121212]' : 'bg-[#121212]'}`}>
+                                <p className={`text-xs sm:text-sm font-bold truncate ${isActive ? 'text-white' : 'text-gray-300'}`}>
                                     {movie.title}
                                 </p>
-                                <p className="text-[10px] text-gray-500 font-medium truncate mt-0.5 uppercase tracking-wider">
+                                <p className="text-[8px] sm:text-[10px] text-gray-500 font-medium truncate mt-0.5 sm:mt-1 uppercase tracking-wider">
                                     {movie.genres?.map(g => g.name || g).join(' • ')}
                                 </p>
                             </div>
@@ -175,6 +177,16 @@ const TrailersSection = () => {
                 })}
             </div>
             
+            <style>{`
+                /* Ensure ReactPlayer wrapper matches aspect ratio exactly */
+                .react-player iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+            `}</style>
         </div>
     )
 }

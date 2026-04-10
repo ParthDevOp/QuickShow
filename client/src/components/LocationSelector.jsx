@@ -146,27 +146,27 @@ const LocationSelector = () => {
     return (
         // Backdrop Overlay: Clicking the dark area closes the modal
         <div 
-            className="fixed inset-0 z-[100] flex items-start justify-center pt-24 px-4 bg-black/70 backdrop-blur-sm animate-fadeIn font-sans"
+            className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center pt-20 sm:pt-0 px-4 bg-black/70 backdrop-blur-sm animate-fadeIn font-sans"
             onMouseDown={(e) => {
                 // Only close if they clicked the backdrop, not the white modal box itself
                 if (e.target === e.currentTarget) setShowLocationModal(false);
             }}
         >
             {/* Main Modal Box */}
-            <div className="bg-white w-full max-w-[850px] rounded-xl shadow-2xl flex flex-col relative overflow-hidden animate-scaleIn text-gray-800 pb-8">
+            <div className="bg-white w-full max-w-[850px] rounded-xl sm:rounded-2xl shadow-2xl flex flex-col relative overflow-hidden animate-scaleIn text-gray-800 pb-6 sm:pb-8 max-h-[85vh] sm:max-h-[90vh]">
                 
                 {/* Close Button */}
                 <button 
                     onClick={() => setShowLocationModal(false)}
-                    className="absolute top-5 right-5 text-gray-400 hover:text-gray-800 transition-colors z-50 cursor-pointer bg-white rounded-full p-1"
+                    className="absolute top-4 right-4 sm:top-5 sm:right-5 text-gray-400 hover:text-gray-800 transition-colors z-50 cursor-pointer bg-white rounded-full p-1"
                 >
-                    <X size={24} />
+                    <X size={20} className="sm:w-6 sm:h-6" />
                 </button>
 
                 {/* --- HEADER: Search Bar --- */}
-                <div className="px-6 pt-8 pb-4 border-b border-gray-200 flex flex-col">
-                    <div className="flex items-center gap-4 bg-white pr-8">
-                        <Search className="text-gray-400" size={22} />
+                <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-3 sm:pb-4 border-b border-gray-200 flex flex-col shrink-0">
+                    <div className="flex items-center gap-3 sm:gap-4 bg-white pr-8 sm:pr-10">
+                        <Search className="text-gray-400 w-5 h-5 sm:w-[22px] sm:h-[22px] shrink-0" />
                         {isLoaded ? (
                             <Autocomplete 
                                 onLoad={(a) => (autocompleteRef.current = a)} 
@@ -177,50 +177,50 @@ const LocationSelector = () => {
                                 <input 
                                     type="text" 
                                     placeholder="Search for your city" 
-                                    className="w-full text-lg outline-none text-gray-800 placeholder-gray-400 bg-transparent"
+                                    className="w-full text-base sm:text-lg outline-none text-gray-800 placeholder-gray-400 bg-transparent py-1"
                                     autoFocus
                                 />
                             </Autocomplete>
                         ) : (
-                            <div className="flex-1 text-gray-400 text-lg">Loading Maps API...</div>
+                            <div className="flex-1 text-gray-400 text-sm sm:text-lg">Loading Maps API...</div>
                         )}
                     </div>
                 </div>
 
                 {/* --- BODY --- */}
-                <div className="px-6 py-6 bg-gray-50 flex-1">
+                <div className="px-4 sm:px-6 py-5 sm:py-6 bg-gray-50 flex-1 overflow-y-auto custom-scrollbar">
                     
                     {/* Detect Location Button */}
-                    <div className="text-center md:text-left mb-8">
+                    <div className="text-center md:text-left mb-6 sm:mb-8">
                         <button 
                             onClick={handleDetectLocation}
                             disabled={isDetecting}
-                            className="inline-flex items-center justify-center gap-2 text-rose-500 font-medium hover:text-rose-600 transition-colors disabled:opacity-50"
+                            className="inline-flex items-center justify-center gap-2 text-rose-500 font-medium hover:text-rose-600 transition-colors disabled:opacity-50 text-sm sm:text-base"
                         >
-                            {isDetecting ? <Loader2 size={18} className="animate-spin" /> : <Target size={18} strokeWidth={2.5} />}
+                            {isDetecting ? <Loader2 size={16} className="animate-spin sm:w-[18px] sm:h-[18px]" /> : <Target size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={2.5} />}
                             Detect my location
                         </button>
                     </div>
 
                     {/* Popular Cities Grid */}
-                    <div className="mb-6">
-                        <h3 className="text-center text-sm font-medium text-gray-800 mb-8">Popular Cities</h3>
+                    <div className="mb-4 sm:mb-6">
+                        <h3 className="text-center text-xs sm:text-sm font-medium text-gray-800 mb-6 sm:mb-8">Popular Cities</h3>
                         
-                        <div className="flex flex-wrap justify-center md:justify-between gap-y-10 gap-x-2 px-2 md:px-8">
+                        <div className="flex flex-wrap justify-center md:justify-between gap-y-8 sm:gap-y-10 gap-x-2 sm:gap-x-2 px-0 md:px-8">
                             {POPULAR_CITIES.map((city) => (
                                 <div 
                                     key={city.name}
                                     onClick={() => handlePopularCityClick(city)}
-                                    className="flex flex-col items-center gap-2 cursor-pointer group w-[70px]"
+                                    className="flex flex-col items-center gap-1.5 sm:gap-2 cursor-pointer group w-[22%] sm:w-[60px] md:w-[70px]"
                                 >
-                                    <div className="w-12 h-12 flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center transition-transform duration-200 group-hover:scale-105 shrink-0">
                                         <img 
                                             src={city.iconUrl} 
                                             alt={city.name} 
                                             className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity" 
                                         />
                                     </div>
-                                    <span className="text-xs text-gray-500 group-hover:text-gray-900 font-medium text-center transition-colors">
+                                    <span className="text-[10px] sm:text-xs text-gray-500 group-hover:text-gray-900 font-medium text-center transition-colors truncate w-full">
                                         {city.name}
                                     </span>
                                 </div>
@@ -229,8 +229,8 @@ const LocationSelector = () => {
                     </div>
 
                     {/* Footer Link */}
-                    <div className="text-center mt-12">
-                        <button className="text-rose-500 text-[13px] font-medium hover:text-rose-600 transition-colors tracking-wide">
+                    <div className="text-center mt-10 sm:mt-12">
+                        <button className="text-rose-500 text-xs sm:text-[13px] font-medium hover:text-rose-600 transition-colors tracking-wide p-2">
                             View All Cities
                         </button>
                     </div>

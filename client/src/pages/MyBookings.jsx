@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
 import Loading from '../components/Loading'
 import { Calendar, Clock, MapPin, Ticket, CheckCircle2, AlertCircle, Download, Printer, FileText, AlertTriangle, X, ScanLine, ChevronDown, ChevronUp, Popcorn, Tag } from 'lucide-react'
@@ -39,38 +39,39 @@ const MyBookings = () => {
     }, [user])
 
     const handleConfirmCancel = async () => {
-    if (!bookingToCancel) return;
-    setIsCancelling(true);
-    
-    try {
-        const token = await getToken();
+        if (!bookingToCancel) return;
+        setIsCancelling(true);
         
-        // 🐛 DEBUG 1: Ensure we actually have an ID to send
-        console.log("Attempting to cancel booking ID:", bookingToCancel._id);
+        try {
+            const token = await getToken();
+            
+            // 🐛 DEBUG 1: Ensure we actually have an ID to send
+            console.log("Attempting to cancel booking ID:", bookingToCancel._id);
 
-        const { data } = await axios.post('/api/bookings/cancel', 
-            { bookingId: bookingToCancel._id }, 
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+            const { data } = await axios.post('/api/bookings/cancel', 
+                { bookingId: bookingToCancel._id }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-        if (data.success) {
-            toast.success(data.message || "Ticket successfully cancelled.", { icon: '💸', duration: 6000 });
-            setBookingToCancel(null);
-            fetchBookings(); 
-        } else {
-            toast.error(data.message || "Cancellation declined by server."); 
+            if (data.success) {
+                toast.success(data.message || "Ticket successfully cancelled.", { icon: '💸', duration: 6000 });
+                setBookingToCancel(null);
+                fetchBookings(); 
+            } else {
+                toast.error(data.message || "Cancellation declined by server."); 
+            }
+        } catch (error) {
+            // 🐛 DEBUG 2: Log the full error to your browser console
+            console.error("Cancellation Error Details:", error.response?.data || error.message);
+            
+            // Intelligently show the backend's error message if one exists, otherwise use fallback
+            const errorMessage = error.response?.data?.message || "Failed to cancel booking. Please try again.";
+            toast.error(errorMessage);
+        } finally {
+            setIsCancelling(false);
         }
-    } catch (error) {
-        // 🐛 DEBUG 2: Log the full error to your browser console
-        console.error("Cancellation Error Details:", error.response?.data || error.message);
-        
-        // Intelligently show the backend's error message if one exists, otherwise use fallback
-        const errorMessage = error.response?.data?.message || "Failed to cancel booking. Please try again.";
-        toast.error(errorMessage);
-    } finally {
-        setIsCancelling(false);
-    }
-};
+    };
+    
     let refundEstimate = 0, earnedPoints = 0, pointsToDeduct = 0;
     if (bookingToCancel) {
         refundEstimate = Math.round(bookingToCancel.amount * 0.60);
@@ -81,28 +82,28 @@ const MyBookings = () => {
     if (loading) return <Loading />
 
     return (
-        <div className='min-h-screen bg-[#050505] px-4 md:px-12 lg:px-20 py-10 font-outfit text-white pt-28 animate-fadeIn'>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <div className='min-h-screen bg-[#050505] px-4 sm:px-6 md:px-12 lg:px-20 py-8 sm:py-10 font-outfit text-white pt-24 sm:pt-28 animate-fadeIn max-w-[1600px] mx-auto'>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-10 gap-4">
                 <div>
-                    <h1 className='text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500'>My Tickets</h1>
-                    <p className="text-gray-400 text-sm mt-2 flex items-center gap-2">
+                    <h1 className='text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500'>My Tickets</h1>
+                    <p className="text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2 flex items-center gap-1.5 sm:gap-2">
                         <FileText size={14}/> History & Tax Invoices
                     </p>
                 </div>
-                <button onClick={() => window.print()} className="bg-white/5 hover:bg-white/10 border border-white/10 px-6 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all">
+                <button onClick={() => window.print()} className="w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-white/10 px-6 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium flex items-center justify-center gap-2 transition-all">
                     <Printer size={16}/> Print Page
                 </button>
             </div>
 
-            <div className="space-y-6 relative">
+            <div className="space-y-6 sm:space-y-8 relative">
                 {bookings.length === 0 ? (
-                   <div className="text-center py-24 bg-[#0f0f0f] rounded-3xl border border-gray-800/50">
-                       <div className="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
-                           <Ticket className="w-10 h-10 text-gray-500"/>
+                   <div className="text-center py-16 sm:py-24 bg-[#0f0f0f] rounded-2xl sm:rounded-3xl border border-gray-800/50 px-4">
+                       <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                           <Ticket className="w-8 h-8 sm:w-10 sm:h-10 text-gray-500"/>
                        </div>
-                       <h3 className="text-xl font-bold text-white mb-2">No bookings yet</h3>
-                       <p className="text-gray-500 mb-6">Your movie history will appear here.</p>
-                       <button onClick={()=>navigate('/')} className="bg-primary hover:bg-red-600 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/20">
+                       <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No bookings yet</h3>
+                       <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">Your movie history will appear here once you make a booking.</p>
+                       <button onClick={()=>navigate('/')} className="w-full sm:w-auto bg-primary hover:bg-red-600 text-white px-8 py-3 sm:py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 text-sm sm:text-base">
                            Book a Movie
                        </button>
                    </div>
@@ -118,38 +119,42 @@ const MyBookings = () => {
                 )}
             </div>
 
-            {/* Cancel Modal (Unchanged) */}
+            {/* Cancel Modal (Responsive Adjustments) */}
             {bookingToCancel && (
-                <div className="fixed top-0 left-0 w-screen h-screen z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn print:hidden">
-                    <div className="bg-[#121212] border border-gray-800 rounded-3xl max-w-md w-full shadow-2xl overflow-hidden">
-                        <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-red-500/5">
-                            <div className="flex items-center gap-3 text-red-500">
-                                <AlertTriangle size={24} />
-                                <h3 className="text-xl font-black">Cancel Ticket</h3>
+                <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn print:hidden">
+                    <div className="bg-[#121212] sm:border border-gray-800 rounded-t-3xl sm:rounded-3xl max-w-md w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+                        <div className="p-5 sm:p-6 border-b border-gray-800 flex justify-between items-center bg-red-500/5 shrink-0">
+                            <div className="flex items-center gap-2 sm:gap-3 text-red-500">
+                                <AlertTriangle size={20} className="sm:w-6 sm:h-6" />
+                                <h3 className="text-lg sm:text-xl font-black">Cancel Ticket</h3>
                             </div>
-                            <button onClick={() => setBookingToCancel(null)} className="text-gray-500 hover:text-white transition-colors">
-                                <X size={20} />
+                            <button onClick={() => setBookingToCancel(null)} className="text-gray-500 hover:text-white transition-colors p-1 bg-white/5 rounded-full hover:bg-white/10">
+                                <X size={18} className="sm:w-5 sm:h-5" />
                             </button>
                         </div>
 
-                        <div className="p-6 space-y-6">
-                            <p className="text-gray-300 font-medium">Are you sure you want to cancel your booking for <strong>{bookingToCancel.show?.movie?.title || "this movie"}</strong>?</p>
+                        <div className="p-5 sm:p-6 space-y-5 sm:space-y-6 overflow-y-auto custom-scrollbar flex-1">
+                            <p className="text-gray-300 font-medium text-sm sm:text-base">Are you sure you want to cancel your booking for <strong className="text-white">{bookingToCancel.show?.movie?.title || "this movie"}</strong>?</p>
                             
-                            <div className="bg-[#1a1a1a] border border-gray-700 p-5 rounded-2xl">
-                                <h4 className="font-bold text-white mb-3 text-sm">Cancellation Terms & Conditions</h4>
-                                <ul className="list-disc pl-5 text-sm text-gray-400 space-y-2">
+                            <div className="bg-[#1a1a1a] border border-gray-700 p-4 sm:p-5 rounded-2xl">
+                                <h4 className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm flex items-center gap-2">
+                                    <FileText size={14} className="text-gray-400"/> Cancellation Terms
+                                </h4>
+                                <ul className="list-disc pl-4 sm:pl-5 text-xs sm:text-sm text-gray-400 space-y-2 leading-relaxed">
                                     <li>You will receive a <strong>60% refund (₹{refundEstimate})</strong> to your original payment method within 3-5 business days.</li>
                                     <li>The remaining 40% (₹{bookingToCancel.amount - refundEstimate}) is retained as a non-refundable cancellation fee.</li>
-                                    <li><strong>{pointsToDeduct} Loyalty Coins</strong> (60% of what you earned from this booking) will be deducted from your wallet.</li>
+                                    {pointsToDeduct > 0 && (
+                                        <li><strong>{pointsToDeduct} Loyalty Coins</strong> (60% of what you earned from this booking) will be deducted from your wallet.</li>
+                                    )}
                                     <li>This action is permanent and your seats will be released immediately.</li>
                                 </ul>
                             </div>
 
-                            <div className="flex gap-3 pt-2">
-                                <button onClick={() => setBookingToCancel(null)} disabled={isCancelling} className="flex-1 py-3.5 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold transition-all disabled:opacity-50">
+                            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                                <button onClick={() => setBookingToCancel(null)} disabled={isCancelling} className="w-full sm:flex-1 py-3 sm:py-3.5 bg-white/5 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition-all disabled:opacity-50 order-2 sm:order-1">
                                     Keep Ticket
                                 </button>
-                                <button onClick={handleConfirmCancel} disabled={isCancelling} className="flex-1 py-3.5 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold transition-all disabled:opacity-50 flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.3)]">
+                                <button onClick={handleConfirmCancel} disabled={isCancelling} className="w-full sm:flex-1 py-3 sm:py-3.5 bg-red-600 hover:bg-red-500 text-white rounded-xl text-sm font-bold transition-all disabled:opacity-50 flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.3)] order-1 sm:order-2">
                                     {isCancelling ? 'Processing...' : 'Agree & Cancel'}
                                 </button>
                             </div>
@@ -186,11 +191,11 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
 
     if (!isCancelled && (!show || !show.movie || !show.theater)) {
         return (
-            <div className="flex bg-[#121212] border border-red-900/30 rounded-2xl p-6 items-center gap-4 opacity-70">
-                <div className="p-3 bg-red-900/20 rounded-full text-red-500"><AlertTriangle size={24}/></div>
-                <div>
-                    <h3 className="text-lg font-bold text-gray-300">Show Data Unavailable</h3>
-                    <p className="text-sm text-gray-500">This show has been removed or passed. Booking ID: #{_id.slice(-6).toUpperCase()}</p>
+            <div className="flex flex-col sm:flex-row bg-[#121212] border border-red-900/30 rounded-2xl p-4 sm:p-6 items-start sm:items-center gap-4 opacity-70">
+                <div className="p-3 bg-red-900/20 rounded-full text-red-500 shrink-0"><AlertTriangle size={20} className="sm:w-6 sm:h-6"/></div>
+                <div className="min-w-0">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-300">Show Data Unavailable</h3>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">This show has been removed or passed. Booking ID: <span className="font-mono">#{_id.slice(-6).toUpperCase()}</span></p>
                 </div>
             </div>
         )
@@ -310,47 +315,61 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
     }
 
     return (
-        <div className={`flex flex-col lg:flex-row bg-[#121212] border ${isCancelled ? 'border-red-900/50 opacity-80' : 'border-gray-800'} rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-300 group`}>
+        <div className={`flex flex-col lg:flex-row bg-[#121212] border ${isCancelled ? 'border-red-900/50 opacity-80' : 'border-gray-800'} rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-300 group relative`}>
             
+            {/* Mobile Cancel Overlay (absolute) */}
+            {isCancelled && (
+                <div className="absolute top-4 right-4 z-10 lg:hidden bg-red-900/80 backdrop-blur-md px-3 py-1 rounded-lg border border-red-500/50 shadow-lg">
+                    <span className="text-white font-black tracking-widest text-xs uppercase">VOID</span>
+                </div>
+            )}
+
             {/* Left: Poster */}
-            <div className="w-full lg:w-56 h-56 lg:h-auto relative overflow-hidden shrink-0">
-                <img src={posterPath} alt="" className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ${isCancelled && 'grayscale'}`}/>
+            <div className="w-full lg:w-56 h-48 sm:h-56 lg:h-auto relative overflow-hidden shrink-0 border-b lg:border-b-0 lg:border-r border-gray-800">
+                <img src={posterPath} alt="" className={`w-full h-full object-cover object-center lg:object-top group-hover:scale-105 transition-transform duration-700 ${isCancelled && 'grayscale'}`}/>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
-                {isCancelled && <div className="absolute inset-0 bg-red-900/40 flex items-center justify-center backdrop-blur-[2px]"><span className="text-white font-black tracking-widest rotate-[-45deg] text-2xl border-4 border-white/50 p-2 rounded-xl">VOID</span></div>}
+                {/* Desktop Cancel Overlay */}
+                {isCancelled && <div className="hidden lg:flex absolute inset-0 bg-red-900/40 items-center justify-center backdrop-blur-[2px]"><span className="text-white font-black tracking-widest rotate-[-45deg] text-2xl border-4 border-white/50 p-2 rounded-xl">VOID</span></div>}
             </div>
             
             {/* Middle: Info & Bill Breakdown */}
-            <div className="flex-1 p-6 lg:p-8 flex flex-col justify-between border-r border-gray-800 border-dashed relative">
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-[#050505] rounded-full hidden lg:block"></div>
-                <div className="absolute -bottom-4 -right-4 w-8 h-8 bg-[#050505] rounded-full hidden lg:block"></div>
+            <div className="flex-1 p-5 sm:p-6 lg:p-8 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-gray-800 border-dashed relative">
+                {/* Visual perforations for ticket style (hidden on mobile) */}
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-[#050505] rounded-full hidden lg:block border-b border-l border-gray-800"></div>
+                <div className="absolute -bottom-4 -right-4 w-8 h-8 bg-[#050505] rounded-full hidden lg:block border-t border-l border-gray-800"></div>
 
                 <div>
-                    <div className="flex justify-between items-start mb-2">
-                        <h2 className={`text-2xl font-bold leading-tight ${isCancelled ? 'text-gray-400 line-through' : 'text-white'}`}>{movieTitle}</h2>
-                        <span className="text-[10px] font-mono text-gray-500 border border-gray-800 px-2 py-0.5 rounded bg-black/50">#{bookingId}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-4 mb-3 sm:mb-2">
+                        <h2 className={`text-xl sm:text-2xl font-bold leading-tight line-clamp-2 ${isCancelled ? 'text-gray-400 line-through' : 'text-white'}`}>{movieTitle}</h2>
+                        <span className="text-[9px] sm:text-[10px] font-mono text-gray-400 border border-gray-700 px-2 py-1 rounded bg-black/50 w-fit shrink-0 tracking-wider">#{bookingId}</span>
                     </div>
-                    <div className="space-y-2 mt-4">
-                        <div className="flex items-center gap-3 text-sm text-gray-400">
-                            <MapPin size={16} className={isCancelled ? 'text-gray-600' : 'text-primary'}/> {theaterName}{theaterCity ? `, ${theaterCity}` : ''}
+                    <div className="space-y-2 mt-3 sm:mt-4">
+                        <div className="flex items-start sm:items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-400">
+                            <MapPin className={`shrink-0 w-4 h-4 sm:w-4 sm:h-4 mt-0.5 sm:mt-0 ${isCancelled ? 'text-gray-600' : 'text-primary'}`}/> 
+                            <span className="leading-snug">{theaterName}{theaterCity ? `, ${theaterCity}` : ''}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-400">
-                            <Calendar size={16} className={isCancelled ? 'text-gray-600' : 'text-primary'}/> {showDate}
-                            <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
-                            <Clock size={16} className={isCancelled ? 'text-gray-600' : 'text-primary'}/> {showTime}
+                        <div className="flex flex-wrap items-center gap-y-1 gap-x-2 sm:gap-3 text-xs sm:text-sm text-gray-400">
+                            <div className="flex items-center gap-2">
+                                <Calendar className={`shrink-0 w-4 h-4 sm:w-4 sm:h-4 ${isCancelled ? 'text-gray-600' : 'text-primary'}`}/> {showDate}
+                            </div>
+                            <span className="hidden sm:block w-1 h-1 bg-gray-600 rounded-full"></span>
+                            <div className="flex items-center gap-2">
+                                <Clock className={`shrink-0 w-4 h-4 sm:w-4 sm:h-4 ${isCancelled ? 'text-gray-600' : 'text-primary'}`}/> {showTime}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* 🚨 Detailed Bill UI Breakdown */}
-                <div className="mt-6 pt-6 border-t border-gray-800/50">
+                <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-gray-800/50">
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Seats ({actualSeats.length})</p>
-                            <p className={`text-xl font-bold tracking-widest ${isCancelled ? 'text-gray-500 line-through' : 'text-white'}`}>{actualSeats.join(', ')}</p>
+                            <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase font-bold mb-1">Seats ({actualSeats.length})</p>
+                            <p className={`text-lg sm:text-xl font-bold tracking-widest leading-none ${isCancelled ? 'text-gray-500 line-through' : 'text-white'}`}>{actualSeats.join(', ')}</p>
                         </div>
                         <div>
-                            <p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Paid Amount</p>
-                            <p className={`text-xl font-bold ${isCancelled ? 'text-gray-500' : 'text-primary'}`}>₹{amount}</p>
+                            <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase font-bold mb-1">Paid Amount</p>
+                            <p className={`text-lg sm:text-xl font-bold leading-none ${isCancelled ? 'text-gray-500' : 'text-primary'}`}>₹{amount}</p>
                         </div>
                     </div>
 
@@ -358,14 +377,14 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
                     <div className="bg-[#1a1a1a] rounded-xl overflow-hidden border border-gray-800">
                         <button 
                             onClick={() => setShowBillDetails(!showBillDetails)} 
-                            className="w-full px-4 py-3 text-xs font-bold text-gray-400 flex items-center justify-between hover:bg-white/5 transition-colors"
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-[11px] sm:text-xs font-bold text-gray-400 flex items-center justify-between hover:bg-white/5 transition-colors"
                         >
                             <span className="flex items-center gap-2"><FileText size={14} className="text-gray-500"/> Invoice Breakdown</span>
                             {showBillDetails ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
                         </button>
                         
                         {showBillDetails && (
-                            <div className="px-4 pb-4 space-y-2 text-sm">
+                            <div className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-2 text-xs sm:text-sm animate-fadeIn">
                                 <div className="flex justify-between text-gray-300 pt-2 border-t border-gray-800">
                                     <span>Tickets</span>
                                     <span className="font-mono">₹{calculatedTicketsTotal}</span>
@@ -373,22 +392,24 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
                                 
                                 {snacks.map((snack, index) => (
                                     <div key={index} className="flex justify-between text-gray-400">
-                                        <span className="flex items-center gap-2 text-xs"><Popcorn size={12}/> {snack.quantity}x {snack.name}</span>
-                                        <span className="font-mono text-xs">₹{snack.price * snack.quantity}</span>
+                                        <span className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs truncate pr-2">
+                                            <Popcorn size={12} className="shrink-0"/> {snack.quantity}x {snack.name}
+                                        </span>
+                                        <span className="font-mono text-[11px] sm:text-xs shrink-0">₹{snack.price * snack.quantity}</span>
                                     </div>
                                 ))}
 
                                 {convenienceFee > 0 && (
-                                    <div className="flex justify-between text-gray-400 text-xs">
+                                    <div className="flex justify-between text-gray-400 text-[11px] sm:text-xs">
                                         <span>Convenience Fee</span>
                                         <span className="font-mono">₹{convenienceFee}</span>
                                     </div>
                                 )}
 
                                 {discountAmount > 0 && (
-                                    <div className="flex justify-between text-emerald-400 text-xs font-bold bg-emerald-500/5 p-1.5 rounded-md mt-1">
-                                        <span className="flex items-center gap-1"><Tag size={12}/> Coupon Applied</span>
-                                        <span className="font-mono">-₹{discountAmount}</span>
+                                    <div className="flex justify-between items-center text-emerald-400 text-[11px] sm:text-xs font-bold bg-emerald-500/5 p-1.5 sm:p-2 rounded-md mt-1.5 border border-emerald-500/10">
+                                        <span className="flex items-center gap-1.5 truncate pr-2"><Tag size={12} className="shrink-0"/> Coupon Applied</span>
+                                        <span className="font-mono shrink-0">-₹{discountAmount}</span>
                                     </div>
                                 )}
                                 
@@ -403,47 +424,51 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
             </div>
 
             {/* Right: Actions & QR */}
-            <div className="w-full lg:w-72 bg-[#1a1a1a] p-6 lg:p-8 flex flex-col items-center justify-between gap-4 relative">
-                <div className={`w-full py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-2 border ${
+            <div className="w-full lg:w-72 bg-[#1a1a1a] p-5 sm:p-6 lg:p-8 flex flex-col items-center justify-between gap-4 relative">
+                {/* Horizontal perforations for mobile */}
+                <div className="absolute -top-4 left-8 w-8 h-8 bg-[#050505] rounded-full lg:hidden border-b border-gray-800"></div>
+                <div className="absolute -top-4 right-8 w-8 h-8 bg-[#050505] rounded-full lg:hidden border-b border-gray-800"></div>
+
+                <div className={`w-full py-2 rounded-lg text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 sm:gap-2 border tracking-wider ${
                     isCancelled ? 'bg-red-500/10 text-red-500 border-red-500/20' :
                     isCheckedIn ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
                     isPaid ? 'bg-green-500/5 text-green-500 border-green-500/20' : 'bg-orange-500/5 text-orange-500 border-orange-500/20'
                 }`}>
-                    {isCancelled ? <><AlertCircle size={14}/> CANCELLED</> :
-                     isCheckedIn ? <><CheckCircle2 size={14}/> ENTRY LOGGED - SCANNED</> :
-                     isPaid ? <><CheckCircle2 size={14}/> CONFIRMED</> : <><AlertCircle size={14}/> PAY AT COUNTER</>}
+                    {isCancelled ? <><AlertCircle size={14} className="sm:w-4 sm:h-4"/> CANCELLED</> :
+                     isCheckedIn ? <><CheckCircle2 size={14} className="sm:w-4 sm:h-4"/> ENTRY LOGGED</> :
+                     isPaid ? <><CheckCircle2 size={14} className="sm:w-4 sm:h-4"/> CONFIRMED</> : <><AlertCircle size={14} className="sm:w-4 sm:h-4"/> PAY AT COUNTER</>}
                 </div>
 
                 {!isCancelled ? (
                     <>
-                        <div className="bg-white p-2 rounded-2xl mt-2 border-4 border-gray-800 shadow-xl relative group">
+                        <div className="bg-white p-2 rounded-2xl mt-2 sm:mt-0 border-4 border-gray-800 shadow-xl relative group">
                             {qrCodeData ? (
-                                <img src={qrCodeData} alt="Scan to enter" className="w-28 h-28 object-contain mix-blend-multiply opacity-95"/>
+                                <img src={qrCodeData} alt="Scan to enter" className="w-24 h-24 sm:w-28 sm:h-28 object-contain mix-blend-multiply opacity-95"/>
                             ) : (
-                                <div className="w-28 h-28 flex items-center justify-center bg-gray-100">
+                                <div className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center bg-gray-100">
                                     <ScanLine size={32} className="text-gray-300 animate-pulse" />
                                 </div>
                             )}
                         </div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Gate Pass</p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-widest font-bold">Gate Pass</p>
                         
                         <div className="w-full space-y-2 mt-2">
-                            <button onClick={downloadReceipt} className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 transition-all group">
-                                <Download size={14} className="group-hover:translate-y-0.5 transition-transform"/> Download Tax Invoice
+                            <button onClick={downloadReceipt} className="w-full py-2.5 sm:py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[11px] sm:text-xs font-bold text-white flex items-center justify-center gap-2 transition-all group">
+                                <Download size={14} className="group-hover:translate-y-0.5 transition-transform"/> Download Invoice
                             </button>
                             
                             {!isCheckedIn && (
-                                <button onClick={onCancelClick} className="w-full py-2.5 bg-red-500/10 hover:bg-red-600 hover:text-white border border-red-500/20 rounded-xl text-xs font-bold text-red-500 transition-all">
+                                <button onClick={onCancelClick} className="w-full py-2.5 sm:py-3 bg-red-500/10 hover:bg-red-600 hover:text-white border border-red-500/20 rounded-xl text-[11px] sm:text-xs font-bold text-red-500 transition-all">
                                     Cancel Booking
                                 </button>
                             )}
                         </div>
                     </>
                 ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center text-center opacity-50 py-4">
+                    <div className="flex-1 flex flex-col items-center justify-center text-center opacity-50 py-6 lg:py-4">
                         <AlertTriangle size={32} className="text-red-500 mb-2"/>
                         <p className="text-xs font-bold text-gray-400">TICKET VOIDED</p>
-                        <p className="text-[10px] text-gray-500 mt-1">Refund initiated to original payment method.</p>
+                        <p className="text-[10px] text-gray-500 mt-1 max-w-[200px]">Refund initiated to original payment method.</p>
                     </div>
                 )}
             </div>
