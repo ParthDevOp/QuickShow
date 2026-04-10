@@ -274,6 +274,7 @@ export const cancelBooking = async (req, res) => {
         if (!booking) throw new Error("Booking not found");
         if (String(booking.user) !== String(userId)) throw new Error("Permission denied.");
         if (booking.status === 'CANCELLED') throw new Error("Already cancelled.");
+        if (booking.isCheckedIn) throw new Error("Ticket has already been utilized. Cancellation is not permitted post check-in.");
 
         const showTime = new Date(booking.show.showDateTime);
         const currentTime = new Date();
@@ -316,7 +317,7 @@ export const cancelBooking = async (req, res) => {
 
         res.json({ 
             success: true, 
-            message: `Ticket cancelled! ₹${refundAmount} will be refunded.`,
+            message: `Ticket successfully cancelled. ₹${refundAmount} refund initiated to original payment method.`,
             refundAmount 
         });
 

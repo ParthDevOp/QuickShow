@@ -54,7 +54,7 @@ const MyBookings = () => {
         );
 
         if (data.success) {
-            toast.success(data.message || "Ticket Cancelled Successfully", { icon: '💳', duration: 6000 });
+            toast.success(data.message || "Ticket successfully cancelled.", { icon: '💸', duration: 6000 });
             setBookingToCancel(null);
             fetchBookings(); 
         } else {
@@ -169,7 +169,7 @@ const MyBookings = () => {
 // Subcomponent
 const TicketCard = ({ booking, user, onCancelClick }) => {
     // 🚨 Extracting detailed billing arrays and fields
-    const { _id, amount, isPaid, show, bookedSeats, seats, createdAt, status, snacks = [], discountAmount = 0, convenienceFee = 0, ticketsTotal = 0 } = booking;
+    const { _id, amount, isPaid, show, bookedSeats, seats, createdAt, status, snacks = [], discountAmount = 0, convenienceFee = 0, ticketsTotal = 0, isCheckedIn } = booking;
     const isCancelled = status === 'CANCELLED' || status === 'Cancelled';
     
     const [qrCodeData, setQrCodeData] = useState('');
@@ -406,9 +406,11 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
             <div className="w-full lg:w-72 bg-[#1a1a1a] p-6 lg:p-8 flex flex-col items-center justify-between gap-4 relative">
                 <div className={`w-full py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-2 border ${
                     isCancelled ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                    isCheckedIn ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
                     isPaid ? 'bg-green-500/5 text-green-500 border-green-500/20' : 'bg-orange-500/5 text-orange-500 border-orange-500/20'
                 }`}>
                     {isCancelled ? <><AlertCircle size={14}/> CANCELLED</> :
+                     isCheckedIn ? <><CheckCircle2 size={14}/> ENTRY LOGGED - SCANNED</> :
                      isPaid ? <><CheckCircle2 size={14}/> CONFIRMED</> : <><AlertCircle size={14}/> PAY AT COUNTER</>}
                 </div>
 
@@ -430,9 +432,11 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
                                 <Download size={14} className="group-hover:translate-y-0.5 transition-transform"/> Download Tax Invoice
                             </button>
                             
-                            <button onClick={onCancelClick} className="w-full py-2.5 bg-red-500/10 hover:bg-red-600 hover:text-white border border-red-500/20 rounded-xl text-xs font-bold text-red-500 transition-all">
-                                Cancel Booking
-                            </button>
+                            {!isCheckedIn && (
+                                <button onClick={onCancelClick} className="w-full py-2.5 bg-red-500/10 hover:bg-red-600 hover:text-white border border-red-500/20 rounded-xl text-xs font-bold text-red-500 transition-all">
+                                    Cancel Booking
+                                </button>
+                            )}
                         </div>
                     </>
                 ) : (
