@@ -42,7 +42,7 @@ const CinemaBookings = () => {
 
         try {
             const doc = new jsPDF();
-            const qrCodeDataUrl = await QRCode.toDataURL(booking._id, { errorCorrectionLevel: 'H' });
+            const qrCodeDataUrl = await QRCode.toDataURL(booking._id, { errorCorrectionLevel: 'L', margin: 2, width: 300 });
             const bookingIdShort = booking._id.slice(-8).toUpperCase();
             
             // Safe date parsing

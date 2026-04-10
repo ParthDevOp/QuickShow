@@ -178,7 +178,7 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
     useEffect(() => {
         if (!isCancelled && _id) {
             const secureData = booking.qrToken || _id; 
-            QRCode.toDataURL(secureData, { errorCorrectionLevel: 'H', margin: 1, width: 200 })
+            QRCode.toDataURL(secureData, { errorCorrectionLevel: 'L', margin: 2, width: 300 })
                 .then(url => setQrCodeData(url))
                 .catch(err => console.error("QR Generation Error:", err));
         }
@@ -217,7 +217,7 @@ const TicketCard = ({ booking, user, onCancelClick }) => {
         try {
             const doc = new jsPDF();
             const secureData = booking.qrToken || _id; 
-            const pdfQrUrl = await QRCode.toDataURL(secureData, { errorCorrectionLevel: 'H' });
+            const pdfQrUrl = await QRCode.toDataURL(secureData, { errorCorrectionLevel: 'L', margin: 2, width: 300 });
 
             // Header Section
             doc.setFillColor(20, 20, 20); doc.rect(0, 0, 210, 40, 'F');

@@ -194,7 +194,7 @@ const BoxOffice = () => {
         setIsPrinting(true);
         try {
             const doc = new jsPDF();
-            const qrCodeDataUrl = await QRCode.toDataURL(completedTxn.bookingId, { errorCorrectionLevel: 'H' });
+            const qrCodeDataUrl = await QRCode.toDataURL(completedTxn.bookingId, { errorCorrectionLevel: 'L', margin: 2, width: 300 });
             const bookingIdShort = completedTxn.bookingId.slice(-8).toUpperCase();
             const showDate = completedTxn.show ? new Date(completedTxn.show.showDateTime).toDateString() : 'N/A';
             const showTime = completedTxn.show ? new Date(completedTxn.show.showDateTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'N/A';

@@ -117,7 +117,7 @@ const ListBookings = () => {
             
             // --- SECURITY FIX: Use Cryptographic Token for Admin PDF ---
             const secureData = qrToken || _id;
-            const qrCodeDataUrl = await QRCode.toDataURL(secureData, { errorCorrectionLevel: 'H' });
+            const qrCodeDataUrl = await QRCode.toDataURL(secureData, { errorCorrectionLevel: 'L', margin: 2, width: 300 });
 
             doc.setFillColor(15, 15, 15); doc.rect(0, 0, 210, 40, 'F');
             doc.setTextColor(248, 69, 101); doc.setFontSize(22); doc.setFont("helvetica", "bold");

@@ -35,27 +35,75 @@ const ScanTicket = () => {
         try {
             setScanResult(null);
             setTicketData(null);
+
+            if (scannerRef.current) {
+                try {
+                    if (scannerRef.current.isScanning) {
+                        await scannerRef.current.stop();
+                    }
+                    scannerRef.current.clear();
+                } catch (e) {
+                    console.warn("Cleanup warning:", e);
+                }
+            }
+
+            // 1. Explicitly request camera permissions and fetch device list
+            let devices = [];
+            try {
+                devices = await Html5Qrcode.getCameras();
+            } catch (camErr) {
+                throw new Error("Camera permission denied or no devices found.");
+            }
+
+            if (!devices || devices.length === 0) {
+                throw new Error("No camera devices detected on this system.");
+            }
             
             const html5QrCode = new Html5Qrcode("qr-reader");
             scannerRef.current = html5QrCode;
 
-            await html5QrCode.start(
-                { facingMode: "environment" }, 
-                { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
-                (decodedText) => {
-                    // Success Callback
-                    html5QrCode.stop().then(() => {
-                        setIsCameraActive(false);
-                        setScanResult(decodedText);
-                        verifyTicket(decodedText);
+            const successCallback = (decodedText) => {
+                // Success Callback
+                html5QrCode.stop().then(() => {
+                    setIsCameraActive(false);
+                    setScanResult(decodedText);
+                    verifyTicket(decodedText);
+                }).catch(e => console.error("Error stopping scanner:", e));
+            };
+
+            const errorCallback = () => { /* Silent ignore for scanning errors */ };
+            const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+
+            let cameraConfig;
+            
+            // 2. Intelligent Camera Selection
+            if (devices.length === 1) {
+                // Desktop Webcams or single-camera devices often fail with facingMode constraints
+                cameraConfig = devices[0].id;
+            } else {
+                // Mobile devices with multiple cameras. Let's pre-test the auto-focus capability.
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: "environment", advanced: [{ focusMode: "continuous" }] } 
                     });
-                },
-                () => { /* Silent ignore for scanning errors */ }
+                    stream.getTracks().forEach(t => t.stop());
+                    cameraConfig = { facingMode: "environment", advanced: [{ focusMode: "continuous" }] };
+                } catch (e) {
+                    cameraConfig = { facingMode: "environment" };
+                }
+            }
+
+            await html5QrCode.start(
+                cameraConfig, 
+                config,
+                successCallback,
+                errorCallback
             );
             setIsCameraActive(true);
+
         } catch (err) {
-            console.error(err);
-            toast.error("Camera access denied or device unavailable.");
+            console.error("Camera Start Error:", err);
+            toast.error(err.message || "Camera access denied or device unavailable.");
             setIsCameraActive(false);
         }
     };
