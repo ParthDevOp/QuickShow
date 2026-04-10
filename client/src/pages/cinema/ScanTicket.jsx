@@ -5,7 +5,7 @@ import Title from '../../components/admin/Title';
 import { 
     QrCode, CheckCircle, XCircle, User, Clock, Film, 
     Ticket as TicketIcon, Keyboard, RefreshCcw, ShieldCheck, 
-    Camera, Hash, CreditCard, Popcorn, Mail, Phone, CalendarDays, UploadCloud, CameraOff
+    Camera, Hash, CreditCard, Popcorn, UploadCloud, CameraOff
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -18,101 +18,126 @@ const ScanTicket = () => {
     
     // Custom Scanner States
     const [isCameraActive, setIsCameraActive] = useState(false);
-    const scannerRef = useRef(null);
+    const [focusPoint, setFocusPoint] = useState(null);
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+    const [mediaStream, setMediaStream] = useState(null);
     const fileInputRef = useRef(null);
 
     // Cleanup scanner on component unmount
     useEffect(() => {
         return () => {
-            if (scannerRef.current && scannerRef.current.isScanning) {
-                scannerRef.current.stop().catch(console.error);
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(t => t.stop());
             }
         };
-    }, []);
+    }, [mediaStream]);
 
-    // --- CUSTOM CAMERA LOGIC ---
+    // Attach stream to video explicitly when it mounts
+    useEffect(() => {
+        if (isCameraActive && videoRef.current && mediaStream) {
+            videoRef.current.srcObject = mediaStream;
+        }
+    }, [isCameraActive, mediaStream]);
+
+    // --- CUSTOM CAMERA LOGIC (MANUAL SNAPSHOT) ---
     const startCamera = async () => {
         try {
             setScanResult(null);
             setTicketData(null);
 
-            if (scannerRef.current) {
-                try {
-                    if (scannerRef.current.isScanning) {
-                        await scannerRef.current.stop();
-                    }
-                    scannerRef.current.clear();
-                } catch (e) {
-                    console.warn("Cleanup warning:", e);
-                }
-            }
+            // Fetch devices
+            await navigator.mediaDevices.getUserMedia({ video: true }); // Request permission first
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
+            if (videoDevices.length === 0) throw new Error("No cameras found");
 
-            // 1. Explicitly request camera permissions and fetch device list
-            let devices = [];
+            let stream;
             try {
-                devices = await Html5Qrcode.getCameras();
-            } catch (camErr) {
-                throw new Error("Camera permission denied or no devices found.");
+                // Try back camera first with continuous auto-focus requesting
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                     video: { 
+                         facingMode: { exact: "environment" },
+                         advanced: [{ focusMode: "continuous" }]
+                     } 
+                });
+            } catch (e) {
+                // Fallback to any camera without strict constraints
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
             }
 
-            if (!devices || devices.length === 0) {
-                throw new Error("No camera devices detected on this system.");
-            }
-            
-            const html5QrCode = new Html5Qrcode("qr-reader");
-            scannerRef.current = html5QrCode;
-
-            const successCallback = (decodedText) => {
-                // Success Callback
-                html5QrCode.stop().then(() => {
-                    setIsCameraActive(false);
-                    setScanResult(decodedText);
-                    verifyTicket(decodedText);
-                }).catch(e => console.error("Error stopping scanner:", e));
-            };
-
-            const errorCallback = () => { /* Silent ignore for scanning errors */ };
-            const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
-
-            let cameraConfig;
-            
-            // 2. Intelligent Camera Selection
-            if (devices.length === 1) {
-                // Desktop Webcams or single-camera devices often fail with facingMode constraints
-                cameraConfig = devices[0].id;
-            } else {
-                // Mobile devices with multiple cameras. Let's pre-test the auto-focus capability.
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { facingMode: "environment", advanced: [{ focusMode: "continuous" }] } 
-                    });
-                    stream.getTracks().forEach(t => t.stop());
-                    cameraConfig = { facingMode: "environment", advanced: [{ focusMode: "continuous" }] };
-                } catch (e) {
-                    cameraConfig = { facingMode: "environment" };
-                }
-            }
-
-            await html5QrCode.start(
-                cameraConfig, 
-                config,
-                successCallback,
-                errorCallback
-            );
+            setMediaStream(stream);
             setIsCameraActive(true);
-
         } catch (err) {
-            console.error("Camera Start Error:", err);
-            toast.error(err.message || "Camera access denied or device unavailable.");
+            console.error(err);
+            toast.error("Camera access denied.");
             setIsCameraActive(false);
         }
     };
 
-    const stopCamera = async () => {
-        if (scannerRef.current && scannerRef.current.isScanning) {
-            await scannerRef.current.stop();
-            setIsCameraActive(false);
+    const handleTapToFocus = async (e) => {
+        // Calculate tap position
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setFocusPoint({ x, y });
+
+        // Try to trigger hardware autofocus if supported
+        if (mediaStream) {
+            const track = mediaStream.getVideoTracks()[0];
+            try {
+                if (track.getCapabilities) {
+                    const capabilities = track.getCapabilities();
+                    if (capabilities.focusMode && capabilities.focusMode.includes('single-shot')) {
+                        await track.applyConstraints({ advanced: [{ focusMode: "single-shot" }] });
+                        // Revert back to continuous after snap
+                        setTimeout(() => {
+                            track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(()=>null);
+                        }, 1000);
+                    }
+                }
+            } catch (err) { /* Silent ignore if constraints fail */ }
         }
+
+        // Hide UI focus marker after animation
+        setTimeout(() => setFocusPoint(null), 1000);
+    };
+
+    const stopCamera = () => {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(t => t.stop());
+            setMediaStream(null);
+        }
+        setIsCameraActive(false);
+    };
+
+    const captureAndScan = () => {
+         if (!videoRef.current || !canvasRef.current) return;
+         const video = videoRef.current;
+         const canvas = canvasRef.current;
+         
+         canvas.width = video.videoWidth;
+         canvas.height = video.videoHeight;
+         const ctx = canvas.getContext("2d");
+         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+         
+         canvas.toBlob(async (blob) => {
+              if (!blob) return;
+              
+              setLoading(true);
+              const file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+              const html5QrCode = new Html5Qrcode("qr-reader-hidden");
+              try {
+                  const decodedText = await html5QrCode.scanFile(file, true);
+                  setScanResult(decodedText);
+                  verifyTicket(decodedText);
+                  stopCamera();
+              } catch (e) {
+                  toast.error("Target missed! Ensure the QR is clear and inside the frame.");
+              } finally {
+                  setLoading(false);
+              }
+         }, 'image/jpeg', 1.0);
     };
 
     // --- FILE UPLOAD LOGIC (Images) ---
@@ -121,10 +146,11 @@ const ScanTicket = () => {
         if (!file) return;
 
         // Stop camera if running
-        if (isCameraActive) await stopCamera();
+        if (isCameraActive) stopCamera();
+        setLoading(true);
 
         try {
-            const html5QrCode = new Html5Qrcode("qr-reader");
+            const html5QrCode = new Html5Qrcode("qr-reader-hidden");
             const decodedText = await html5QrCode.scanFile(file, true);
             
             setScanResult(decodedText);
@@ -132,9 +158,10 @@ const ScanTicket = () => {
         } catch (err) {
             console.error(err);
             toast.error("No valid QR code found in this image.");
+        } finally {
+            setLoading(false);
         }
         
-        // Reset file input so same file can be selected again if needed
         e.target.value = '';
     };
 
@@ -252,9 +279,55 @@ const ScanTicket = () => {
                             {isCameraActive && <span className="flex items-center gap-2 text-[10px] text-emerald-500 font-black uppercase tracking-[0.2em]"><div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.8)]"></div> Active</span>}
                         </div>
                         
-                        <div className="rounded-2xl overflow-hidden bg-black aspect-square relative flex items-center justify-center border-2 border-white/5 shadow-inner">
-                            {/* The DOM element HTML5Qrcode attaches to */}
-                            <div id="qr-reader" className="w-full h-full"></div>
+                        <div 
+                            className="rounded-2xl overflow-hidden bg-black aspect-[4/3] sm:aspect-square relative flex items-center justify-center border border-white/10 shadow-inner group cursor-crosshair"
+                            onClick={handleTapToFocus}
+                        >
+                            
+                            {isCameraActive && (
+                                <>
+                                    <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover filter contrast-125 saturate-150 transform scale-105"></video>
+                                    <canvas ref={canvasRef} className="hidden"></canvas>
+                                    
+                                    {/* Targeting Frame Overlay */}
+                                    <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+                                        <div className="w-[65%] sm:w-[50%] aspect-square border-2 border-emerald-500/30 bg-emerald-500/5 rounded-2xl relative shadow-[0_0_30px_rgba(16,185,129,0.15)] backdrop-blur-[1px]">
+                                            {/* Corner brackets */}
+                                            <div className="absolute top-0 left-0 w-8 h-8 border-t-[4px] border-l-[4px] border-emerald-400 rounded-tl-2xl -translate-x-0.5 -translate-y-0.5 shadow-[0_0_15px_rgba(16,185,129,0.8)]"></div>
+                                            <div className="absolute top-0 right-0 w-8 h-8 border-t-[4px] border-r-[4px] border-emerald-400 rounded-tr-2xl translate-x-0.5 -translate-y-0.5 shadow-[0_0_15px_rgba(16,185,129,0.8)]"></div>
+                                            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[4px] border-l-[4px] border-emerald-400 rounded-bl-2xl -translate-x-0.5 translate-y-0.5 shadow-[0_0_15px_rgba(16,185,129,0.8)]"></div>
+                                            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[4px] border-r-[4px] border-emerald-400 rounded-br-2xl translate-x-0.5 translate-y-0.5 shadow-[0_0_15px_rgba(16,185,129,0.8)]"></div>
+                                            
+                                            {/* Scanning effect line */}
+                                            <div className="absolute top-0 left-0 w-full h-0.5 bg-emerald-400 shadow-[0_0_15px_rgba(16,185,129,1)] animate-bounce" style={{ animationDuration: '3s' }}></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Capture Button Overlay */}
+                                    <div className="absolute bottom-6 w-full flex justify-center z-20 pointer-events-none">
+                                         <button onClick={(e) => { e.stopPropagation(); captureAndScan(); }} className="bg-emerald-500 hover:bg-emerald-400 text-black px-6 py-4 rounded-full font-black uppercase text-xs tracking-widest shadow-[0_0_40px_rgba(16,185,129,1)] hover:shadow-[0_0_50px_rgba(16,185,129,1)] transition-all flex items-center gap-2 hover:scale-105 active:scale-95 border-2 border-emerald-200 pointer-events-auto">
+                                             <Camera size={18}/> Target & Snap
+                                         </button>
+                                    </div>
+
+                                    {/* Interactive Touch Focus Animation */}
+                                    {focusPoint && (
+                                        <div 
+                                            className="absolute border border-yellow-400 rounded-sm animate-ping pointer-events-none z-30"
+                                            style={{ 
+                                                left: focusPoint.x - 30, top: focusPoint.y - 30, 
+                                                width: 60, height: 60,
+                                                animationDuration: '0.5s'
+                                            }}
+                                        >
+                                            <div className="w-full h-full border border-yellow-400/50 scale-50"></div>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                            
+                            {/* Hidden element for File Scanning */}
+                            <div id="qr-reader-hidden" className="hidden"></div>
                             
                             {/* Inactive Overlay */}
                             {!isCameraActive && !scanResult && (
@@ -263,7 +336,7 @@ const ScanTicket = () => {
                                         <CameraOff size={32} className="text-gray-600"/>
                                     </div>
                                     <p className="text-lg font-black text-gray-300 tracking-tight">Camera Offline</p>
-                                    <p className="text-sm font-medium text-gray-500 mt-2 max-w-xs">Initialize optical array or upload a digital pass manually.</p>
+                                    <p className="text-sm font-medium text-gray-500 mt-2 max-w-xs">Initialize optical array and snap a picture of the guest's pass.</p>
                                 </div>
                             )}
                         </div>
@@ -276,14 +349,13 @@ const ScanTicket = () => {
                                 </button>
                             ) : (
                                 <button onClick={startCamera} className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white py-4 rounded-xl text-[11px] font-black uppercase tracking-[0.15em] transition-all flex justify-center items-center gap-2.5 shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] border border-emerald-400/50">
-                                    <Camera size={16}/> Initialize Scan
+                                    <Camera size={16}/> Initialize Camera
                                 </button>
                             )}
                             
                             <button onClick={() => fileInputRef.current?.click()} className="bg-[#121212] border border-white/5 hover:border-white/10 hover:bg-white/5 text-white py-4 rounded-xl text-[11px] font-black uppercase tracking-[0.15em] transition-all flex justify-center items-center gap-2.5 shadow-lg">
                                 <UploadCloud size={16} className="text-blue-400"/> Upload Frame
                             </button>
-                            {/* Hidden file input */}
                             <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
                         </div>
                     </div>
@@ -321,7 +393,7 @@ const ScanTicket = () => {
                                     <QrCode size={56} className="text-gray-700"/>
                                 </div>
                                 <h2 className="text-3xl font-black text-gray-300 tracking-tight mb-2">Systems Ready</h2>
-                                <p className="text-gray-500 text-sm font-medium max-w-sm">Scan a secured QR code or initiate a manual override to instantly verify guest access.</p>
+                                <p className="text-gray-500 text-sm font-medium max-w-sm">Capture a secured QR code or initiate a manual override to instantly verify guest access.</p>
                             </div>
                         )}
 
@@ -329,9 +401,9 @@ const ScanTicket = () => {
                             <div className="flex-1 flex flex-col items-center justify-center bg-black/40">
                                 <div className="relative w-20 h-20 mb-8">
                                     <div className="absolute inset-0 border-4 border-gray-800 rounded-full"></div>
-                                    <div className="absolute inset-0 border-4 border-t-white rounded-full animate-spin shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
+                                    <div className="absolute inset-0 border-4 border-t-emerald-500 rounded-full animate-spin shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
                                 </div>
-                                <p className="text-white text-xs font-black uppercase tracking-[0.25em] animate-pulse">Querying Mainframe...</p>
+                                <p className="text-emerald-500 text-xs font-black uppercase tracking-[0.25em] animate-pulse">Processing Frame...</p>
                             </div>
                         )}
 
@@ -410,12 +482,6 @@ const ScanTicket = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Custom CSS overrides to clean up html5-qrcode's injected video element */}
-            <style>{`
-                #qr-reader { border: none !important; border-radius: 1rem; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
-                #qr-reader video { object-fit: cover !important; width: 100% !important; height: 100% !important; filter: contrast(1.1) brightness(1.1); }
-            `}</style>
         </div>
     );
 };
@@ -429,4 +495,4 @@ const InfoItem = ({ icon, label, value, valueColor = "text-gray-400 font-medium"
     </div>
 );
 
-export default ScanTicket;
+export default ScanTicket;
