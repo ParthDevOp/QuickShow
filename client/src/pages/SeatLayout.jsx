@@ -6,7 +6,6 @@ import { AlertCircle, ArrowRight, ScreenShare, Ticket, Crown, Zap, Lock } from '
 import Loading from '../components/Loading';
 
 import { io } from 'socket.io-client';
-const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000');
 
 // --- LOGICAL FIX: Default Layout Fallback ---
 const DEFAULT_LAYOUT = [
@@ -19,7 +18,14 @@ const SeatLayout = () => {
     const { showId } = useParams();
     const { state } = useLocation(); 
     const navigate = useNavigate();
-    const { axios, user } = useAppContext();
+    const { axios, user, backendUrl } = useAppContext();
+
+    // Initialize socket using the same backendUrl from context (env-aware)
+    const socketRef = useRef(null);
+    if (!socketRef.current) {
+        socketRef.current = io(backendUrl);
+    }
+    const socket = socketRef.current;
 
     const show = state?.show;
 
