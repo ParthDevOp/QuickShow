@@ -9,7 +9,7 @@ const CinemaNavbar = () => {
 
     // Determine the theater name exactly how the backend defines or fallback to a standard name.
     const cinemaName = dbUser?.theaterName || dbUser?.theaterConfig?.name || dbUser?.name || 'Box Office Console';
-    const userRole = dbUser?.role === 'admin' ? 'System Administrator' : 'Box Office Manager';
+    const userRole = dbUser?.role === 'admin' ? 'System Administrator' : 'Cinema Manager';
 
     return (
         <div className="h-16 sm:h-20 bg-[#060606]/90 backdrop-blur-xl border-b border-white/[0.04] flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-50">
@@ -27,7 +27,7 @@ const CinemaNavbar = () => {
                         )}
                     </h1>
                     <p className="text-[9px] sm:text-[11px] text-gray-500 font-medium uppercase tracking-[0.15em] mt-0.5 flex items-center gap-1 sm:gap-1.5 truncate">
-                        <Navigation size={10} className="text-gray-600 shrink-0"/> <span className="truncate">Local Facility Operations</span>
+                        <Navigation size={10} className="text-gray-600 shrink-0"/> <span className="truncate">Cinema Operations</span>
                     </p>
                 </div>
             </div>
@@ -39,7 +39,7 @@ const CinemaNavbar = () => {
                 <div className="hidden md:flex flex-col items-end">
                      <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
                         <ShieldCheck size={12} className="text-emerald-500" />
-                        <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Network Secure</span>
+                        <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">System Connected</span>
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5"></div>
                     </div>
                 </div>

@@ -27,7 +27,7 @@ const DailyManifest = () => {
             }
         } catch (error) {
             console.error("Manifest Error:", error);
-            toast.error("Failed to load daily manifest.");
+            toast.error("Failed to load guest list.");
         } finally {
             setLoading(false);
             setIsRefreshing(false);
@@ -114,9 +114,9 @@ const DailyManifest = () => {
                     <div className="w-full xl:w-auto">
                         <div className="flex items-center gap-2 sm:gap-3 mb-2">
                             <Users fill="currentColor" size={12} className="text-blue-500" />
-                            <p className="text-blue-500 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em]">Guest Operations</p>
+                            <p className="text-blue-500 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em]">Guest Management</p>
                         </div>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Daily Manifest</h2>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Today's Guest List</h2>
                         <p className="text-gray-400 text-xs sm:text-sm flex items-center gap-2 font-medium bg-white/[0.03] inline-flex px-3 sm:px-3.5 py-1.5 rounded-lg border border-white/[0.05] shadow-inner break-words">
                             Live guest list and real-time check-in status
                         </p>
@@ -143,7 +143,7 @@ const DailyManifest = () => {
                                 className="flex-1 sm:flex-none bg-[#121212] border border-white/5 hover:border-white/10 hover:bg-white/5 text-gray-300 px-4 sm:px-5 py-3 sm:py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-[10px] sm:text-xs uppercase tracking-[0.15em] disabled:opacity-50 shadow-lg"
                             >
                                 <RefreshCcw size={14} className={`sm:w-4 sm:h-4 ${isRefreshing ? "animate-spin text-blue-500" : ""}`} /> 
-                                <span>Sync</span>
+                                <span>Refresh List</span>
                             </button>
 
                             <button onClick={() => window.print()} className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-[10px] sm:text-xs uppercase tracking-[0.15em] shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] border border-blue-400/30">
@@ -223,7 +223,7 @@ const DailyManifest = () => {
                                 <tr>
                                     <td colSpan="5" className="py-16 sm:py-24 text-center text-gray-500 bg-black/20">
                                         <Film size={40} className="sm:w-12 sm:h-12 mx-auto text-gray-800 mb-3 sm:mb-4" />
-                                        <p className="text-xs sm:text-sm font-medium tracking-wide">No guests matching your criteria.</p>
+                                        <p className="text-xs sm:text-sm font-medium tracking-wide">No guests found.</p>
                                     </td>
                                 </tr>
                             ) : (

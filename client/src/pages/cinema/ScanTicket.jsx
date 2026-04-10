@@ -229,7 +229,7 @@ const ScanTicket = () => {
         } catch (error) {
             setTicketData({ 
                 success: false, 
-                message: error.response?.data?.message || "System offline or invalid barcode." 
+                message: error.response?.data?.message || "Invalid ticket or system offline." 
             });
         } finally {
             setLoading(false);
@@ -256,23 +256,23 @@ const ScanTicket = () => {
     let headerColor = 'bg-red-950/20 border-red-500/30';
     let textColor = 'text-red-500';
     let StatusIcon = XCircle;
-    let titleText = "ACCESS DENIED";
-    let subMessage = ticketData?.message || "Invalid or Unrecognized Pass.";
+    let titleText = "INVALID TICKET";
+    let subMessage = ticketData?.message || "Ticket not recognized in the system.";
 
     if (ticketData?.success) {
         headerColor = 'bg-emerald-950/20 border-emerald-500/30';
         textColor = 'text-emerald-500';
         StatusIcon = CheckCircle;
-        titleText = "AUTHORIZATION GRANTED";
-        subMessage = `Identity verified for ${ticketData.details?.guestName || "Guest"}. Proceed to entry.`;
+        titleText = "TICKET VALID";
+        subMessage = `${ticketData.details?.guestName || "Guest"} is verified. Please allow entry.`;
     } else if (ticketData?.isExpired || ticketData?.message?.toLowerCase().includes('past')) {
         headerColor = 'bg-gray-900/80 border-gray-500/50';
         textColor = 'text-gray-400';
         StatusIcon = Clock;
-        titleText = "PASS EXPIRED";
-        subMessage = "This ticket's showtime has elapsed. Entry is no longer permitted.";
+        titleText = "TICKET EXPIRED";
+        subMessage = "The showtime for this ticket has passed.";
     } else if (ticketData && !ticketData.success) {
-        subMessage = "Security protocol failure. Pass is invalid, scanned previously, or associated transaction is voided.";
+        subMessage = "This ticket may be invalid, cancelled, or has already been scanned.";
     }
 
     return (
@@ -286,17 +286,17 @@ const ScanTicket = () => {
                 <div>
                     <div className="flex items-center gap-2 sm:gap-3 mb-2">
                         <ShieldCheck fill="currentColor" size={12} className="text-emerald-500" />
-                        <p className="text-emerald-500 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em]">Access Control Server</p>
+                        <p className="text-emerald-500 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em]">Entry Management</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Digital Scan Terminal</h2>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Ticket Scanner</h2>
                     <p className="text-gray-400 text-xs sm:text-sm flex items-center gap-2 font-medium bg-white/[0.03] inline-flex px-3 sm:px-3.5 py-1.5 rounded-lg border border-white/[0.05] shadow-inner">
-                        Verify entry passes via Optical Scanner or Manual Input
+                        Scan QR codes or enter ticket IDs manually to grant entry
                     </p>
                 </div>
                 
                 <div className="hidden md:flex items-center gap-2.5 border border-emerald-500/20 px-4 py-2.5 rounded-xl bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.15)] mt-4 md:mt-0">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
-                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-400">Live Auth Active</span>
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-400">Scanner Ready</span>
                 </div>
             </div>
 
@@ -311,7 +311,7 @@ const ScanTicket = () => {
                         <div className="flex justify-between items-center mb-5 sm:mb-6">
                             <h3 className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2 sm:gap-3">
                                 <div className="p-1.5 sm:p-2 bg-emerald-500/10 rounded-lg flex items-center justify-center border border-emerald-500/20"><Camera size={16} className="text-emerald-500"/></div>
-                                Optical Target
+                                Camera Scanner
                             </h3>
                             {isCameraActive && <span className="flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] text-emerald-500 font-black uppercase tracking-[0.2em]"><div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.8)]"></div> Active</span>}
                         </div>
@@ -343,7 +343,7 @@ const ScanTicket = () => {
                                     {/* Capture Button Overlay */}
                                     <div className="absolute bottom-4 sm:bottom-6 w-full flex justify-center z-20 pointer-events-none">
                                          <button onClick={(e) => { e.stopPropagation(); captureAndScan(); }} className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 sm:px-6 py-3 sm:py-4 rounded-full font-black uppercase text-[10px] sm:text-xs tracking-widest shadow-[0_0_40px_rgba(16,185,129,1)] hover:shadow-[0_0_50px_rgba(16,185,129,1)] transition-all flex items-center gap-1.5 sm:gap-2 hover:scale-105 active:scale-95 border-2 border-emerald-200 pointer-events-auto">
-                                             <Camera size={16} className="sm:w-[18px] sm:h-[18px]"/> Click to Scan
+                                             <Camera size={16} className="sm:w-[18px] sm:h-[18px]"/> Tap to Scan
                                          </button>
                                     </div>
 
@@ -372,8 +372,8 @@ const ScanTicket = () => {
                                     <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/5 rounded-full flex items-center justify-center mb-4 sm:mb-6 border border-white/10 shadow-inner">
                                         <CameraOff size={28} className="text-gray-600 sm:w-8 sm:h-8"/>
                                     </div>
-                                    <p className="text-base sm:text-lg font-black text-gray-300 tracking-tight">Camera Offline</p>
-                                    <p className="text-xs sm:text-sm font-medium text-gray-500 mt-2 max-w-[200px] sm:max-w-xs">Initialize optical array and snap a picture of the guest's pass.</p>
+                                    <p className="text-base sm:text-lg font-black text-gray-300 tracking-tight">Camera is Off</p>
+                                    <p className="text-xs sm:text-sm font-medium text-gray-500 mt-2 max-w-[200px] sm:max-w-xs">Start the scanner to scan a guest's QR code ticket.</p>
                                 </div>
                             )}
                         </div>
@@ -382,16 +382,16 @@ const ScanTicket = () => {
                         <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-5 sm:mt-6">
                             {isCameraActive ? (
                                 <button onClick={stopCamera} className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-500 py-3 sm:py-4 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.15em] transition-all flex justify-center items-center gap-2 sm:gap-2.5 shadow-inner">
-                                    <CameraOff size={14} className="sm:w-4 sm:h-4"/> Terminate
+                                    <CameraOff size={14} className="sm:w-4 sm:h-4"/> Stop Scanner
                                 </button>
                             ) : (
                                 <button onClick={startCamera} className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white py-3 sm:py-4 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.15em] transition-all flex justify-center items-center gap-2 sm:gap-2.5 shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] border border-emerald-400/50">
-                                    <Camera size={14} className="sm:w-4 sm:h-4"/> Init Camera
+                                    <Camera size={14} className="sm:w-4 sm:h-4"/> Start Scanner
                                 </button>
                             )}
                             
                             <button onClick={() => fileInputRef.current?.click()} className="bg-[#121212] border border-white/5 hover:border-white/10 hover:bg-white/5 text-white py-3 sm:py-4 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.15em] transition-all flex justify-center items-center gap-2 sm:gap-2.5 shadow-lg">
-                                <UploadCloud size={14} className="text-blue-400 sm:w-4 sm:h-4"/> Upload
+                                <UploadCloud size={14} className="text-blue-400 sm:w-4 sm:h-4"/> Upload Ticket
                             </button>
                             <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
                         </div>
@@ -402,18 +402,18 @@ const ScanTicket = () => {
                         <div className="absolute top-0 right-0 w-full h-[1px] bg-gradient-to-l from-transparent via-blue-500/50 to-transparent"></div>
                         <h3 className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-gray-400 mb-4 sm:mb-5 flex items-center gap-2 sm:gap-3">
                             <div className="p-1.5 sm:p-2 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20"><Keyboard size={16} className="text-blue-500"/></div>
-                            Manual Override
+                            Manual Entry
                         </h3>
                         <form onSubmit={handleManualSubmit} className="flex flex-col sm:flex-row gap-3">
                             <input 
                                 type="text" 
-                                placeholder="Enter Transaction ID..." 
+                                placeholder="Enter Ticket ID..." 
                                 value={manualTicketId}
                                 onChange={(e) => setManualTicketId(e.target.value)}
                                 className="flex-1 bg-[#121212] border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-blue-500/50 font-mono text-xs sm:text-sm uppercase placeholder:text-gray-600 placeholder:font-sans transition-all shadow-inner w-full"
                             />
                             <button type="submit" disabled={loading} className="w-full sm:w-auto bg-white hover:bg-gray-200 text-black px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.15em] transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.2)] whitespace-nowrap">
-                                Execute
+                                Check Ticket
                             </button>
                         </form>
                     </div>
@@ -430,7 +430,7 @@ const ScanTicket = () => {
                                     <QrCode size={40} className="text-gray-700 sm:w-14 sm:h-14"/>
                                 </div>
                                 <h2 className="text-2xl sm:text-3xl font-black text-gray-300 tracking-tight mb-2">Systems Ready</h2>
-                                <p className="text-gray-500 text-xs sm:text-sm font-medium max-w-sm">Capture a secured QR code or initiate a manual override to instantly verify guest access.</p>
+                                <p className="text-gray-500 text-xs sm:text-sm font-medium max-w-sm">Scan a QR code or manually enter a ticket ID to verify access.</p>
                             </div>
                         )}
 
@@ -440,7 +440,7 @@ const ScanTicket = () => {
                                     <div className="absolute inset-0 border-[3px] sm:border-4 border-gray-800 rounded-full"></div>
                                     <div className="absolute inset-0 border-[3px] sm:border-4 border-t-emerald-500 rounded-full animate-spin shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
                                 </div>
-                                <p className="text-emerald-500 text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] animate-pulse">Processing Frame...</p>
+                                <p className="text-emerald-500 text-[10px] sm:text-xs font-black uppercase tracking-[0.25em] animate-pulse">Checking Ticket...</p>
                             </div>
                         )}
 
@@ -466,14 +466,14 @@ const ScanTicket = () => {
                                         
                                         {/* Booking Details */}
                                         <div className="mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-white/[0.05]">
-                                            <h4 className="text-[9px] sm:text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-4 sm:mb-5 flex items-center gap-2"><Film size={14}/> Encrypted Payload</h4>
+                                            <h4 className="text-[9px] sm:text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-4 sm:mb-5 flex items-center gap-2"><Film size={14}/> Ticket Details</h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 sm:gap-y-8 gap-x-4 sm:gap-x-6">
-                                                <InfoItem icon={<Hash size={14}/>} label="Signature" value={`TXN-${(scanResult || manualTicketId).slice(-8).toUpperCase()}`} valueColor="text-gray-300 font-mono tracking-wider" />
-                                                <InfoItem icon={<Film size={14}/>} label="Digital Print" value={ticketData.details.movieTitle} valueColor="text-white font-bold" />
+                                                <InfoItem icon={<Hash size={14}/>} label="Ticket ID" value={`TXN-${(scanResult || manualTicketId).slice(-8).toUpperCase()}`} valueColor="text-gray-300 font-mono tracking-wider" />
+                                                <InfoItem icon={<Film size={14}/>} label="Movie" value={ticketData.details.movieTitle} valueColor="text-white font-bold" />
                                                 <InfoItem icon={<Clock size={14}/>} label="Show Window" value={ticketData.details.showTime ? new Date(ticketData.details.showTime).toLocaleString([], {weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'}) : "N/A"} />
-                                                <InfoItem icon={<User size={14}/>} label="Subject Identity" value={ticketData.details.guestName || "Walk-In Subject"} />
-                                                <InfoItem icon={<AtSign size={14}/>} label="Account Comm" value={ticketData.details.guestEmail || "No Email Linked"} />
-                                                <InfoItem icon={<Globe size={14}/>} label="Booking Network" value={['VENUE', 'CASH', 'CARD_TERMINAL'].includes(ticketData.details.paymentMethod) ? "Local Box Office" : "QuickShow Network"} valueColor="text-blue-400 font-bold" />
+                                                <InfoItem icon={<User size={14}/>} label="Guest Name" value={ticketData.details.guestName || "Walk-In Guest"} />
+                                                <InfoItem icon={<AtSign size={14}/>} label="Email" value={ticketData.details.guestEmail || "No Email Linked"} />
+                                                <InfoItem icon={<Globe size={14}/>} label="Booked Via" value={['VENUE', 'CASH', 'CARD_TERMINAL'].includes(ticketData.details.paymentMethod) ? "Local Box Office" : "QuickShow App"} valueColor="text-blue-400 font-bold" />
                                             </div>
                                         </div>
 
@@ -481,11 +481,11 @@ const ScanTicket = () => {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
                                             <div className="bg-[#111] border border-white/[0.05] p-4 sm:p-5 rounded-xl sm:rounded-2xl shadow-inner relative overflow-hidden group">
                                                 <div className="absolute top-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-blue-500/10 rounded-full blur-xl transform translate-x-1/2 -translate-y-1/2"></div>
-                                                <InfoItem icon={<TicketIcon size={14} className="text-blue-500"/>} label="Allocation Map" value={ticketData.details.seats?.join(', ') || "N/A"} valueColor="text-white font-mono font-black text-lg sm:text-xl lg:text-2xl mt-1 tracking-wider" />
+                                                <InfoItem icon={<TicketIcon size={14} className="text-blue-500"/>} label="Seats" value={ticketData.details.seats?.join(', ') || "N/A"} valueColor="text-white font-mono font-black text-lg sm:text-xl lg:text-2xl mt-1 tracking-wider" />
                                             </div>
                                             <div className="bg-[#111] border border-white/[0.05] p-4 sm:p-5 rounded-xl sm:rounded-2xl shadow-inner relative overflow-hidden group">
                                                 <div className="absolute top-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-emerald-500/10 rounded-full blur-xl transform translate-x-1/2 -translate-y-1/2"></div>
-                                                <InfoItem icon={<CreditCard size={14} className="text-emerald-500"/>} label="Fiscal Route" value={ticketData.details.paymentMethod || "N/A"} valueColor="text-emerald-400 font-bold" />
+                                                <InfoItem icon={<CreditCard size={14} className="text-emerald-500"/>} label="Payment Method" value={ticketData.details.paymentMethod || "N/A"} valueColor="text-emerald-400 font-bold" />
                                             </div>
                                         </div>
 
@@ -513,7 +513,7 @@ const ScanTicket = () => {
                                 {/* Reset System Button */}
                                 <div className="p-5 sm:p-6 bg-[#030303] shrink-0 border-t border-white/[0.05] z-10 bottom-0 relative">
                                     <button onClick={resetSystem} className="w-full py-3.5 sm:py-4.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all flex items-center justify-center gap-2 sm:gap-3 shadow-lg">
-                                        <RefreshCcw size={14} className="sm:w-4 sm:h-4"/> Clear & Standby Next Pass
+                                        <RefreshCcw size={14} className="sm:w-4 sm:h-4"/> Scan Next Ticket
                                     </button>
                                 </div>
                             </div>

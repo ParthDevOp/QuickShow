@@ -122,11 +122,11 @@ const ScheduleRequests = () => {
                 <div>
                     <div className="flex items-center gap-2 sm:gap-3 mb-2">
                         <CalendarClock fill="currentColor" size={12} className="text-orange-500" />
-                        <p className="text-orange-500 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em]">Allocation Management</p>
+                        <p className="text-orange-500 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em]">Theater Scheduling</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Schedule Requests</h2>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Movie Requests</h2>
                     <p className="text-gray-400 text-xs sm:text-sm flex items-center gap-2 font-medium bg-white/[0.03] inline-flex px-3 sm:px-3.5 py-1.5 rounded-lg border border-white/[0.05] shadow-inner max-w-2xl leading-relaxed">
-                        Submit proposals for new movie runs, special screenings, or extensions to Central Admin
+                        Request new movies, special screenings, or extend current runs with the head office.
                     </p>
                 </div>
             </div>
@@ -143,23 +143,23 @@ const ScheduleRequests = () => {
                                 <CalendarClock className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500"/>
                             </div>
                             <div>
-                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md">New Proposal</h3>
-                                <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mt-0.5 sm:mt-1">Draft Schedule Plan</p>
+                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md">New Request</h3>
+                                <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mt-0.5 sm:mt-1">Movie Details</p>
                             </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                             {/* Movie Selection */}
                             <div className="space-y-2">
-                                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Assigned Feature</label>
+                                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Select Movie</label>
                                 <select 
                                     name="movieId" 
                                     value={formData.movieId} 
                                     onChange={handleInputChange} 
                                     className="w-full bg-[#121212] border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all text-xs sm:text-sm appearance-none cursor-pointer shadow-inner font-bold"
                                 >
-                                    <option value="" className="text-gray-500">-- Browse Active Distribution Catalog --</option>
-                                    <option value="CUSTOM" className="text-orange-400 font-semibold">✨ Request an unlisted or legacy feature...</option>
+                                    <option value="" className="text-gray-500">-- Select a movie from our catalog --</option>
+                                    <option value="CUSTOM" className="text-orange-400 font-semibold">✨ Request an older or unlisted movie...</option>
                                     {movies.map(m => <option key={m._id} value={m._id}>{m.title}</option>)}
                                 </select>
                                 
@@ -170,11 +170,11 @@ const ScheduleRequests = () => {
                                             name="customMovieTitle" 
                                             value={formData.customMovieTitle} 
                                             onChange={handleInputChange} 
-                                            placeholder="Enter the exact exact nomenclature..." 
+                                            placeholder="Enter the exact movie title..." 
                                             className="w-full bg-[#121212] border border-orange-500/50 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/50 transition-all text-xs sm:text-sm shadow-[inset_0_0_15px_rgba(249,115,22,0.1)] font-bold placeholder:text-gray-600 placeholder:font-sans" 
                                         />
                                         <p className="text-[9px] sm:text-[10px] font-black text-gray-500 flex items-center gap-1.5 mt-2 ml-1 uppercase tracking-wider">
-                                            <Info size={10} className="text-orange-500 shrink-0"/> Central Admin will verify DRM rights.
+                                            <Info size={10} className="text-orange-500 shrink-0"/> Our team will check screening rights.
                                         </p>
                                     </div>
                                 )}
@@ -183,25 +183,25 @@ const ScheduleRequests = () => {
                             {/* Dates Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                                 <div className="space-y-2">
-                                    <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Launch Date</label>
+                                    <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Start Date</label>
                                     <input type="date" name="startDate" value={formData.startDate} onChange={handleInputChange} className="w-full bg-[#121212] border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all text-xs sm:text-sm shadow-inner font-mono" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Termination Date</label>
+                                    <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">End Date</label>
                                     <input type="date" name="endDate" value={formData.endDate} onChange={handleInputChange} className="w-full bg-[#121212] border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all text-xs sm:text-sm shadow-inner font-mono" />
                                 </div>
                             </div>
 
                             {/* Times */}
                             <div className="space-y-2">
-                                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Allocated Timeslots</label>
+                                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Preferred Showtimes</label>
                                 <input type="text" name="preferredTimes" value={formData.preferredTimes} onChange={handleInputChange} placeholder="e.g., 10:00 AM, 2:30 PM, 7:00 PM" className="w-full bg-[#121212] border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all text-xs sm:text-sm placeholder:text-gray-600 shadow-inner block" />
                             </div>
 
                             {/* Message */}
                             <div className="space-y-2">
-                                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Justification Brief</label>
-                                <textarea name="message" value={formData.message} onChange={handleInputChange} placeholder="Define local market logic for this feature deployment..." rows="3" className="w-full bg-[#121212] border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all text-xs sm:text-sm resize-none placeholder:text-gray-600 custom-scrollbar shadow-inner" />
+                                <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 block ml-1">Reason for Request</label>
+                                <textarea name="message" value={formData.message} onChange={handleInputChange} placeholder="Tell us why this movie will do well at your theater..." rows="3" className="w-full bg-[#121212] border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all text-xs sm:text-sm resize-none placeholder:text-gray-600 custom-scrollbar shadow-inner" />
                             </div>
 
                             {/* Submit */}
@@ -210,7 +210,7 @@ const ScheduleRequests = () => {
                                 disabled={isSubmitting} 
                                 className="w-full py-4 mt-2 sm:mt-4 bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] transition-all disabled:opacity-50 flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] border border-orange-400/30"
                             >
-                                {isSubmitting ? 'Transmitting...' : 'Transmit Proposal'} 
+                                {isSubmitting ? 'Submitting...' : 'Submit Request'} 
                                 {!isSubmitting && <Send size={16} strokeWidth={2.5}/>}
                             </button>
                         </form>
@@ -225,11 +225,11 @@ const ScheduleRequests = () => {
                         {/* History Header */}
                         <div className="px-5 py-5 sm:px-8 sm:py-6 border-b border-white/[0.05] flex items-center justify-between shrink-0">
                             <div className="min-w-0 pr-3">
-                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md truncate">Log Feed</h3>
-                                <p className="text-[10px] sm:text-xs text-gray-500 mt-1 font-medium truncate">Historical dispatch records.</p>
+                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md truncate">Request History</h3>
+                                <p className="text-[10px] sm:text-xs text-gray-500 mt-1 font-medium truncate">Status of your past movie requests.</p>
                             </div>
                             <span className="shrink-0 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] bg-white/[0.03] text-gray-400 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-white/[0.05] shadow-inner">
-                                {requests.length} Logs
+                                {requests.length} Requests
                             </span>
                         </div>
                         
@@ -240,7 +240,7 @@ const ScheduleRequests = () => {
                                     <div className="w-16 h-16 sm:w-24 sm:h-24 bg-white/[0.02] border border-white/[0.05] rounded-full flex items-center justify-center mb-4 sm:mb-6 shadow-inner">
                                         <Film className="w-8 h-8 sm:w-10 sm:h-10 text-gray-600"/>
                                     </div>
-                                    <p className="text-white text-lg sm:text-xl font-black tracking-tight drop-shadow-md">No Log Detected</p>
+                                    <p className="text-white text-lg sm:text-xl font-black tracking-tight drop-shadow-md">No Requests Found</p>
                                     <p className="text-gray-500 text-xs sm:text-sm mt-1 sm:mt-2 font-medium">Past submissions will be archived here.</p>
                                 </div>
                             ) : (
@@ -257,7 +257,7 @@ const ScheduleRequests = () => {
                                                     <h4 className="font-bold text-gray-100 text-base sm:text-lg lg:text-xl tracking-tight group-hover:text-orange-400 transition-colors truncate">
                                                         {req.movie?.title || req.customMovieTitle}
                                                     </h4>
-                                                    <p className="text-[9px] sm:text-[10px] text-gray-500 mt-1 sm:mt-2 uppercase tracking-widest font-mono truncate">Dispatched {new Date(req.createdAt).toLocaleDateString()}</p>
+                                                    <p className="text-[9px] sm:text-[10px] text-gray-500 mt-1 sm:mt-2 uppercase tracking-widest font-mono truncate">Requested on {new Date(req.createdAt).toLocaleDateString()}</p>
                                                 </div>
                                                 <div className={`shrink-0 flex items-center self-start sm:self-auto gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] border shadow-inner ${Status.color}`}>
                                                     <StatusIcon size={14} strokeWidth={2.5}/> {req.status}
@@ -271,7 +271,7 @@ const ScheduleRequests = () => {
                                                         <CalendarRange size={16} className="text-gray-500"/>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase tracking-[0.2em] font-black mb-0.5 sm:mb-1 truncate">Target Window</p>
+                                                        <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase tracking-[0.2em] font-black mb-0.5 sm:mb-1 truncate">Requested Dates</p>
                                                         <p className="text-xs sm:text-sm text-gray-200 font-bold truncate">{new Date(req.startDate).toLocaleDateString()} &mdash; {new Date(req.endDate).toLocaleDateString()}</p>
                                                     </div>
                                                 </div>
@@ -280,7 +280,7 @@ const ScheduleRequests = () => {
                                                         <Clock3 size={16} className="text-gray-500"/>
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase tracking-[0.2em] font-black mb-0.5 sm:mb-1 truncate">Target Slots</p>
+                                                        <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase tracking-[0.2em] font-black mb-0.5 sm:mb-1 truncate">Requested Times</p>
                                                         <p className="text-xs sm:text-sm text-orange-400 font-bold font-mono truncate">{req.preferredTimes?.join(', ') || 'Any Available'}</p>
                                                     </div>
                                                 </div>
@@ -296,7 +296,7 @@ const ScheduleRequests = () => {
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <p className={`text-[8px] sm:text-[9px] uppercase tracking-[0.2em] font-black mb-1 sm:mb-1.5 truncate ${req.status === 'APPROVED' ? 'text-emerald-500' : 'text-red-500'}`}>
-                                                            System Directive Log
+                                                            Head Office Response
                                                         </p>
                                                         <p className="text-xs sm:text-sm text-gray-300 leading-relaxed font-medium break-words">{req.adminReply}</p>
                                                     </div>

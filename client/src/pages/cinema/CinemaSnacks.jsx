@@ -75,7 +75,7 @@ const CinemaSnacks = () => {
             });
             
             if(data.success) {
-                toast.success(isEditMode ? "Item Updated!" : "Added to Local Menu!");
+                toast.success(isEditMode ? "Snack Updated!" : "Added to Menu!");
                 resetForm();
                 fetchSnacks();
             } else {
@@ -98,7 +98,7 @@ const CinemaSnacks = () => {
             });
             
             if(data.success) {
-                toast.success(currentStatus ? "Marked Out of Stock" : "Restocked!");
+                toast.success(currentStatus ? "Marked Out of Stock" : "Item Restocked!");
                 setSnacks(prev => prev.map(s => s._id === snackId ? { ...s, isActive: !currentStatus } : s));
             }
         } catch (error) {
@@ -108,14 +108,14 @@ const CinemaSnacks = () => {
     };
 
     const handleDelete = async (id) => {
-        if(!window.confirm("Permanently delete this item from your menu?")) return;
+        if(!window.confirm("Are you sure you want to delete this snack from the menu?")) return;
         try {
             const token = await getToken();
             const { data } = await axios.post('/api/snacks/delete', { id }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if(data.success) { 
-                toast.success("Item Deleted!"); 
+                toast.success("Snack Deleted!"); 
                 if (editingId === id) resetForm();
                 fetchSnacks(); 
             }
@@ -140,14 +140,14 @@ const CinemaSnacks = () => {
                         <Utensils fill="currentColor" size={12} className="text-orange-500" />
                         <p className="text-orange-500 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em]">Concessions Manager</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Local Inventory</h2>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Snacks Menu</h2>
                     <p className="text-gray-400 text-xs sm:text-sm flex items-center gap-2 font-medium bg-white/[0.03] inline-flex px-3 sm:px-3.5 py-1.5 rounded-lg border border-white/[0.05] shadow-inner">
-                        Manage the F&B menu directly for your local venue
+                        Manage food and beverage items for your theater
                     </p>
                 </div>
                 {isEditMode && (
                     <button onClick={resetForm} className="w-full sm:w-auto bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-500 px-4 sm:px-5 py-3 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 shadow-inner mt-2 sm:mt-0">
-                        <X size={14} strokeWidth={3}/> Terminate Edit
+                        <X size={14} strokeWidth={3}/> Cancel Edit
                     </button>
                 )}
             </div>
@@ -164,8 +164,8 @@ const CinemaSnacks = () => {
                                 {isEditMode ? <Edit2 className="w-5 h-5 sm:w-6 sm:h-6"/> : <Utensils className="w-5 h-5 sm:w-6 sm:h-6"/>}
                             </div>
                             <div>
-                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md">{isEditMode ? 'Modify Item' : 'New Provision'}</h3>
-                                <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mt-0.5 sm:mt-1">Local Catalog Sync</p>
+                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md">{isEditMode ? 'Edit Snack' : 'Add New Snack'}</h3>
+                                <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-[0.2em] font-black mt-0.5 sm:mt-1">Menu Details</p>
                             </div>
                         </div>
                         
@@ -177,25 +177,25 @@ const CinemaSnacks = () => {
                                 ) : (
                                     <div className="flex flex-col items-center text-gray-600">
                                         <ImageIcon size={32} className="mb-2 sm:mb-3 opacity-40"/>
-                                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Visual Preview</span>
+                                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Image Preview</span>
                                     </div>
                                 )}
                             </div>
 
                             <div>
-                                <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Nomenclature</label>
-                                <input required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm text-white outline-none transition-all shadow-inner placeholder:text-gray-600" placeholder="e.g. Cinematic Popcorn"/>
+                                <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Item Name</label>
+                                <input required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm text-white outline-none transition-all shadow-inner placeholder:text-gray-600" placeholder="e.g. Large Caramel Popcorn"/>
                             </div>
                             
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                                 <div>
-                                    <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Classification</label>
+                                    <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Category</label>
                                     <select value={formData.category} onChange={e=>setFormData({...formData, category: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm text-white outline-none transition-all appearance-none cursor-pointer shadow-inner">
                                         {categories.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Valuation</label>
+                                    <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Price</label>
                                     <div className="relative">
                                         <IndianRupee size={14} className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500"/>
                                         <input type="number" required value={formData.price} onChange={e=>setFormData({...formData, price: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-3.5 sm:p-4 pl-9 sm:pl-10 text-xs sm:text-sm text-white outline-none transition-all shadow-inner font-mono placeholder:text-gray-600" placeholder="0.00"/>
@@ -204,17 +204,17 @@ const CinemaSnacks = () => {
                             </div>
                             
                             <div>
-                                <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Secure Image URL</label>
+                                <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Image URL</label>
                                 <input required value={formData.image} onChange={e=>setFormData({...formData, image: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm text-white outline-none transition-all shadow-inner placeholder:text-gray-600 font-mono" placeholder="https://..."/>
                             </div>
                             
                             <div>
-                                <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Technical Specs</label>
-                                <textarea value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm text-white outline-none transition-all shadow-inner resize-none h-20 sm:h-24 custom-scrollbar placeholder:text-gray-600" placeholder="Optional details regarding constraints, allergens, or sizing..."/>
+                                <label className="text-[9px] sm:text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] block mb-1.5 sm:mb-2 ml-1">Description</label>
+                                <textarea value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} className="w-full bg-[#121212] border border-white/10 focus:border-orange-500/50 rounded-xl p-3.5 sm:p-4 text-xs sm:text-sm text-white outline-none transition-all shadow-inner resize-none h-20 sm:h-24 custom-scrollbar placeholder:text-gray-600" placeholder="Add details like size, allergens, or ingredients..."/>
                             </div>
                             
                             <button disabled={isSubmitting} type="submit" className={`w-full text-white font-black uppercase tracking-[0.15em] text-[10px] sm:text-[11px] py-4 sm:py-4.5 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center gap-2 mt-6 sm:mt-8 border ${isEditMode ? 'bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 border-blue-400/30' : 'bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 border-orange-400/30'}`}>
-                                {isSubmitting ? "Processing..." : isEditMode ? <><CheckIcon size={14} className="sm:w-4 sm:h-4" strokeWidth={3}/> Update Database</> : <><Plus size={14} className="sm:w-4 sm:h-4" strokeWidth={3}/> Initialize Deployment</>}
+                                {isSubmitting ? "Processing..." : isEditMode ? <><CheckIcon size={14} className="sm:w-4 sm:h-4" strokeWidth={3}/> Save Changes</> : <><Plus size={14} className="sm:w-4 sm:h-4" strokeWidth={3}/> Add Snack</>}
                             </button>
                         </form>
                     </div>
@@ -226,11 +226,11 @@ const CinemaSnacks = () => {
                         <div className="absolute top-0 right-0 w-[50%] h-[1px] bg-gradient-to-l from-transparent via-white/20 to-transparent"></div>
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 pb-5 sm:pb-6 border-b border-white/[0.05] gap-4">
                             <div>
-                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md">Active Feed</h3>
-                                <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2 font-medium">Currently deployed inventory available for guest procurement.</p>
+                                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md">Current Menu</h3>
+                                <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2 font-medium">Food and drinks currently available for guests to order.</p>
                             </div>
                             <span className="bg-black/50 text-gray-400 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] border border-white/5 shadow-inner">
-                                Entries: {snacks.length}
+                                Total Items: {snacks.length}
                             </span>
                         </div>
 
@@ -239,8 +239,8 @@ const CinemaSnacks = () => {
                                 <div className="p-4 sm:p-6 bg-white/[0.02] rounded-full mb-4 sm:mb-6 border border-white/[0.05]">
                                     <Utensils className="w-10 h-10 sm:w-12 sm:h-12 opacity-40 text-orange-500"/>
                                 </div>
-                                <p className="text-lg sm:text-xl font-black text-white tracking-tight drop-shadow-md">Inventory Empty</p>
-                                <p className="text-xs sm:text-sm mt-2 sm:mt-3 max-w-[250px] sm:max-w-sm mx-auto">Initialize your first provision object to establish local theater revenue streams.</p>
+                                <p className="text-lg sm:text-xl font-black text-white tracking-tight drop-shadow-md">Menu is Empty</p>
+                                <p className="text-xs sm:text-sm mt-2 sm:mt-3 max-w-[250px] sm:max-w-sm mx-auto">Add your first snack to start selling food and drinks.</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 auto-rows-max">
@@ -251,7 +251,7 @@ const CinemaSnacks = () => {
                                             <img src={snack.image} alt={snack.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"/>
                                             {!snack.isActive && (
                                                 <div className="absolute inset-0 bg-black/70 flex items-center justify-center backdrop-blur-sm">
-                                                    <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-red-500 bg-red-500/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.5)] transform -rotate-12">Halted</span>
+                                                    <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-red-500 bg-red-500/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.5)] transform -rotate-12">Out of Stock</span>
                                                 </div>
                                             )}
                                         </div>
@@ -274,14 +274,14 @@ const CinemaSnacks = () => {
                                             <button 
                                                 onClick={() => handleToggleStock(snack._id, snack.isActive)} 
                                                 className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-all shadow-lg border backdrop-blur-md ${snack.isActive ? 'bg-[#111]/80 hover:bg-black text-gray-400 hover:text-red-500 border-white/10 hover:border-red-500/50' : 'bg-red-500/20 text-red-400 hover:bg-emerald-500/20 hover:text-emerald-400 border-red-500/30 hover:border-emerald-500/30'}`} 
-                                                title={snack.isActive ? "Halt Distribution" : "Resume Distribution"}
+                                                title={snack.isActive ? "Mark Out of Stock" : "Mark In Stock"}
                                             >
                                                 {snack.isActive ? <Power size={12} className="sm:w-3.5 sm:h-3.5" strokeWidth={2.5}/> : <AlertCircle size={12} className="sm:w-3.5 sm:h-3.5" strokeWidth={2.5}/>}
                                             </button>
-                                            <button onClick={() => handleEditClick(snack)} className="bg-[#111]/80 hover:bg-black text-gray-400 hover:text-blue-400 p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-all shadow-lg border border-white/10 hover:border-blue-500/50 backdrop-blur-md" title="Modify Config">
+                                            <button onClick={() => handleEditClick(snack)} className="bg-[#111]/80 hover:bg-black text-gray-400 hover:text-blue-400 p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-all shadow-lg border border-white/10 hover:border-blue-500/50 backdrop-blur-md" title="Edit Item">
                                                 <Edit2 size={12} className="sm:w-3.5 sm:h-3.5" strokeWidth={2.5}/>
                                             </button>
-                                            <button onClick={() => handleDelete(snack._id)} className="bg-[#111]/80 hover:bg-red-500 text-gray-400 hover:text-white p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-all shadow-lg border border-white/10 hover:border-red-500/50 backdrop-blur-md" title="Execute Purge">
+                                            <button onClick={() => handleDelete(snack._id)} className="bg-[#111]/80 hover:bg-red-500 text-gray-400 hover:text-white p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition-all shadow-lg border border-white/10 hover:border-red-500/50 backdrop-blur-md" title="Delete Item">
                                                 <Trash2 size={12} className="sm:w-3.5 sm:h-3.5" strokeWidth={2.5}/>
                                             </button>
                                         </div>

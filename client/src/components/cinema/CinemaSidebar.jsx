@@ -4,13 +4,13 @@ import { LayoutDashboard, Ticket, QrCode, ClipboardList, LogOut, Search, Popcorn
 import { useClerk } from '@clerk/clerk-react';
 
 const cinemaLinks = [
-    { name: 'Facility Overview', path: '/cinema', icon: LayoutDashboard, desc: 'Live stats & shows' },
-    { name: 'POS Terminal', path: '/cinema/pos', icon: Ticket, desc: 'Sell tickets' },
-    { name: 'Access Gate', path: '/cinema/scan', icon: QrCode, desc: 'Scan & verify' },
-    { name: 'Daily Manifest', path: '/cinema/manifest', icon: ClipboardList, desc: 'Guest check-ins' },
-    { name: 'All Bookings', path: '/cinema/bookings', icon: Search, desc: 'History & reprint' },
-    { name: 'Concessions Menu', path: '/cinema/snacks', icon: Popcorn, desc: 'F&B inventory' },
-    { name: 'Schedule Requests', path: '/cinema/requests', icon: CalendarClock, desc: 'Request shows' },
+    { name: 'Dashboard', path: '/cinema', icon: LayoutDashboard, desc: 'Live stats & shows' },
+    { name: 'Box Office', path: '/cinema/pos', icon: Ticket, desc: 'Sell tickets & snacks' },
+    { name: 'Scan Tickets', path: '/cinema/scan', icon: QrCode, desc: 'Verify guest entry' },
+    { name: 'Guest List', path: '/cinema/manifest', icon: ClipboardList, desc: "Today's attendees" },
+    { name: 'All Bookings', path: '/cinema/bookings', icon: Search, desc: 'History & reprints' },
+    { name: 'Snacks Menu', path: '/cinema/snacks', icon: Popcorn, desc: 'Manage food & drinks' },
+    { name: 'Movie Requests', path: '/cinema/requests', icon: CalendarClock, desc: 'Ask for new shows' },
 ];
 
 const CinemaSidebar = () => {

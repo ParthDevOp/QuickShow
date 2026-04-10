@@ -123,17 +123,17 @@ const CinemaDashboard = () => {
                     <div className="w-full md:w-auto">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-                            <p className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.25em]">System Online</p>
+                            <p className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.25em]">System Live</p>
                             
                             <button 
                                 onClick={handleManualRefresh} 
                                 className="ml-auto md:ml-3 p-1.5 bg-white/5 hover:bg-white/10 rounded-md border border-white/5 transition-all group shadow-sm flex items-center justify-center"
-                                title="Force Refresh Data"
+                                title="Refresh Data"
                             >
                                 <RefreshCw size={12} className={`text-gray-400 group-hover:text-white ${isRefreshing ? 'animate-spin text-orange-500' : ''}`} />
                             </button>
                         </div>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Facility Dashboard</h2>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white mb-2">Cinema Dashboard</h2>
                         <p className="text-gray-400 text-xs sm:text-sm flex items-center gap-2 font-medium bg-white/[0.03] inline-flex px-3.5 py-1.5 rounded-lg border border-white/[0.05] shadow-inner break-words max-w-full">
                             <MapPin size={16} className="text-orange-500 shrink-0" /> <span className="truncate">{theaterName || 'Local View'}</span>
                         </p>
@@ -141,20 +141,20 @@ const CinemaDashboard = () => {
                     
                     <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto mt-4 md:mt-0">
                         <button onClick={() => navigate('/cinema/scan')} className="w-full sm:w-auto bg-[#121212] hover:bg-[#1a1a1a] text-gray-300 px-6 py-3.5 sm:py-3 rounded-xl font-bold flex items-center justify-center gap-2.5 transition-all text-sm border border-white/5 hover:border-white/10 hover:text-white shadow-lg">
-                            <QrCode size={18} className="text-blue-400"/> Scan Ticket
+                            <QrCode size={18} className="text-blue-400"/> Scan Tickets
                         </button>
                         <button onClick={() => navigate('/cinema/pos')} className="w-full sm:w-auto bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white px-8 py-3.5 sm:py-3 rounded-xl font-bold flex items-center justify-center gap-2.5 transition-all text-sm shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] border border-orange-400/30">
-                            <Ticket size={18}/> Point of Sale
+                            <Ticket size={18}/> Sell Tickets
                         </button>
                     </div>
                 </div>
 
                 {/* KPI Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-10">
-                    <StatCard icon={<Users size={24}/>} label="Admissions Today" value={stats?.totalGuests || 0} colorTheme="blue" />
-                    <StatCard icon={<Ticket size={24}/>} label="Tickets Generated" value={stats?.todayTickets || 0} colorTheme="purple" />
+                    <StatCard icon={<Users size={24}/>} label="Guests Today" value={stats?.totalGuests || 0} colorTheme="blue" />
+                    <StatCard icon={<Ticket size={24}/>} label="Tickets Sold" value={stats?.todayTickets || 0} colorTheme="purple" />
                     <StatCard icon={<Banknote size={24}/>} label="Box Office Cash" value={formatCurrency(stats?.posCashRevenue)} colorTheme="emerald" />
-                    <StatCard icon={<MonitorPlay size={24}/>} label="Gross Daily Revenue" value={formatCurrency(stats?.totalRevenue)} colorTheme="orange" trend="Live"/>
+                    <StatCard icon={<MonitorPlay size={24}/>} label="Total Revenue" value={formatCurrency(stats?.totalRevenue)} colorTheme="orange" trend="Live"/>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
@@ -164,7 +164,7 @@ const CinemaDashboard = () => {
                         <div className="flex justify-between items-center mb-6 sm:mb-8 border-b border-white/5 pb-4 sm:pb-5">
                             <h3 className="text-xs sm:text-sm font-black flex items-center gap-2 sm:gap-3 text-white uppercase tracking-[0.2em]">
                                 <div className="p-1.5 sm:p-2 bg-orange-500/10 rounded-lg flex items-center justify-center border border-orange-500/20"><Calendar size={18} className="text-orange-500" /></div> 
-                                Master Schedule
+                                Today's Shows
                             </h3>
                             <span className="text-[10px] sm:text-xs font-bold text-gray-400 bg-white/5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-white/5 shadow-inner shrink-0">{stats?.upcomingShows?.length || 0} Shows</span>
                         </div>
@@ -215,7 +215,7 @@ const CinemaDashboard = () => {
                                             <div className="w-full md:w-56 lg:w-64 flex flex-col gap-2 bg-[#050505] p-3 sm:p-4 rounded-xl border border-white/5 shadow-inner relative overflow-hidden group/bar shrink-0 mt-2 md:mt-0">
                                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.02] to-transparent -translate-x-full group-hover/bar:translate-x-full transition-transform duration-1000"></div>
                                                 <div className="flex justify-between text-[10px] font-black text-gray-500 uppercase tracking-widest relative z-10">
-                                                    <span>Occupancy</span>
+                                                    <span>Seats Sold</span>
                                                     <span className="text-white relative z-10">{bookedCount} / {capacity} <span className="text-gray-500 ml-1">({occupancyPercentage}%)</span></span>
                                                 </div>
                                                 <div className="w-full bg-[#111] rounded-full h-2 sm:h-2.5 overflow-hidden border border-black inset-shadow relative z-10">
@@ -235,7 +235,7 @@ const CinemaDashboard = () => {
                         <div className="p-5 sm:p-8 pb-4 sm:pb-5 flex justify-between items-center border-b border-white/5 shrink-0">
                             <h3 className="text-xs sm:text-sm font-black flex items-center gap-2 sm:gap-3 text-white uppercase tracking-[0.2em]">
                                 <div className="p-1.5 sm:p-2 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20"><Activity size={18} className="text-blue-500" /></div>
-                                Operations Feed
+                                Recent Sales
                             </h3>
                         </div>
                         
@@ -294,7 +294,7 @@ const CinemaDashboard = () => {
                         
                         <div className="p-5 sm:p-6 shrink-0 border-t border-white/[0.05] bg-[#030303] mt-auto">
                             <button onClick={() => navigate('/cinema/manifest')} className="w-full py-3 sm:py-3.5 bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-gray-300 hover:text-white transition-all flex justify-center items-center gap-2 shadow-lg">
-                                Access Guest Manifest <ArrowRight size={14}/>
+                                View Guest List <ArrowRight size={14}/>
                             </button>
                         </div>
                     </div>
