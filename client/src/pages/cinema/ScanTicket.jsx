@@ -6,7 +6,7 @@ import Title from '../../components/admin/Title';
 import { 
     QrCode, CheckCircle, XCircle, User, Clock, Film, 
     Ticket as TicketIcon, Keyboard, RefreshCcw, ShieldCheck, 
-    Camera, Hash, CreditCard, Popcorn, UploadCloud, CameraOff
+    Camera, Hash, CreditCard, Popcorn, UploadCloud, CameraOff, Mail, Globe, AtSign
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -467,11 +467,13 @@ const ScanTicket = () => {
                                         {/* Booking Details */}
                                         <div className="mb-8 pb-8 border-b border-white/[0.05]">
                                             <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-5 flex items-center gap-2"><Film size={14}/> Encrypted Payload</h4>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-6">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-6">
                                                 <InfoItem icon={<Hash size={14}/>} label="Signature" value={`TXN-${(scanResult || manualTicketId).slice(-8).toUpperCase()}`} valueColor="text-gray-300 font-mono tracking-wider" />
                                                 <InfoItem icon={<Film size={14}/>} label="Digital Print" value={ticketData.details.movieTitle} valueColor="text-white font-bold" />
                                                 <InfoItem icon={<Clock size={14}/>} label="Show Window" value={ticketData.details.showTime ? new Date(ticketData.details.showTime).toLocaleString([], {weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'}) : "N/A"} />
-                                                <InfoItem icon={<User size={14}/>} label="Identify" value={ticketData.details.guestName || ticketData.details.user?.name || "Unknown Identity"} />
+                                                <InfoItem icon={<User size={14}/>} label="Subject Identity" value={ticketData.details.guestName || "Walk-In Subject"} />
+                                                <InfoItem icon={<AtSign size={14}/>} label="Account Comm" value={ticketData.details.guestEmail || "No Email Linked"} />
+                                                <InfoItem icon={<Globe size={14}/>} label="Booking Network" value={['VENUE', 'CASH', 'CARD_TERMINAL'].includes(ticketData.details.paymentMethod) ? "Local Box Office" : "QuickShow Network"} valueColor="text-blue-400 font-bold" />
                                             </div>
                                         </div>
 
