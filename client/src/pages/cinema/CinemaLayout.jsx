@@ -2,8 +2,10 @@ import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { SignIn, useUser } from '@clerk/clerk-react';
 import { useAppContext } from '../../context/AppContext';
-import { CinemaSidebar } from '../../components/cinema/CinemaSidebar'; // Note: Ensure named import is used based on your previous file merge
-import { CinemaNavbar } from '../../components/cinema/CinemaNavbar';
+
+// FIX: Changed from named imports `{}` to default imports to match the components
+import CinemaSidebar from '../../components/cinema/CinemaSidebar';
+import CinemaNavbar from '../../components/cinema/CinemaNavbar';
 import { Loader2 } from 'lucide-react';
 
 const CinemaLayout = () => {
