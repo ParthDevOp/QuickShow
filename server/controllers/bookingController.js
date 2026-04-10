@@ -41,7 +41,7 @@ export const createBooking = async (req, res) => {
     session.startTransaction();
 
     try {
-        const { showId, paymentMethod, appliedRewardId, guestName, guestPhone, snacks = [], transactionId, isPosTransaction } = req.body; 
+        const { showId, paymentMethod, appliedRewardId, guestName, guestEmail, guestPhone, snacks = [], transactionId, isPosTransaction } = req.body; 
 
         let userId = "POS_GUEST";
         if (!isPosTransaction) {
@@ -153,6 +153,7 @@ export const createBooking = async (req, res) => {
             isPaid: isVenuePay || (transactionId ? true : false),
             status: isVenuePay || transactionId ? 'CONFIRMED' : 'PENDING',
             guestName: guestName || 'Walk-in Guest',
+            guestEmail: guestEmail || '',
             guestPhone: guestPhone || '',
             snacks: verifiedSnacks 
         }], { session });

@@ -21,7 +21,8 @@ const BoxOffice = () => {
     const [selectedShow, setSelectedShow] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState([]);
     const [cartSnacks, setCartSnacks] = useState([]); // [{ ...snack, qty }]
-    const [customerName, setCustomerName] = useState('Walk-in Guest');
+    const [customerName, setCustomerName] = useState('');
+    const [customerEmail, setCustomerEmail] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
     
     // Processing States
@@ -146,6 +147,7 @@ const BoxOffice = () => {
                 amount: grandTotal,
                 paymentMethod: paymentMethod, 
                 guestName: customerName || 'Walk-in Guest',
+                guestEmail: customerEmail,
                 guestPhone: customerPhone,
                 snacks: orderedSnacks,
                 isPosTransaction: true // <-- CRITICAL FIX: Stops Cashier from getting loyalty coins
@@ -183,7 +185,8 @@ const BoxOffice = () => {
         setCartSnacks([]);
         setSelectedShow(null);
         setActiveTab('SEATS');
-        setCustomerName('Walk-in Guest');
+        setCustomerName('');
+        setCustomerEmail('');
         setCustomerPhone('');
     };
 
@@ -482,6 +485,16 @@ const BoxOffice = () => {
                                         value={customerName}
                                         onChange={(e) => setCustomerName(e.target.value)}
                                         placeholder="Walk-in Guest"
+                                        className="w-full bg-transparent border-b border-gray-700 text-white py-2 text-sm outline-none focus:border-orange-500 transition-colors"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-500">Email (Optional)</label>
+                                    <input 
+                                        type="email" 
+                                        value={customerEmail}
+                                        onChange={(e) => setCustomerEmail(e.target.value)}
+                                        placeholder="guest@mail.com"
                                         className="w-full bg-transparent border-b border-gray-700 text-white py-2 text-sm outline-none focus:border-orange-500 transition-colors"
                                     />
                                 </div>

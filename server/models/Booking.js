@@ -73,6 +73,11 @@ const bookingSchema = new mongoose.Schema({
         trim: true,
         default: 'Walk-in Guest'
     },
+    guestEmail: {
+        type: String,
+        trim: true,
+        default: ''
+    },
     guestPhone: {
         type: String,
         trim: true,
