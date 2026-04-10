@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
+import jsQR from 'jsqr';
 import { useAppContext } from '../../context/AppContext';
 import Title from '../../components/admin/Title';
 import { 
@@ -32,6 +33,37 @@ const ScanTicket = () => {
             }
         };
     }, [mediaStream]);
+
+    // Background Auto-Scanner
+    useEffect(() => {
+        let interval;
+        if (isCameraActive && videoRef.current && canvasRef.current && !loading && !scanResult) {
+            interval = setInterval(() => {
+                try {
+                    const video = videoRef.current;
+                    const canvas = canvasRef.current;
+                    if (video.videoWidth > 0 && video.videoHeight > 0) {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                            inversionAttempts: "dontInvert"
+                        });
+                        
+                        if (code && code.data) {
+                            setScanResult(code.data);
+                            verifyTicket(code.data);
+                            stopCamera();
+                        }
+                    }
+                } catch(e) { /* ignore canvas cross-origin or dimension errors */ }
+            }, 300);
+        }
+        return () => clearInterval(interval);
+    }, [isCameraActive, loading, scanResult, mediaStream]);
 
     // Attach stream to video explicitly when it mounts
     useEffect(() => {
@@ -224,18 +256,23 @@ const ScanTicket = () => {
     let headerColor = 'bg-red-950/20 border-red-500/30';
     let textColor = 'text-red-500';
     let StatusIcon = XCircle;
-    let titleText = "Access Denied";
+    let titleText = "ACCESS DENIED";
+    let subMessage = ticketData?.message || "Invalid or Unrecognized Pass.";
 
     if (ticketData?.success) {
         headerColor = 'bg-emerald-950/20 border-emerald-500/30';
         textColor = 'text-emerald-500';
         StatusIcon = CheckCircle;
-        titleText = "Access Granted";
+        titleText = "AUTHORIZATION GRANTED";
+        subMessage = `Identity verified for ${ticketData.details?.guestName || "Guest"}. Proceed to entry.`;
     } else if (ticketData?.isExpired || ticketData?.message?.toLowerCase().includes('past')) {
         headerColor = 'bg-gray-900/80 border-gray-500/50';
         textColor = 'text-gray-400';
         StatusIcon = Clock;
-        titleText = "Ticket Expired";
+        titleText = "PASS EXPIRED";
+        subMessage = "This ticket's showtime has elapsed. Entry is no longer permitted.";
+    } else if (ticketData && !ticketData.success) {
+        subMessage = "Security protocol failure. Pass is invalid, scanned previously, or associated transaction is voided.";
     }
 
     return (
@@ -306,7 +343,7 @@ const ScanTicket = () => {
                                     {/* Capture Button Overlay */}
                                     <div className="absolute bottom-6 w-full flex justify-center z-20 pointer-events-none">
                                          <button onClick={(e) => { e.stopPropagation(); captureAndScan(); }} className="bg-emerald-500 hover:bg-emerald-400 text-black px-6 py-4 rounded-full font-black uppercase text-xs tracking-widest shadow-[0_0_40px_rgba(16,185,129,1)] hover:shadow-[0_0_50px_rgba(16,185,129,1)] transition-all flex items-center gap-2 hover:scale-105 active:scale-95 border-2 border-emerald-200 pointer-events-auto">
-                                             <Camera size={18}/> Target & Snap
+                                             <Camera size={18}/> Click to Scan
                                          </button>
                                     </div>
 
@@ -419,7 +456,7 @@ const ScanTicket = () => {
                                         <h2 className={`text-3xl font-black tracking-tight uppercase ${textColor} drop-shadow-md`}>
                                             {titleText}
                                         </h2>
-                                        <p className="text-gray-200 text-sm mt-1.5 font-medium">{ticketData.message}</p>
+                                        <p className="text-gray-200 text-sm mt-1.5 font-medium">{subMessage}</p>
                                     </div>
                                 </div>
 
