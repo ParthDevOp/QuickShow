@@ -361,7 +361,7 @@ const Landing = () => {
           >
             {[
               { value: "50K+", label: "Happy Customers" },
-              { value: "100+", label: "Partner Theaters" },
+              { value: "50+", label: "Partner Theaters" },
               { value: "4.8", label: "User Rating", icon: <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /> },
               { value: "24/7", label: "Support" }
             ].map((stat, idx) => (

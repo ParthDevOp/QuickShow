@@ -3,7 +3,7 @@ import { useAppContext } from '../../context/AppContext';
 import Loading from '../../components/Loading';
 import { 
     Search, User, Clock, Film, Ticket as TicketIcon, 
-    CheckCircle2, CircleDashed, Users, Download, RefreshCcw, XCircle 
+    CheckCircle2, CircleDashed, Users, RefreshCcw, XCircle 
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -140,14 +140,10 @@ const DailyManifest = () => {
                             <button 
                                 onClick={() => fetchManifest(true)} 
                                 disabled={isRefreshing}
-                                className="flex-1 sm:flex-none bg-[#121212] border border-white/5 hover:border-white/10 hover:bg-white/5 text-gray-300 px-4 sm:px-5 py-3 sm:py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-[10px] sm:text-xs uppercase tracking-[0.15em] disabled:opacity-50 shadow-lg"
+                                className="flex-1 sm:flex-none bg-[#121212] border border-white/5 hover:border-white/10 hover:bg-white/5 text-gray-300 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-[10px] sm:text-xs uppercase tracking-[0.15em] disabled:opacity-50 shadow-lg w-full"
                             >
                                 <RefreshCcw size={14} className={`sm:w-4 sm:h-4 ${isRefreshing ? "animate-spin text-blue-500" : ""}`} /> 
                                 <span>Refresh List</span>
-                            </button>
-
-                            <button onClick={() => window.print()} className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-[10px] sm:text-xs uppercase tracking-[0.15em] shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] border border-blue-400/30">
-                                <Download size={14} className="sm:w-4 sm:h-4"/> <span className="hidden sm:inline">Export</span><span className="sm:hidden">Print</span>
                             </button>
                         </div>
                     </div>
@@ -302,25 +298,6 @@ const DailyManifest = () => {
                     </table>
                 </div>
             </div>
-
-            <style>{`
-                @media print {
-                    body * { visibility: hidden; }
-                    .animate-fadeIn, .animate-fadeIn * { visibility: visible; }
-                    .animate-fadeIn { position: absolute; left: 0; top: 0; width: 100%; }
-                    button, input { display: none !important; }
-                    .bg-[#060606]\\/80, .bg-[#0c0c0c], .bg-[#121212], .bg-[white\\\\/0\\.02] { background: white !important; border-color: #ddd !important; box-shadow: none !important; }
-                    * { color: black !important; }
-                    /* Force colored badges to print correctly if the browser supports it */
-                    .text-emerald-400 { color: #10b981 !important; }
-                    .text-orange-400 { color: #f97316 !important; }
-                    .text-red-400 { color: #ef4444 !important; }
-                    
-                    /* Reset scroll containers for print to show all content */
-                    .overflow-x-auto { overflow-x: visible !important; }
-                    table { min-width: 100% !important; }
-                }
-            `}</style>
         </div>
     );
 };
